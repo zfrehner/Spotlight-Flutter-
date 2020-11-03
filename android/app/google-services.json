@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "199595358287",
+    "firebase_url": "https://spotlight-dfc0e.firebaseio.com",
+    "project_id": "spotlight-dfc0e",
+    "storage_bucket": "spotlight-dfc0e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:199595358287:android:27ead815620a4933e4923a",
+        "android_client_info": {
+          "package_name": "zfrehner.spotlight_login"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "199595358287-2g78jtajplt0qfmvf932vrf1brd4jf5s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4iNuC4u5J2s463gKhYoQzdu-jJsWaReM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "199595358287-2g78jtajplt0qfmvf932vrf1brd4jf5s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
