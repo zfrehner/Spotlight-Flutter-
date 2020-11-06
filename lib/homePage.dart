@@ -1,7 +1,10 @@
 // ************** imports ****************
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'package:url_launcher/url_launcher.dart';
 //****************************************
 
 class LandPage extends StatefulWidget {
@@ -53,6 +56,16 @@ class _LandPageState extends State<LandPage> {
       ),
       body: Column(
         children: <Widget>[
+          Container(
+          child: InkWell(
+          child: Text("See Who's at the Gym!",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16
+          )),
+          onTap: () => launch('https://nullpointerexception.greenriverdev.com/Spotlight/index.php')
+    ),
+    ),
           Image(
             image: AssetImage('assets/images/gym5.jpg'),
           ),
