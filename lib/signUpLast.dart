@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:spotlight_login/successPage.dart';
 
 class SignUpLast extends StatefulWidget {
   @override
@@ -15,7 +16,7 @@ class _SignUpLastState extends State<SignUpLast> {
 
   Widget buildGenderChoice() {
 
-    var _isSelected = false;
+    bool isSelected = false;
 
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,34 +36,37 @@ class _SignUpLastState extends State<SignUpLast> {
              Padding(
                padding: const EdgeInsets.only(right: 8.0),
                child: ChoiceChip(
+                selectedColor: Colors.red,
                 label: Text('Male'),
                 labelStyle: TextStyle(
                     color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.0),
                 ),
+                 selectedShadowColor: Colors.red,
                 backgroundColor: Colors.white,
-                 selected: _isSelected,
+                 selected: isSelected,
                 onSelected: (isSelected) {
                   setState(() {
-                    _isSelected = isSelected;
+                    isSelected = isSelected;
+
                   });
                 },
-                selectedColor: Colors.red,
+                //selectedColor: Colors.red,
             ),
              ),
             ChoiceChip(
               label: Text('Female'),
               labelStyle: TextStyle(
                   color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold),
-              selected: _isSelected,
+              selected: isSelected,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0),
               ),
               backgroundColor: Colors.white,
               onSelected: (isSelected) {
                 setState(() {
-                  _isSelected = !isSelected;
+                  isSelected = isSelected;
                 });
               },
               selectedColor: Colors.red,
@@ -228,8 +232,10 @@ class _SignUpLastState extends State<SignUpLast> {
                                   fontWeight: FontWeight.bold)),
                           onPressed: () {
                             if (_fbKey.currentState.saveAndValidate()) {
-                              print(_fbKey.currentState.value);
+                              Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => Success()));
                             }
+
                           },
                         ),
 

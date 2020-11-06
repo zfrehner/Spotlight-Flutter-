@@ -384,23 +384,7 @@ class _SignUpContinueState extends State<SignUpContinue> {
 
 
 //code for phone number
-/*SizedBox(height: 15),
-FormBuilderPhoneField(
-attribute: 'phone_number',
-initialValue: '+25443534543567',
-// defaultSelectedCountryIsoCode: 'KE',
-cursorColor: Colors.black,
-// style: TextStyle(color: Colors.black, fontSize: 18),
-decoration: const InputDecoration(
-border: OutlineInputBorder(),
-labelText: 'Phone Number',
-),
-onChanged: _onChanged,
-priorityListByIsoCode: ['US'],
-validators: [
-FormBuilderValidators.required(
-errorText: 'This field required')
-],*/
+/**/
 
 /*
 

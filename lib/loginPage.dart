@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:spotlight_login/signUpPage.dart';
+import 'package:spotlight_login/homePage.dart';
 
 class LoginScreen extends StatefulWidget {
 
@@ -13,6 +14,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
 
   bool isChecked = false;
+
+  // **************** artems code: var *****************************************
+  // creating a global key for use for the form
+  var _formKey = GlobalKey<FormState>();
+  // ***************************************************************************
 
   Widget buildEmail() {
     return Column(
@@ -46,6 +52,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: TextStyle(
                     color: Colors.black87,
                   ),
+                  // **************** artems code : validation ***********************
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return "Email field cant be empty";
+                    }
+                    return null;
+                  },
+                  // *****************************************************************
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.only(top: 14),
@@ -56,7 +70,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       hintText: 'Email',
                       hintStyle: TextStyle(
                         color: Colors.black38,
-                      )
+                      ),
+    // **************** artems code: errorStyle ********************
+    errorStyle: TextStyle(color: Colors.redAccent, fontSize: 15)
+    // *************************************************************
                   )
               ),
           )
@@ -96,6 +113,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: TextStyle(
                     color: Colors.black87,
                   ),
+                  // **************** artems code : validation ***********************
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return "Password field cant be empty";
+                    }
+                    return null;
+                  },
+                  // *****************************************************************
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.only(top: 14),
@@ -106,10 +131,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       hintText: 'Password',
                       hintStyle: TextStyle(
                         color: Colors.black38,
-                      )
+                      ),
+    // ******************** artems code: errorStyle ****************
+    errorStyle: TextStyle(color: Colors.redAccent, fontSize: 15)),
+    // *************************************************************
                   )
               )
-          )
         ]
     );
   }
@@ -167,7 +194,17 @@ class _LoginScreenState extends State<LoginScreen> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5,
-        onPressed: () => print('Login was pressed'),
+          onPressed: () {
+            //=> print('Login was pressed'),
+            setState(() {
+              if (_formKey.currentState.validate()) {
+                // if validate = true, take user to home screen
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LandPage()));
+              }
+            });
+          },
         padding: EdgeInsets.all(15),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15)
@@ -220,63 +257,66 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.light,
-          child: GestureDetector(
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  height: double.infinity,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xffFF3232),
-                        Color(0xccFF3232),
-                        Color(0xccFF3232),
-                        Color(0xffFF3232),
-                      ]
-                    )
-                  ),
-                  child: SingleChildScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 25,
-                      vertical: 25
+        child: Form(
+          key: _formKey,
+          child: AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle.light,
+            child: GestureDetector(
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    height: double.infinity,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xffFF3232),
+                          Color(0xccFF3232),
+                          Color(0xccFF3232),
+                          Color(0xffFF3232),
+                        ]
+                      )
                     ),
-                      child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        CircleAvatar(
-                          radius: 75,
-                          backgroundImage: AssetImage('assets/images/LOGO 4.jpg'),
-                        ),
-                        Text(
-                            'SPOTLIGHT',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
+                    child: SingleChildScrollView(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 25,
+                        vertical: 25
+                      ),
+                        child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          CircleAvatar(
+                            radius: 75,
+                            backgroundImage: AssetImage('assets/images/LOGO 4.jpg'),
+                          ),
+                          Text(
+                              'SPOTLIGHT',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
 
-                            )
-                        ),
-                        SizedBox(height: 20),
-                        buildEmail(),
-                        SizedBox(height: 20),
-                        buildPassword(),
-                        buildForgotPassBtn(),
-                        buildRememberMeBox(),
-                        buildLoginBtn(),
-                        buildSignUpBtn()
-                      ]
+                              )
+                          ),
+                          SizedBox(height: 20),
+                          buildEmail(),
+                          SizedBox(height: 20),
+                          buildPassword(),
+                          buildForgotPassBtn(),
+                          buildRememberMeBox(),
+                          buildLoginBtn(),
+                          buildSignUpBtn()
+                        ]
+                    )
+                    )
                   )
-                  )
-                )
-              ]
+                ]
+              )
             )
-          )
+          ),
         ),
       )
     );

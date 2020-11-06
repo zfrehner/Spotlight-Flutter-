@@ -10,6 +10,13 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  // **************** artems code: fields *****************************************
+  // creating a global key for use for the form
+  var _formKey = GlobalKey<FormState>();
+  // fields to validate password/confirmPassword
+  TextEditingController _password = TextEditingController();
+  TextEditingController _confirmPassword = TextEditingController();
+  // ***************************************************************************
 
 Widget buildFirstNameField() {
   return Column(
@@ -38,11 +45,26 @@ Widget buildFirstNameField() {
               ]
           ),
           height: 60,
-          child: TextField(
+
+          child: TextFormField(
               /*keyboardType: TextInputType.emailAddress,*/
               style: TextStyle(
                 color: Colors.black87,
               ),
+              // ************ Artems code: validator *************************
+              validator: (name) {
+                // trim off whitespace
+                name = name.trim();
+                Pattern pattern = r'^[A-Za-z]+(?:[ _-][A-Za-z]+)*$';
+                RegExp regex = new RegExp(pattern);
+                if (name.isEmpty)
+                  return 'Please enter a first name';
+                else if (!regex.hasMatch(name))
+                  return 'Invalid first name';
+                else
+                  return null;
+              },
+              // *************************************************************
               decoration: InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.only(top: 14),
@@ -53,11 +75,12 @@ Widget buildFirstNameField() {
                   hintText: 'First Name',
                   hintStyle: TextStyle(
                     color: Colors.black38,
-                  )
+                  ),
+  // ************* artems code: errorStyle ***********************
+  errorStyle: TextStyle(color: Colors.redAccent, fontSize: 15))),
+  // *********************************************************************
               )
-          ),
-        )
-      ]
+          ],
   );
 }
 
@@ -93,6 +116,20 @@ Widget buildLastNameField() {
               style: TextStyle(
                 color: Colors.black87,
               ),
+              // ************ Artems code: validator *************************
+              validator: (name) {
+                // trim off whitespace
+                name = name.trim();
+                Pattern pattern = r'^[A-Za-z]+(?:[ _-][A-Za-z]+)*$';
+                RegExp regex = new RegExp(pattern);
+                if (name.isEmpty)
+                  return 'Please enter a last name';
+                else if (!regex.hasMatch(name))
+                  return 'Invalid last name';
+                else
+                  return null;
+              },
+              // *************************************************************
               decoration: InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.only(top: 14),
@@ -103,11 +140,12 @@ Widget buildLastNameField() {
                   hintText: 'Last Name',
                   hintStyle: TextStyle(
                     color: Colors.black38,
-                  )
+                  ),
+  // ************* artems code: errorStyle ***********************
+  errorStyle: TextStyle(color: Colors.redAccent, fontSize: 15))),
+  // *********************************************************************
               )
-          ),
-        )
-      ]
+          ]
   );
 }
 
@@ -143,6 +181,19 @@ Widget buildEmail() {
               style: TextStyle(
                 color: Colors.black87,
               ),
+              // ************ Artems code: validator *************************
+              validator: (email) {
+                Pattern pattern =
+                    r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                RegExp regex = new RegExp(pattern);
+                if (email.isEmpty)
+                  return 'Please enter an email';
+                else if (!regex.hasMatch(email))
+                  return 'Invalid email';
+                else
+                  return null;
+              },
+              // *************************************************************
               decoration: InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.only(top: 14),
@@ -153,7 +204,10 @@ Widget buildEmail() {
                   hintText: 'Email',
                   hintStyle: TextStyle(
                     color: Colors.black38,
-                  )
+                  ),
+  // ************* artems code: errorStyle ***********************
+  errorStyle: TextStyle(color: Colors.redAccent, fontSize: 15),
+  // *************************************************************
               )
           ),
         )
@@ -189,10 +243,23 @@ Widget buildPassword() {
             ),
             height: 60,
             child: TextFormField(
+              // ******** artems code: add contorller *********************
+                controller: _password,
+                // ***********************************************************
                 obscureText: true,
                 style: TextStyle(
                   color: Colors.black87,
                 ),
+                // ************ Artems code: validator *************************
+                validator: (password) {
+                  if (password.isEmpty)
+                    return 'Please enter a password';
+                  else if (password.length < 8)
+                    return 'Password too short';
+                  else
+                    return null;
+                },
+                // *************************************************************
                 decoration: InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.only(top: 14),
@@ -203,7 +270,10 @@ Widget buildPassword() {
                     hintText: 'Password',
                     hintStyle: TextStyle(
                       color: Colors.black38,
-                    )
+                    ),
+  // ************* artems code: errorStyle ***********************
+  errorStyle: TextStyle(color: Colors.redAccent, fontSize: 15),
+  // *********************************************************************
                 )
             )
         )
@@ -239,10 +309,23 @@ Widget buildConfirmPassword() {
             ),
             height: 60,
             child: TextFormField(
+              // ******** artems code: add contorller *********************
+                controller: _confirmPassword,
+                // ***********************************************************
                 obscureText: true,
                 style: TextStyle(
                   color: Colors.black87,
                 ),
+                // ************ Artems code: validator *************************
+                validator: (password) {
+                  if (password.isEmpty)
+                    return 'Please re-enter password';
+                  else if (_password.text != _confirmPassword.text)
+                    return 'Passwords must match';
+                  else
+                    return null;
+                },
+                // *************************************************************
                 decoration: InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.only(top: 14),
@@ -253,7 +336,10 @@ Widget buildConfirmPassword() {
                     hintText: 'Confirm Password',
                     hintStyle: TextStyle(
                       color: Colors.black38,
-                    )
+                    ),
+                  // ************* artems code: errorStyle ***********************
+                  errorStyle: TextStyle(color: Colors.redAccent, fontSize: 15),
+                  // ***********************************************************
                 )
             )
         )
@@ -263,10 +349,21 @@ Widget buildConfirmPassword() {
 
 Widget buildContinueBtn() {
   return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => SignUpContinue()),
-      ),
+    // ***************** Artems code ****************************************
+    // onTap: () => Navigator.push(
+    //       context,
+    //       MaterialPageRoute(builder: (context) => SignUpContinue()),
+    //     ),
+      onTap: () {
+        setState(() {
+          if (_formKey.currentState.validate()) {
+            // if validate = true, take user to next page
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => SignUpContinue()));
+          }
+        });
+      },
+      // *********************************************************************
       child: RichText(
           text: TextSpan(
               children: [
@@ -288,78 +385,81 @@ Widget buildContinueBtn() {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: AnnotatedRegion<SystemUiOverlayStyle>(
-            value: SystemUiOverlayStyle.light,
-            child: GestureDetector(
-                child: Stack(
-                    children: <Widget>[
-                      Container(
-                          height: double.infinity,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Color(0xffFF3232),
-                                    Color(0xccFF3232),
-                                    Color(0xccFF3232),
-                                    Color(0xffFF3232),
-                                  ]
-                              )
-                          ),
-                          child: SingleChildScrollView(
-                              physics: AlwaysScrollableScrollPhysics(),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 25,
-                                  vertical: 25
-                              ),
-                              child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(right: 40),
-                                          child: Text(
-                                              'Sign Up',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 30,
-                                                fontWeight: FontWeight.bold,
-                                              )
+    return Form(
+      key: _formKey,
+      child: Scaffold(
+          body: AnnotatedRegion<SystemUiOverlayStyle>(
+              value: SystemUiOverlayStyle.light,
+              child: GestureDetector(
+                  child: Stack(
+                      children: <Widget>[
+                        Container(
+                            height: double.infinity,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Color(0xffFF3232),
+                                      Color(0xccFF3232),
+                                      Color(0xccFF3232),
+                                      Color(0xffFF3232),
+                                    ]
+                                )
+                            ),
+                            child: SingleChildScrollView(
+                                physics: AlwaysScrollableScrollPhysics(),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 25,
+                                    vertical: 25
+                                ),
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(right: 40),
+                                            child: Text(
+                                                'Sign Up',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 30,
+                                                  fontWeight: FontWeight.bold,
+                                                )
+                                            ),
                                           ),
-                                        ),
-                                        CircleAvatar(
-                                          radius: 50,
-                                          backgroundImage: AssetImage('assets/images/LOGO 4.jpg'),
+                                          CircleAvatar(
+                                            radius: 50,
+                                            backgroundImage: AssetImage('assets/images/LOGO 4.jpg'),
 
-                                        ),
-                                      ],
-                                    ),
+                                          ),
+                                        ],
+                                      ),
 
-                                    SizedBox(height: 10),
-                                    buildFirstNameField(),
-                                    SizedBox(height: 10),
-                                    buildLastNameField(),
-                                    SizedBox(height: 10),
-                                    buildEmail(),
-                                    SizedBox(height: 10),
-                                    buildPassword(),
-                                    SizedBox(height: 10),
-                                    buildConfirmPassword(),
-                                    SizedBox(height: 10),
-                                    buildContinueBtn()
-                                  ]
-                              )
-                          )
-                      )
-                    ]
-                )
-            )
-        )
+                                      SizedBox(height: 10),
+                                      buildFirstNameField(),
+                                      SizedBox(height: 10),
+                                      buildLastNameField(),
+                                      SizedBox(height: 10),
+                                      buildEmail(),
+                                      SizedBox(height: 10),
+                                      buildPassword(),
+                                      SizedBox(height: 10),
+                                      buildConfirmPassword(),
+                                      SizedBox(height: 10),
+                                      buildContinueBtn()
+                                    ]
+                                )
+                            )
+                        )
+                      ]
+                  )
+              )
+          )
+      ),
     );
   }
 }
