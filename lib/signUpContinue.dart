@@ -16,6 +16,11 @@ class _SignUpContinueState extends State<SignUpContinue> {
 
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
 
+  // **************** artems code: fields *****************************************
+  // creating a global key for use for the form
+  var _formKey = GlobalKey<FormState>();
+  // ***************************************************************************
+
   Widget buildAddressField() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,11 +48,21 @@ class _SignUpContinueState extends State<SignUpContinue> {
                 ]
             ),
             height: 60,
-            child: TextField(
+            child: TextFormField(
               /*keyboardType: TextInputType.emailAddress,*/
                 style: TextStyle(
                   color: Colors.black87,
                 ),
+                // ************ Artems code: validator *************************
+                validator: (value) {
+                  // trim off whitespace
+                  value = value.trim();
+                  if (value.isEmpty)
+                    return 'Please enter an address';
+                  else
+                    return null;
+                },
+                // *************************************************************
                 decoration: InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.only(top: 14),
@@ -55,6 +70,9 @@ class _SignUpContinueState extends State<SignUpContinue> {
                         Icons.house,
                         color: Color(0xffFF3232)
                     ),
+                    // ************* artems code: errorStyle ***********************
+                    errorStyle: TextStyle(color: Colors.redAccent, fontSize: 15),
+                    // *************************************************************
                     hintText: 'Address',
                     hintStyle: TextStyle(
                       color: Colors.black38,
@@ -111,11 +129,21 @@ class _SignUpContinueState extends State<SignUpContinue> {
                 ]
             ),
             height: 60,
-            child: TextField(
+            child: TextFormField(
               /*keyboardType: TextInputType.emailAddress,*/
                 style: TextStyle(
                   color: Colors.black87,
                 ),
+                // ************ Artems code: validator *************************
+                validator: (city) {
+                  // trim off whitespace
+                  city = city.trim();
+                  if (city.isEmpty)
+                    return 'Please enter a city';
+                  else
+                    return null;
+                },
+                // *************************************************************
                 decoration: InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.only(top: 14),
@@ -124,6 +152,9 @@ class _SignUpContinueState extends State<SignUpContinue> {
                         color: Color(0xffFF3232)
                     ),
                     hintText: 'City',
+                    // ************* artems code: errorStyle ***********************
+                    errorStyle: TextStyle(color: Colors.redAccent, fontSize: 15),
+                    // *************************************************************
                     hintStyle: TextStyle(
                       color: Colors.black38,
                     )
@@ -161,11 +192,21 @@ class _SignUpContinueState extends State<SignUpContinue> {
                 ]
             ),
             height: 60,
-            child: TextField(
+            child: TextFormField(
               /*keyboardType: TextInputType.emailAddress,*/
                 style: TextStyle(
                   color: Colors.black87,
                 ),
+                // ************ Artems code: validator *************************
+                validator: (value) {
+                  // trim off whitespace
+                  value = value.trim();
+                  if (value.isEmpty)
+                    return 'Please enter a Stare or Province';
+                  else
+                    return null;
+                },
+                // *************************************************************
                 decoration: InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.only(top: 14),
@@ -174,6 +215,10 @@ class _SignUpContinueState extends State<SignUpContinue> {
                         color: Color(0xffFF3232)
                     ),
                     hintText: 'State or Province',
+                    // ************* artems code: errorStyle *******************
+                    errorStyle:
+                    TextStyle(color: Colors.redAccent, fontSize: 15),
+                    // *********************************************************
                     hintStyle: TextStyle(
                       color: Colors.black38,
                     )
@@ -211,11 +256,19 @@ class _SignUpContinueState extends State<SignUpContinue> {
                 ]
             ),
             height: 60,
-            child: TextField(
+            child: TextFormField(
               /*keyboardType: TextInputType.emailAddress,*/
                 style: TextStyle(
                   color: Colors.black87,
                 ),
+                // ************ Artems code: validator *************************
+                validator: (zip) {
+                  if (zip.isEmpty)
+                    return 'Please re-enter password';
+                  else
+                    return null;
+                },
+                // *************************************************************
                 decoration: InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.only(top: 14),
@@ -223,6 +276,10 @@ class _SignUpContinueState extends State<SignUpContinue> {
                         Icons.location_on_sharp,
                         color: Color(0xffFF3232)
                     ),
+                    // ************* artems code: errorStyle ***********************
+                    errorStyle:
+                    TextStyle(color: Colors.redAccent, fontSize: 15),
+                    // ***********************************************************
                     hintText: 'Zip Code',
                     hintStyle: TextStyle(
                       color: Colors.black38,
@@ -236,10 +293,17 @@ class _SignUpContinueState extends State<SignUpContinue> {
 
   Widget buildContinueBtn() {
     return GestureDetector(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => SignUpLast()),
-        ),
+        // ***************** Artems code ****************************************
+        onTap: () {
+          setState(() {
+            if (_fbKey.currentState.validate()) {
+              // if validate = true, take user to next page
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SignUpLast()));
+            }
+          });
+        },
+        // *********************************************************************
         child: RichText(
             text: TextSpan(
                 children: [
