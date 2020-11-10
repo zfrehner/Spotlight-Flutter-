@@ -301,6 +301,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               )
                           ),
+                          Text(
+                            "It's time to be someone at the gym!",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                            )
+                          ),
                           SizedBox(height: 20),
                           buildEmail(),
                           SizedBox(height: 20),

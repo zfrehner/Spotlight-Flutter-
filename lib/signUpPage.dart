@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:spotlight_login/signUpContinue.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:spotlight_login/successPage.dart';
 
 
 class SignUpScreen extends StatefulWidget {
@@ -17,6 +18,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _password = TextEditingController();
   TextEditingController _confirmPassword = TextEditingController();
   // ***************************************************************************
+  List<ListItem> _dropdownItems = [
+    ListItem(1, "Choose..."),
+    ListItem(2, "Male"),
+    ListItem(3, "Female")
+  ];
+
+  List<DropdownMenuItem<ListItem>> _dropdownMenuItems;
+  ListItem _selectedItem;
+
+  void initState() {
+    super.initState();
+    _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
+    _selectedItem = _dropdownMenuItems[0].value;
+  }
 
 Widget buildFirstNameField() {
   return Column(
@@ -215,6 +230,276 @@ Widget buildEmail() {
   );
 }
 
+Widget buildAddressField() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Address',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold
+            ),
+          ),
+          SizedBox(height: 10),
+          Container(
+            alignment: Alignment.centerLeft,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 6,
+                      offset: Offset(0, 2)
+                  ),
+                ]
+            ),
+            height: 60,
+            child: TextFormField(
+              /*keyboardType: TextInputType.emailAddress,*/
+                style: TextStyle(
+                  color: Colors.black87,
+                ),
+                // ************ Artems code: validator *************************
+                validator: (value) {
+                  // trim off whitespace
+                  value = value.trim();
+                  if (value.isEmpty)
+                    return 'Please enter an address';
+                  else
+                    return null;
+                },
+                // *************************************************************
+                decoration: InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.only(top: 14),
+                    prefixIcon: Icon(
+                        Icons.house,
+                        color: Color(0xffFF3232)
+                    ),
+                    // ************* artems code: errorStyle ***********************
+                    errorStyle: TextStyle(color: Colors.redAccent, fontSize: 15),
+                    // *************************************************************
+                    hintText: 'Address',
+                    hintStyle: TextStyle(
+                      color: Colors.black38,
+                    )
+                )
+            ),
+          )
+        ]
+    );
+  }
+
+Widget buildCountryPicker() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Choose Country',
+          style: TextStyle(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 10),
+        FormBuilderCountryPicker(
+          attribute: 'country_picker',
+          initialValue: 'Canada',
+        )
+      ],
+    );
+  }
+
+Widget buildCityField() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'City',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold
+            ),
+          ),
+          SizedBox(height: 10),
+          Container(
+            alignment: Alignment.centerLeft,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 6,
+                      offset: Offset(0, 2)
+                  ),
+                ]
+            ),
+            height: 60,
+            child: TextFormField(
+              /*keyboardType: TextInputType.emailAddress,*/
+                style: TextStyle(
+                  color: Colors.black87,
+                ),
+                // ************ Artems code: validator *************************
+                validator: (city) {
+                  // trim off whitespace
+                  city = city.trim();
+                  if (city.isEmpty)
+                    return 'Please enter a city';
+                  else
+                    return null;
+                },
+                // *************************************************************
+                decoration: InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.only(top: 14),
+                    prefixIcon: Icon(
+                        Icons.location_city,
+                        color: Color(0xffFF3232)
+                    ),
+                    hintText: 'City',
+                    // ************* artems code: errorStyle ***********************
+                    errorStyle: TextStyle(color: Colors.redAccent, fontSize: 15),
+                    // *************************************************************
+                    hintStyle: TextStyle(
+                      color: Colors.black38,
+                    )
+                )
+            ),
+          )
+        ]
+    );
+  }
+
+Widget buildStateField() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'State/Province',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold
+            ),
+          ),
+          SizedBox(height: 10),
+          Container(
+            alignment: Alignment.centerLeft,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 6,
+                      offset: Offset(0, 2)
+                  ),
+                ]
+            ),
+            height: 60,
+            child: TextFormField(
+              /*keyboardType: TextInputType.emailAddress,*/
+                style: TextStyle(
+                  color: Colors.black87,
+                ),
+                // ************ Artems code: validator *************************
+                validator: (value) {
+                  // trim off whitespace
+                  value = value.trim();
+                  if (value.isEmpty)
+                    return 'Please enter a Stare or Province';
+                  else
+                    return null;
+                },
+                // *************************************************************
+                decoration: InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.only(top: 14),
+                    prefixIcon: Icon(
+                        Icons.landscape_sharp,
+                        color: Color(0xffFF3232)
+                    ),
+                    hintText: 'State or Province',
+                    // ************* artems code: errorStyle *******************
+                    errorStyle:
+                    TextStyle(color: Colors.redAccent, fontSize: 15),
+                    // *********************************************************
+                    hintStyle: TextStyle(
+                      color: Colors.black38,
+                    )
+                )
+            ),
+          )
+        ]
+    );
+  }
+
+Widget buildZipField() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Zip Code',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold
+            ),
+          ),
+          SizedBox(height: 10),
+          Container(
+            alignment: Alignment.centerLeft,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 6,
+                      offset: Offset(0, 2)
+                  ),
+                ]
+            ),
+            height: 60,
+            child: TextFormField(
+              /*keyboardType: TextInputType.emailAddress,*/
+                style: TextStyle(
+                  color: Colors.black87,
+                ),
+                // ************ Artems code: validator *************************
+                validator: (zip) {
+                  if (zip.isEmpty)
+                    return 'Please re-enter password';
+                  else
+                    return null;
+                },
+                // *************************************************************
+                decoration: InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.only(top: 14),
+                    prefixIcon: Icon(
+                        Icons.location_on_sharp,
+                        color: Color(0xffFF3232)
+                    ),
+                    // ************* artems code: errorStyle ***********************
+                    errorStyle:
+                    TextStyle(color: Colors.redAccent, fontSize: 15),
+                    // ***********************************************************
+                    hintText: 'Zip Code',
+                    hintStyle: TextStyle(
+                      color: Colors.black38,
+                    )
+                )
+            ),
+          )
+        ]
+    );
+  }
+
 Widget buildPassword() {
   return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -347,6 +632,143 @@ Widget buildConfirmPassword() {
   );
 }
 
+Widget buildGenderChoice() {
+
+    return Row(
+      //crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Gender',
+            style: TextStyle(
+                color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.only(top:5.0, left: 130.0),
+            child: Container(
+              padding: EdgeInsets.only(left: 15.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.0),
+                color: Colors.white,
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<ListItem>(
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold
+                    ),
+                    value: _selectedItem,
+                    items: _dropdownMenuItems,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedItem = value;
+
+                      });
+                    }),
+              ),
+            ),
+          ),
+        ]);
+  }
+
+Widget buildPhoneField() {
+    var _onChanged;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Phone (To receive text updates)',
+          style: TextStyle(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 10),
+        //SizedBox(height: 15),
+        FormBuilderPhoneField(
+          attribute: 'phone_number',
+          initialValue: '+25443534543567',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+
+          ),
+// defaultSelectedCountryIsoCode: 'KE',
+          cursorColor: Colors.white,
+// style: TextStyle(color: Colors.black, fontSize: 18),
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            labelText: 'Phone Number',
+          ),
+          onChanged: _onChanged,
+          priorityListByIsoCode: ['US'],
+          validators: [
+            FormBuilderValidators.required(errorText: 'This field required')
+          ],
+        ),
+      ],
+    );
+  }
+
+Widget buildAgeField() {
+
+    DateTime _dateTime;
+
+    return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Birthday',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Row(
+              children: <Widget>[
+                Text(_dateTime == null ? 'Please Select:' : _dateTime.toString(),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 10.0),
+            child: RaisedButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)
+              ),
+              color: Colors.white,
+              child: Text('Pick a date',
+                style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold
+                ),
+              ),
+              onPressed: () {
+                showDatePicker(context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(1900),
+                    lastDate: DateTime.now()
+                ).then((date) {
+                  setState(() {
+                    _dateTime = date;
+                  });
+                });
+              },
+            ),
+          )]);
+  }
+
 Widget buildContinueBtn() {
   return GestureDetector(
     // ***************** Artems code ****************************************
@@ -359,7 +781,7 @@ Widget buildContinueBtn() {
           if (_formKey.currentState.validate()) {
             // if validate = true, take user to next page
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SignUpContinue()));
+                MaterialPageRoute(builder: (context) => Success()));
           }
         });
       },
@@ -445,6 +867,26 @@ Widget buildContinueBtn() {
                                       buildLastNameField(),
                                       SizedBox(height: 10),
                                       buildEmail(),
+
+                                      SizedBox(height: 10),
+                                      buildCountryPicker(),
+                                      SizedBox(height: 10),
+                                      buildAddressField(),
+                                      SizedBox(height: 10),
+                                      buildCityField(),
+                                      SizedBox(height: 10),
+                                      buildStateField(),
+                                      SizedBox(height: 10),
+                                      buildZipField(),
+
+                                      SizedBox(height: 30),
+                                      buildAgeField(),
+                                      SizedBox(height: 30),
+                                      buildGenderChoice(),
+                                      SizedBox(height: 30),
+                                      buildPhoneField(),
+
+
                                       SizedBox(height: 10),
                                       buildPassword(),
                                       SizedBox(height: 10),
@@ -464,4 +906,24 @@ Widget buildContinueBtn() {
   }
 }
 
+  List<DropdownMenuItem<ListItem>> buildDropDownMenuItems(List listItems) {
+    List<DropdownMenuItem<ListItem>> items = List();
+    for (ListItem listItem in listItems) {
+      items.add(
+        DropdownMenuItem(
+          child: Text(listItem.name),
+          value: listItem,
+        ),
+      );
+    }
+    return items;
+  }
+
+
+class ListItem {
+  int value;
+  String name;
+
+  ListItem(this.value, this.name);
+}
 
