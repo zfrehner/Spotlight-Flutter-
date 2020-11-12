@@ -3,13 +3,18 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 //****************************************
 
 class LandPage extends StatefulWidget {
+
+  static const String id = 'home_screen';
+
   @override
   _LandPageState createState() => _LandPageState();
+
 }
 class _LandPageState extends State<LandPage> {
   // current index variable; value changes based on icon selected: 0 Profile,
@@ -35,8 +40,11 @@ class _LandPageState extends State<LandPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: CircleAvatar(
-            backgroundImage: AssetImage('assets/images/LOGO 4.jpg'),
+          icon: Hero(
+            tag: 'logo',
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/LOGO 4.jpg'),
+            ),
           ),
         ),
         centerTitle: true,

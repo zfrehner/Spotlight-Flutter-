@@ -1,43 +1,19 @@
-//import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'loginPage.dart';
 
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 
-class Success extends StatefulWidget {
 
-  static const String id = "success_screen";
+class AlreadyCreated extends StatefulWidget {
 
-  @override
-  _SuccessState createState() => _SuccessState();
-
-  final _auth = FirebaseAuth.instance;
-  User loggedInUser;
+  static const String id = "user_already_been_created_screen";
 
   @override
-  void initState() {
-    getCurrentUser();
-  }
-
-  void getCurrentUser() async {
-    try{
-    final user = _auth.currentUser;
-
-    if(user != null) {
-      loggedInUser = user;
-      print(loggedInUser.email);
-    } }
-    catch(e) {
-      print(e);
-    }
-  }
+  _AlreadyCreatedState createState() => _AlreadyCreatedState();
 }
-class _SuccessState extends State<Success> {
+class _AlreadyCreatedState extends State<AlreadyCreated> {
 
   Widget buildReturnBtn() {
     return GestureDetector(
@@ -67,13 +43,13 @@ class _SuccessState extends State<Success> {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(top: 50.0, bottom: 50.0),
-          child: Text('Thank you for signing up with SPOTLIGHT!',
+          child: Text('The email you entered has already been used to create an account.',
               textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold
-            )
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold
+              )
           ),
         )
       ],

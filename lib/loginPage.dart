@@ -2,16 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:spotlight_login/signUpPage.dart';
 import 'package:spotlight_login/homePage.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'successPage.dart';
 
 class LoginScreen extends StatefulWidget {
 
+  static const String id = 'login_screen';
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
+
 }
 
 
 
 class _LoginScreenState extends State<LoginScreen> {
+
+  final _auth = FirebaseAuth.instance;
+  String email;
+  String password;
 
   bool isChecked = false;
 
@@ -48,6 +58,9 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               height: 60,
               child: TextFormField(
+                onChanged: (value){
+                  email = value;
+                },
                   keyboardType: TextInputType.emailAddress,
                   style: TextStyle(
                     color: Colors.black87,
@@ -109,6 +122,9 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               height: 60,
               child: TextFormField(
+                onChanged: (value){
+                  password = value;
+                },
                   obscureText: true,
                   style: TextStyle(
                     color: Colors.black87,
@@ -194,16 +210,24 @@ class _LoginScreenState extends State<LoginScreen> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5,
-          onPressed: () {
-            //=> print('Login was pressed'),
-            setState(() {
+          onPressed: () async {
+          try {
+            final user = await _auth.signInWithEmailAndPassword(
+                email: email, password: password);
+            if (user != null) {
+              Navigator.pushNamed(context, LandPage.id);
+            }
+          }
+          catch(e) {
+            print(e);
+          }
+            /*setState(() {
               if (_formKey.currentState.validate()) {
                 // if validate = true, take user to home screen
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LandPage()));
+                Navigator.pushNamed(context, Success.id);
               }
-            });
+
+            })*/;
           },
         padding: EdgeInsets.all(15),
         shape: RoundedRectangleBorder(
@@ -224,10 +248,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget buildSignUpBtn() {
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => SignUpScreen()),
-      ),
+      onTap: () => Navigator.pushNamed(context, SignUpScreen.id),
       child: RichText(
         text: TextSpan(
           children: [
@@ -288,13 +309,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          CircleAvatar(
-                            radius: 75,
-                            backgroundImage: AssetImage('assets/images/LOGO 4.jpg'),
+                          Hero(
+                            tag: 'logo',
+                            child: CircleAvatar(
+                              radius: 75,
+                              backgroundImage: AssetImage('assets/images/LOGO 4.jpg'),
+                            ),
                           ),
-                          Text(
-                              'SPOTLIGHT',
-                              style: TextStyle(
+                          TypewriterAnimatedTextKit(
+                              text: ['SPOTLIGHT'],
+                              textStyle: TextStyle(
                                 color: Colors.white,
                                 fontSize: 40,
                                 fontWeight: FontWeight.bold,
