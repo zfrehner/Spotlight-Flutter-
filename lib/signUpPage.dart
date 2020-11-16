@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:spotlight_login/successPage.dart';
 import 'package:intl/intl.dart';
 import 'userAlreadyBeenCreatedPage.dart';
@@ -20,8 +21,9 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
 
-  //creating an instance of a user - next step on line 851
+  //creating an instance of a user -
   final _auth = FirebaseAuth.instance;
+  final _firestore = FirebaseFirestore.instance;
 
   // **************** artems code: fields *****************************************
   // creating a global key for use for the form
@@ -53,10 +55,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   //variable for phone number
   var phoneNumber;
   DateTime dateTime;
-
-
-
-
 
 
   void initState() {
@@ -668,7 +666,7 @@ Widget buildPhoneNumber() {
         //SizedBox(height: 15),
         FormBuilderPhoneField(
           attribute: 'phone_number',
-          initialValue: '+25443534543567',
+          initialValue: ' ',
           style: TextStyle(
             color: Colors.white,
             fontSize: 16,
@@ -849,6 +847,20 @@ Widget buildContBtn() {
           print(_gender);//getting instance of ListItem
           print(phoneNumber);//getting null
           print(password);
+
+          _firestore.collection('SpotlightUsers').add({
+            'firstName' : firstName,
+            'lastName' : lastName,
+            'email': email,
+            'country' : country,
+            'address' : address,
+            'city' : city,
+            'state' : state,
+            'zipCode' : zipCode,
+            'birthday' : dateTime,
+            //'gender' : _gender,
+            'phoneNumber' : phoneNumber
+          });
 
           //registering the user with the form fields
           //returns a "Future"

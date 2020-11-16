@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 //****************************************
@@ -16,10 +16,43 @@ class LandPage extends StatefulWidget {
   _LandPageState createState() => _LandPageState();
 
 }
+
 class _LandPageState extends State<LandPage> {
+  final _auth = FirebaseAuth.instance;
+  var firebaseUser =  FirebaseAuth.instance.currentUser;
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  User loggedInUser;
+
+  @override
+  void initState() {
+    getCurrentUser();
+  }
+
+   getUserInfo() async{
+    return await _firestore.collection('SpotlightUsers').doc(firebaseUser.uid).get();
+      //print(userInfo);
+
+    //for(var info in userInfo.docs) {
+    //  print(info.data());
+    //}
+
+  }
+
+  void getCurrentUser() async {
+    try{
+      final user = _auth.currentUser;
+
+      if(user != null) {
+        loggedInUser = user;
+        print(loggedInUser.email);
+      } }
+    catch(e) {
+      print(e);
+    }
+  }
   // current index variable; value changes based on icon selected: 0 Profile,
   // 1 Messages, 2 Location, 3 Workout.
-  int _currentIndex = 0;
+  int _currentIndex = 1;
   // list of sections
   dynamic tabs = [
     Center(
@@ -32,7 +65,7 @@ class _LandPageState extends State<LandPage> {
       child: Text('Location'),
     ),
     Center(
-      child: Text('Workout'),
+      child: Text('Calendar'),
     ),
   ];
   @override
@@ -40,6 +73,9 @@ class _LandPageState extends State<LandPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
+          onPressed: (){
+            //does nothing for now
+          },
           icon: Hero(
             tag: 'logo',
             child: CircleAvatar(
@@ -57,7 +93,10 @@ class _LandPageState extends State<LandPage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.settings,),
-            onPressed: null,
+            onPressed: () {
+              _auth.signOut();
+              Navigator.pop(context);
+            },
           ),
         ],
         backgroundColor: Colors.red,
@@ -66,7 +105,7 @@ class _LandPageState extends State<LandPage> {
         children: <Widget>[
           Container(
           child: InkWell(
-          child: Text("See Who's at the Gym!",
+          child: Text("It's time to be someone at the Gym!",
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16
@@ -103,13 +142,17 @@ class _LandPageState extends State<LandPage> {
             label: 'Location',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.scatter_plot),
-            label: 'Workout',
+            icon: Icon(Icons.calendar_today_rounded ),
+            label: 'Calendar',
           ),
         ],
         onTap: (index){
           setState(() {
             _currentIndex = index;
+            if(_currentIndex == 0) {
+              getUserInfo();
+            }
+
           });
         },
       ),

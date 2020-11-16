@@ -5,6 +5,7 @@ import 'package:spotlight_login/homePage.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'successPage.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class LoginScreen extends StatefulWidget {
 
@@ -15,11 +16,10 @@ class LoginScreen extends StatefulWidget {
 
 }
 
-
-
 class _LoginScreenState extends State<LoginScreen> {
 
   final _auth = FirebaseAuth.instance;
+  bool showSpinner = false;
   String email;
   String password;
 
@@ -211,12 +211,18 @@ class _LoginScreenState extends State<LoginScreen> {
       child: RaisedButton(
         elevation: 5,
           onPressed: () async {
+          setState(() {
+            showSpinner = true;
+          });
           try {
             final user = await _auth.signInWithEmailAndPassword(
                 email: email, password: password);
             if (user != null) {
               Navigator.pushNamed(context, LandPage.id);
             }
+            setState(() {
+              showSpinner = false;
+            });
           }
           catch(e) {
             print(e);
@@ -277,77 +283,81 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: AnnotatedRegion<SystemUiOverlayStyle>(
-            value: SystemUiOverlayStyle.light,
-            child: GestureDetector(
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    height: double.infinity,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Color(0xffFF3232),
-                          Color(0xccFF3232),
-                          Color(0xccFF3232),
-                          Color(0xffFF3232),
-                        ]
-                      )
-                    ),
-                    child: SingleChildScrollView(
-                      physics: AlwaysScrollableScrollPhysics(),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 25,
-                        vertical: 25
+      body: ModalProgressHUD(
+        color: Colors.white,
+        inAsyncCall: showSpinner,
+        child: SafeArea(
+          child: Form(
+            key: _formKey,
+            child: AnnotatedRegion<SystemUiOverlayStyle>(
+              value: SystemUiOverlayStyle.light,
+              child: GestureDetector(
+                child: Stack(
+                  children: <Widget>[
+                    Container(
+                      height: double.infinity,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Color(0xffFF3232),
+                            Color(0xccFF3232),
+                            Color(0xccFF3232),
+                            Color(0xffFF3232),
+                          ]
+                        )
                       ),
-                        child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Hero(
-                            tag: 'logo',
-                            child: CircleAvatar(
-                              radius: 75,
-                              backgroundImage: AssetImage('assets/images/LOGO 4.jpg'),
+                      child: SingleChildScrollView(
+                        physics: AlwaysScrollableScrollPhysics(),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 25,
+                          vertical: 25
+                        ),
+                          child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Hero(
+                              tag: 'logo',
+                              child: CircleAvatar(
+                                radius: 75,
+                                backgroundImage: AssetImage('assets/images/LOGO 4.jpg'),
+                              ),
                             ),
-                          ),
-                          TypewriterAnimatedTextKit(
-                              text: ['SPOTLIGHT'],
-                              textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold,
+                            TypewriterAnimatedTextKit(
+                                text: ['SPOTLIGHT'],
+                                textStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.bold,
 
+                                )
+                            ),
+                            Text(
+                              "It's time to be someone at the gym!",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold
                               )
-                          ),
-                          Text(
-                            "It's time to be someone at the gym!",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold
-                            )
-                          ),
-                          SizedBox(height: 20),
-                          buildEmail(),
-                          SizedBox(height: 20),
-                          buildPassword(),
-                          buildForgotPassBtn(),
-                          buildRememberMeBox(),
-                          buildLoginBtn(),
-                          buildSignUpBtn()
-                        ]
+                            ),
+                            SizedBox(height: 20),
+                            buildEmail(),
+                            SizedBox(height: 20),
+                            buildPassword(),
+                            buildForgotPassBtn(),
+                            buildRememberMeBox(),
+                            buildLoginBtn(),
+                            buildSignUpBtn()
+                          ]
+                      )
+                      )
                     )
-                    )
-                  )
-                ]
+                  ]
+                )
               )
-            )
+            ),
           ),
         ),
       )
