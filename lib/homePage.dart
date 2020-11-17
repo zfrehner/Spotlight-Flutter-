@@ -92,7 +92,7 @@ class _LandPageState extends State<LandPage> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.settings,),
+            icon: Icon(Icons.logout),
             onPressed: () {
               _auth.signOut();
               Navigator.pop(context);

@@ -4,7 +4,6 @@ import 'package:spotlight_login/signUpPage.dart';
 import 'package:spotlight_login/homePage.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'successPage.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -233,7 +232,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Navigator.pushNamed(context, Success.id);
               }
 
-            })*/;
+            });*/
           },
         padding: EdgeInsets.all(15),
         shape: RoundedRectangleBorder(

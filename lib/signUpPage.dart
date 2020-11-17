@@ -52,6 +52,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String zipCode;
   String password;
   String email;
+  String gender;
   //variable for phone number
   var phoneNumber;
   DateTime dateTime;
@@ -281,7 +282,7 @@ Widget buildCountryPicker() {
         SizedBox(height: 10),
         FormBuilderCountryPicker(
           onChanged: (value){
-            country = value;
+            country = value.toString();
           },
           attribute: 'country_picker',
           initialValue: 'Canada',
@@ -643,8 +644,7 @@ Widget buildGenderChoice() {
                     items: _dropdownMenuItems,
                     onChanged: (value) {
                       setState(() {
-                        _gender = value;
-
+                        gender = value.name;
                       });
                     }),
               ),
@@ -844,44 +844,44 @@ Widget buildContBtn() {
           print(state);
           print(zipCode);
           print(dateTime);
-          print(_gender);//getting instance of ListItem
+          print(gender);//getting instance of ListItem
           print(phoneNumber);//getting null
           print(password);
 
-          _firestore.collection('SpotlightUsers').add({
-            'firstName' : firstName,
-            'lastName' : lastName,
-            'email': email,
-            'country' : country,
-            'address' : address,
-            'city' : city,
-            'state' : state,
-            'zipCode' : zipCode,
-            'birthday' : dateTime,
-            //'gender' : _gender,
-            'phoneNumber' : phoneNumber
-          });
 
-          //registering the user with the form fields
-          //returns a "Future"
-          //capture the new user
-          //async and await mean the user is authenticated before we go on
-          try {
-            final newUser = await _auth.createUserWithEmailAndPassword(
-                email: email, password: password);
-
-            if(newUser != null) {
-              Navigator.pushNamed(context, Success.id);
-            }
-          }
-          catch(e) {
-            print(e);
-          }
-
-          setState(() {
+          setState(() async{
             if (_formKey.currentState.validate()) {
+
+              //registering the user with the form fields
+              //returns a "Future"
+              //capture the new user
+              //async and await mean the user is authenticated before we go on
+              try {
+                final newUser = await _auth.createUserWithEmailAndPassword(
+                    email: email, password: password);
+
+                if(newUser != null) {
+                  Navigator.pushNamed(context, Success.id);
+                }
+              }
+              catch(e) {
+                print(e);
+              }
+              _firestore.collection('SpotlightUsers').add({
+                'firstName' : firstName,
+                'lastName' : lastName,
+                'email': email,
+                'country' : country,
+                'address' : address,
+                'city' : city,
+                'state' : state,
+                'zipCode' : zipCode,
+                'birthday' : dateTime,
+                'gender' : gender,
+                'phoneNumber' : phoneNumber
+              });
               // if validate = true, take user to next page
-              Navigator.pushNamed(context, Success.id);
+              //Navigator.pushNamed(context, Success.id);
             }
           });
         },
