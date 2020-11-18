@@ -1,10 +1,14 @@
 // ************** imports ****************
 import 'dart:ui';
-
+import 'home/profile.dart';
+import 'home/messenger.dart';
+import 'home/gyms.dart';
+import 'home/calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:spotlight_login/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 //****************************************
 
@@ -30,21 +34,20 @@ class _LandPageState extends State<LandPage> {
     getCurrentUser();
   }
 
-   /*getGymInfo() async{
+  /*getGymInfo() async{
     final gyms = await _firestore.collection("Gyms").get();
       //print(userInfo);
-
     for(var info in gyms.docs) {
       print(info.data());
     }
   }*/
 
   void gymStream() async {
-   await for(var snapshot in _firestore.collection("Gyms").snapshots()) {
-     for(var info in snapshot.docs) {
-       print(info.data());
-     }
-   }
+    await for(var snapshot in _firestore.collection("Gyms").snapshots()) {
+      for(var info in snapshot.docs) {
+        print(info.data());
+      }
+    }
   }
 
 
@@ -61,22 +64,26 @@ class _LandPageState extends State<LandPage> {
     }
   }
   // current index variable; value changes based on icon selected: 0 Profile,
-  // 1 Messages, 2 Location, 3 Workout.
-  int _currentIndex = 1;
+  // 1 profile, 2 messages, 3 gyms, 4 calendar.
+  int _currentIndex = 0;
   // list of sections
-  dynamic tabs = [
-    Center(
+  final List<Widget> tabs = [
+    /*Center(
       child: Text('Profile'),
     ),
     Center(
       child: Text('Messages'),
     ),
     Column(
-      children: <Widget>[ Text("Gyms"),
-    ]),
+        children: <Widget>[ Text("Gyms"),
+        ]),
     Center(
       child: Text('Calendar'),
-    ),
+    ),*/
+    Profile(),
+    Messenger(),
+    Gyms(),
+    Calendar(),
   ];
 
 
@@ -111,9 +118,8 @@ class _LandPageState extends State<LandPage> {
             },
           ),
         ],
-        backgroundColor: Colors.red,
-      ),
-      body: Column(
+      ),//***********************************************************
+      body: /*Column(
         children: <Widget>[
           Container(
               child: Text(
@@ -121,28 +127,26 @@ class _LandPageState extends State<LandPage> {
               )
           ),
           Container(
-          child: InkWell(
-          child: Text("It's time to be someone at the Gym!",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16
-          )),
-          onTap: () => launch('https://nullpointerexception.greenriverdev.com/Spotlight/index.php')
-    ),
-    ),
+            child: InkWell(
+                child: Text("It's time to be someone at the Gym!",
+                    style: kLoginTextStyle,
+                ),
+                onTap: () => launch('https://nullpointerexception.greenriverdev.com/Spotlight/index.php')
+            ),
+          ),
           Image(
             image: AssetImage('assets/images/gym5.jpg'),
           ),
-            tabs[_currentIndex]
+          tabs[_currentIndex]
         ],
-      ),
+      ),*/
+      tabs[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         iconSize: 30.0,
         unselectedFontSize: 14.0,
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.white,
         currentIndex: _currentIndex,
-        backgroundColor: Colors.red,
         type: BottomNavigationBarType.fixed,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -166,12 +170,12 @@ class _LandPageState extends State<LandPage> {
         onTap: (index){
           setState(() {
             _currentIndex = index;
-            if(_currentIndex == 0) {
+           /* if(_currentIndex == 0) {
               //getUserInfo();
             }
             if(_currentIndex == 2) {
               gymStream();
-            }
+            }*/
           });
         },
       ),
@@ -209,7 +213,6 @@ dynamic tabs = [
                 }
                 return null;
               }
-
           ),
         ),
       ]),

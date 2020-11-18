@@ -6,13 +6,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:spotlight_login/successPage.dart';
 import 'package:intl/intl.dart';
 import 'userAlreadyBeenCreatedPage.dart';
-
-
+import 'constants.dart';
 
 class SignUpScreen extends StatefulWidget {
 
   static const String id = 'signup_screen';
-
 
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
@@ -57,50 +55,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
   var phoneNumber;
   DateTime dateTime;
 
-
   void initState() {
     super.initState();
     _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
     _gender = _dropdownMenuItems[0].value;
   }
 
-Widget buildFirstNameField() {
-  return Column(
+//**************************** First Name Input Field **************************
+  Widget buildFirstNameField() {
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
           'First Name',
-          style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold
-          ),
+          style: kLoginTextStyle,
         ),
         SizedBox(height: 10),
         Container(
           alignment: Alignment.centerLeft,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 6,
-                    offset: Offset(0,2)
-                ),
-              ]
-          ),
+          decoration: kSignUpBoxDecoration,
           height: 60,
-
           child: TextFormField(
-            onChanged: (value){
-              firstName = value;
-            },
+              onChanged: (value){
+                firstName = value;
+              },
               /*keyboardType: TextInputType.emailAddress,*/
-              style: TextStyle(
-                color: Colors.black87,
-              ),
-              // ************ Artems code: validator *************************
+              // ************ Artems code: validator ***************************
               validator: (name) {
                 // trim off whitespace
                 name = name.trim();
@@ -113,7 +93,7 @@ Widget buildFirstNameField() {
                 else
                   return null;
               },
-              // *************************************************************
+              // ***************************************************************
               decoration: InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.only(top: 14),
@@ -125,131 +105,101 @@ Widget buildFirstNameField() {
                   hintStyle: TextStyle(
                     color: Colors.black38,
                   ),
-  // ************* artems code: errorStyle ***********************
-  errorStyle: TextStyle(color: Colors.redAccent, fontSize: 15))),
-  // *********************************************************************
-              )
-          ],
-  );
-}
-
-Widget buildLastNameField() {
-  return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Last Name',
-          style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold
-          ),
-        ),
-        SizedBox(height: 10),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 6,
-                    offset: Offset(0,2)
-                ),
-              ]
-          ),
-          height: 60,
-          child: TextFormField(
-            onChanged: (value){
-              lastName = value;
-            },
-              /*keyboardType: TextInputType.emailAddress,*/
-              style: TextStyle(
-                color: Colors.black87,
+                  // ************* artems code: errorStyle *********************
+                  errorStyle: kErrorTextStyle,
               ),
-              // ************ Artems code: validator *************************
-              validator: (name) {
-                // trim off whitespace
-                name = name.trim();
-                Pattern pattern = r'^[A-Za-z]+(?:[ _-][A-Za-z]+)*$';
-                RegExp regex = new RegExp(pattern);
-                if (name.isEmpty)
-                  return 'Please enter a last name';
-                else if (!regex.hasMatch(name))
-                  return 'Invalid last name';
-                else
-                  return null;
-              },
-              // *************************************************************
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top: 14),
-                  prefixIcon: Icon(
-                      Icons.person,
-                      color: Color(0xffFF3232)
-                  ),
-                  hintText: 'Last Name',
-                  hintStyle: TextStyle(
-                    color: Colors.black38,
-                  ),
-  // ************* artems code: errorStyle ***********************
-  errorStyle: TextStyle(color: Colors.redAccent, fontSize: 15))),
-  // *********************************************************************
-              )
-          ]
-  );
-}
-
-Widget buildEmail() {
-  return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Email',
-          style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold
           ),
+          // *******************************************************************
         ),
-        SizedBox(height: 10),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 6,
-                    offset: Offset(0,2)
-                ),
-              ]
+      ],
+    );
+  }
+
+//**************************** Last Name Input Field ***************************
+  Widget buildLastNameField() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Last Name',
+            style: kLoginTextStyle,
           ),
-          height: 60,
-          child: TextFormField(
-            onChanged: (value){
-              email = value;
-            },
-              keyboardType: TextInputType.emailAddress,
-              style: TextStyle(
-                color: Colors.black87,
-              ),
-              // ************ Artems code: validator *************************
-              validator: (email) {
-                Pattern pattern =
+          SizedBox(height: 10),
+          Container(
+            alignment: Alignment.centerLeft,
+            decoration: kSignUpBoxDecoration,
+            height: 60,
+            child: TextFormField(
+                onChanged: (value){
+                  lastName = value;
+                },
+                /*keyboardType: TextInputType.emailAddress,*/
+                // ************ Artems code: validator *************************
+                validator: (name) {
+                  // trim off whitespace
+                  name = name.trim();
+                  Pattern pattern = r'^[A-Za-z]+(?:[ _-][A-Za-z]+)*$';
+                  RegExp regex = new RegExp(pattern);
+                  if (name.isEmpty)
+                    return 'Please enter a last name';
+                  else if (!regex.hasMatch(name))
+                    return 'Invalid last name';
+                  else
+                    return null;
+                },
+                // *************************************************************
+                decoration: InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.only(top: 14),
+                    prefixIcon: Icon(
+                        Icons.person,
+                        color: Color(0xffFF3232)
+                    ),
+                    hintText: 'Last Name',
+                    hintStyle: TextStyle(
+                      color: Colors.black38,
+                    ),
+            // ************* artems code: errorStyle ***************************
+                    errorStyle: kErrorTextStyle),
+            ),
+            // *****************************************************************
+          ),
+        ],
+    );
+  }
+//**************************** Email Input Field *******************************
+  Widget buildEmail() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Email',
+            style: kLoginTextStyle,
+          ),
+          SizedBox(height: 10),
+          Container(
+            alignment: Alignment.centerLeft,
+            decoration: kSignUpBoxDecoration,
+            height: 60,
+            child: TextFormField(
+                onChanged: (value){
+                  email = value;
+                },
+                keyboardType: TextInputType.emailAddress,
+                // ************ Artems code: validator *************************
+                validator: (email) {
+                  Pattern pattern =
                     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                RegExp regex = new RegExp(pattern);
-                if (email.isEmpty)
-                  return 'Please enter an email';
-                else if (!regex.hasMatch(email))
-                  return 'Invalid email';
-                else
-                  return null;
-              },
-              // *************************************************************
-              decoration: InputDecoration(
+                  RegExp regex = new RegExp(pattern);
+                  if (email.isEmpty)
+                    return 'Please enter an email';
+                  else if (!regex.hasMatch(email))
+                    return 'Invalid email';
+                  else
+                    return null;
+                },
+                // *************************************************************
+                decoration: InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.only(top: 14),
                   prefixIcon: Icon(
@@ -260,24 +210,24 @@ Widget buildEmail() {
                   hintStyle: TextStyle(
                     color: Colors.black38,
                   ),
-  // ************* artems code: errorStyle ***********************
-  errorStyle: TextStyle(color: Colors.redAccent, fontSize: 15),
-  // *************************************************************
-              )
+                  // ************* artems code: errorStyle *********************
+                  errorStyle: kErrorTextStyle,
+                  // ***********************************************************
+                ),
+            ),
           ),
-        )
-      ]
-  );
-}
+        ],
+    );
+  }
 
-Widget buildCountryPicker() {
+//**************************** Country Input Field *****************************
+  Widget buildCountryPicker() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
           'Choose Country',
-          style: TextStyle(
-              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+          style: kLoginTextStyle,
         ),
         SizedBox(height: 10),
         FormBuilderCountryPicker(
@@ -286,46 +236,30 @@ Widget buildCountryPicker() {
           },
           attribute: 'country_picker',
           initialValue: 'Canada',
-        )
+        ),
       ],
     );
   }
 
-Widget buildAddressField() {
+//**************************** Address Input Field *****************************
+  Widget buildAddressField() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             'Address',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold
-            ),
+            style: kLoginTextStyle,
           ),
           SizedBox(height: 10),
           Container(
             alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 6,
-                      offset: Offset(0, 2)
-                  ),
-                ]
-            ),
+            decoration: kSignUpBoxDecoration,
             height: 60,
             child: TextFormField(
-              onChanged: (value){
-                address = value;
-              },
-              /*keyboardType: TextInputType.emailAddress,*/
-                style: TextStyle(
-                  color: Colors.black87,
-                ),
+                onChanged: (value){
+                  address = value;
+                },
+                /*keyboardType: TextInputType.emailAddress,*/
                 // ************ Artems code: validator *************************
                 validator: (value) {
                   // trim off whitespace
@@ -343,55 +277,39 @@ Widget buildAddressField() {
                         Icons.house,
                         color: Color(0xffFF3232)
                     ),
-                    // ************* artems code: errorStyle ***********************
-                    errorStyle: TextStyle(color: Colors.redAccent, fontSize: 15),
-                    // *************************************************************
+                    // ************* artems code: errorStyle *******************
+                    errorStyle: kErrorTextStyle,
+                    // *********************************************************
                     hintText: 'Address',
                     hintStyle: TextStyle(
                       color: Colors.black38,
-                    )
-                )
+                    ),
+                ),
             ),
-          )
+          ),
         ]
     );
   }
 
-Widget buildCityField() {
+//**************************** City Input Field ********************************
+  Widget buildCityField() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             'City',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold
-            ),
+            style: kLoginTextStyle,
           ),
           SizedBox(height: 10),
           Container(
             alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 6,
-                      offset: Offset(0, 2)
-                  ),
-                ]
-            ),
+            decoration: kSignUpBoxDecoration,
             height: 60,
             child: TextFormField(
-              onChanged: (value){
-                city = value;
-              },
-              /*keyboardType: TextInputType.emailAddress,*/
-                style: TextStyle(
-                  color: Colors.black87,
-                ),
+                onChanged: (value){
+                  city = value;
+                },
+                /*keyboardType: TextInputType.emailAddress,*/
                 // ************ Artems code: validator *************************
                 validator: (city) {
                   // trim off whitespace
@@ -410,54 +328,38 @@ Widget buildCityField() {
                         color: Color(0xffFF3232)
                     ),
                     hintText: 'City',
-                    // ************* artems code: errorStyle ***********************
-                    errorStyle: TextStyle(color: Colors.redAccent, fontSize: 15),
-                    // *************************************************************
+                    // ************* artems code: errorStyle *******************
+                    errorStyle: kErrorTextStyle,
+                    // *********************************************************
                     hintStyle: TextStyle(
                       color: Colors.black38,
-                    )
-                )
+                    ),
+                ),
             ),
-          )
-        ]
+          ),
+        ],
     );
   }
 
-Widget buildStateField() {
+//**************************** State Input Field *******************************
+  Widget buildStateField() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             'State/Province',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold
-            ),
+            style: kLoginTextStyle,
           ),
           SizedBox(height: 10),
           Container(
             alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 6,
-                      offset: Offset(0, 2)
-                  ),
-                ]
-            ),
+            decoration: kSignUpBoxDecoration,
             height: 60,
             child: TextFormField(
-              onChanged: (value){
-                state = value;
-              },
-              /*keyboardType: TextInputType.emailAddress,*/
-                style: TextStyle(
-                  color: Colors.black87,
-                ),
+                onChanged: (value){
+                  state = value;
+                },
+                /*keyboardType: TextInputType.emailAddress,*/
                 // ************ Artems code: validator *************************
                 validator: (value) {
                   // trim off whitespace
@@ -478,53 +380,37 @@ Widget buildStateField() {
                     hintText: 'State or Province',
                     // ************* artems code: errorStyle *******************
                     errorStyle:
-                    TextStyle(color: Colors.redAccent, fontSize: 15),
+                    kErrorTextStyle,
                     // *********************************************************
                     hintStyle: TextStyle(
                       color: Colors.black38,
-                    )
-                )
+                    ),
+                ),
             ),
-          )
-        ]
+          ),
+        ],
     );
   }
 
-Widget buildZipField() {
+//**************************** Zip Input Field *********************************
+  Widget buildZipField() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             'Zip Code',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold
-            ),
+            style: kLoginTextStyle,
           ),
           SizedBox(height: 10),
           Container(
             alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 6,
-                      offset: Offset(0, 2)
-                  ),
-                ]
-            ),
+            decoration: kSignUpBoxDecoration,
             height: 60,
             child: TextFormField(
-              onChanged: (value){
-                zipCode = value;
-              },
-              /*keyboardType: TextInputType.emailAddress,*/
-                style: TextStyle(
-                  color: Colors.black87,
-                ),
+                onChanged: (value){
+                  zipCode = value;
+                },
+                /*keyboardType: TextInputType.emailAddress,*/
                 // ************ Artems code: validator *************************
                 validator: (zip) {
                   if (zip.isEmpty)
@@ -540,33 +426,28 @@ Widget buildZipField() {
                         Icons.location_on_sharp,
                         color: Color(0xffFF3232)
                     ),
-                    // ************* artems code: errorStyle ***********************
-                    errorStyle:
-                    TextStyle(color: Colors.redAccent, fontSize: 15),
-                    // ***********************************************************
+                    // ************* artems code: errorStyle *******************
+                    errorStyle: kErrorTextStyle,
+                    // *********************************************************
                     hintText: 'Zip Code',
                     hintStyle: TextStyle(
                       color: Colors.black38,
-                    )
-                )
+                    ),
+                ),
             ),
-          )
+          ),
         ]
     );
   }
 
-Widget buildAgeField() {
-
+//**************************** First Name Input Field **************************
+  Widget buildAgeField() {
     return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             'Birthday',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold
-            ),
+            style: kLoginTextStyle,
           ),
 
           Padding(
@@ -574,12 +455,8 @@ Widget buildAgeField() {
             child: Row(
               children: <Widget>[
                 Text(dateTime == null ? 'Please Select:' :
-                    DateFormat('MMMM-dd-yyyy').format(dateTime),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                DateFormat('MMMM-dd-yyyy').format(dateTime),
+                  style: kLoginTextStyle,
                 ),
               ],
             ),
@@ -611,18 +488,20 @@ Widget buildAgeField() {
                 });
               },
             ),
-          )]);
+          ),
+        ],
+    );
   }
 
-Widget buildGenderChoice() {
+//**************************** Gender Input Field ******************************
+  Widget buildGenderChoice() {
 
     return Row(
       //crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             'Gender',
-            style: TextStyle(
-                color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+            style: kLoginTextStyle,
           ),
           SizedBox(height: 10),
           Padding(
@@ -653,25 +532,21 @@ Widget buildGenderChoice() {
         ]);
   }
 
-Widget buildPhoneNumber() {
+//**************************** Phone Number Input Field ************************
+  Widget buildPhoneNumber() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
           'Phone (To receive text updates)',
-          style: TextStyle(
-              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+          style: kLoginTextStyle,
         ),
         SizedBox(height: 10),
         //SizedBox(height: 15),
         FormBuilderPhoneField(
           attribute: 'phone_number',
           initialValue: ' ',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-
-          ),
+          style: kLoginTextStyle,
 // defaultSelectedCountryIsoCode: 'KE',
           cursorColor: Colors.white,
 // style: TextStyle(color: Colors.black, fontSize: 18),
@@ -689,34 +564,21 @@ Widget buildPhoneNumber() {
         ),
       ],
     );
-}
+  }
 
-Widget buildPassword() {
+//**************************** Password Input Field ****************************
+  Widget buildPassword() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             'Password',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold
-            ),
+            style: kLoginTextStyle,
           ),
           SizedBox(height: 10),
           Container(
               alignment: Alignment.centerLeft,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 6,
-                        offset: Offset(0,2)
-                    ),
-                  ]
-              ),
+              decoration: kSignUpBoxDecoration,
               height: 60,
               child: TextFormField(
                   onChanged: (value){
@@ -726,10 +588,7 @@ Widget buildPassword() {
                   controller: _password,
                   // ***********************************************************
                   obscureText: true,
-                  style: TextStyle(
-                    color: Colors.black87,
-                  ),
-                  // ************ Artems code: validator *************************
+                  // ************ Artems code: validator ***********************
                   validator: (password) {
                     if (password.isEmpty)
                       return 'Please enter a password';
@@ -738,7 +597,7 @@ Widget buildPassword() {
                     else
                       return null;
                   },
-                  // *************************************************************
+                  // ***********************************************************
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.only(top: 14),
@@ -750,51 +609,35 @@ Widget buildPassword() {
                     hintStyle: TextStyle(
                       color: Colors.black38,
                     ),
-                    // ************* artems code: errorStyle ***********************
-                    errorStyle: TextStyle(color: Colors.redAccent, fontSize: 15),
-                    // *********************************************************************
-                  )
-              )
-          )
+                    // ************* artems code: errorStyle *******************
+                      errorStyle: kErrorTextStyle,
+                    // *********************************************************
+                  ),
+              ),
+          ),
         ]
     );
-}
+  }
 
-Widget buildConfirmPassword() {
+//************************ Confirm Password Input Field ************************
+  Widget buildConfirmPassword() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             'Confirm Password',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold
-            ),
+            style: kLoginTextStyle,
           ),
           SizedBox(height: 10),
           Container(
               alignment: Alignment.centerLeft,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 6,
-                        offset: Offset(0,2)
-                    ),
-                  ]
-              ),
+              decoration: kSignUpBoxDecoration,
               height: 60,
               child: TextFormField(
                 // ******** artems code: add contorller *********************
                   controller: _confirmPassword,
                   // ***********************************************************
                   obscureText: true,
-                  style: TextStyle(
-                    color: Colors.black87,
-                  ),
                   // ************ Artems code: validator *************************
                   validator: (password) {
                     if (password.isEmpty)
@@ -804,7 +647,7 @@ Widget buildConfirmPassword() {
                     else
                       return null;
                   },
-                  // *************************************************************
+                  // ***********************************************************
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.only(top: 14),
@@ -816,20 +659,20 @@ Widget buildConfirmPassword() {
                     hintStyle: TextStyle(
                       color: Colors.black38,
                     ),
-                    // ************* artems code: errorStyle ***********************
-                    errorStyle: TextStyle(color: Colors.redAccent, fontSize: 15),
-                    // ***********************************************************
+                    // ************* artems code: errorStyle *******************
+                    errorStyle: kErrorTextStyle,
+                    // *********************************************************
                   )
               )
           )
         ]
     );
-}
+  }
 
-Widget buildContBtn() {
+//****************************** Continue Field ********************************
+  Widget buildContBtn() {
     return GestureDetector(
-
-      // ***************** Artems code ****************************************
+      // ***************** Artems code *****************************************
       // onTap: () => Navigator.push(
       //       context,
       //       MaterialPageRoute(builder: (context) => SignUpContinue()),
@@ -902,12 +745,11 @@ Widget buildContBtn() {
             )
         )
     );
-}
+  }
 
+//****************************** MAIN SCAFFOLD *********************************
   @override
   Widget build(BuildContext context) {
-
-
     return Form(
       key: _formKey,
       child: Scaffold(
@@ -959,7 +801,6 @@ Widget buildContBtn() {
                                             child: CircleAvatar(
                                               radius: 50,
                                               backgroundImage: AssetImage('assets/images/LOGO 4.jpg'),
-
                                             ),
                                           ),
                                         ],
@@ -1014,24 +855,25 @@ Widget buildContBtn() {
   }
 }
 
-  List<DropdownMenuItem<ListItem>> buildDropDownMenuItems(List listItems) {
-    List<DropdownMenuItem<ListItem>> items = List();
-    for (ListItem listItem in listItems) {
-      items.add(
-        DropdownMenuItem(
-          child: Text(listItem.name),
-          value: listItem,
-        ),
-      );
-    }
-    return items;
+//****************************** Drop Down Menu ********************************
+List<DropdownMenuItem<ListItem>> buildDropDownMenuItems(List listItems) {
+  List<DropdownMenuItem<ListItem>> items = List();
+  for (ListItem listItem in listItems) {
+    items.add(
+      DropdownMenuItem(
+        child: Text(listItem.name),
+        value: listItem,
+      ),
+    );
   }
+  return items;
+}
 
-
+//****************************** List Item Class *******************************
 class ListItem {
+  ListItem(this.value, this.name);
   int value;
   String name;
 
-  ListItem(this.value, this.name);
-}
 
+}

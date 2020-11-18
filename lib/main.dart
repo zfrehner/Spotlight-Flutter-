@@ -18,18 +18,30 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.dark(),
-      title: 'Spotlight Login',
-      debugShowCheckedModeBanner: false,
-      /*home: LoginScreen(),*/
-      initialRoute: LoginScreen.id,
-      routes: {
-        LoginScreen.id : (context) => LoginScreen(),
-        SignUpScreen.id : (context) => SignUpScreen(),
-        Success.id : (context) => Success(),
-        AlreadyCreated.id : (context) => AlreadyCreated(),
-        LandPage.id : (context) => LandPage()
-      }
+      theme: ThemeData.dark().copyWith(
+        backgroundColor: Colors.red,
+        primaryColor: Colors.red,
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+        textTheme: Theme.of(context).textTheme.apply(
+          bodyColor: Colors.black87
+        ),
+        bottomNavigationBarTheme:  BottomNavigationBarThemeData(
+          backgroundColor: Colors.red,
+        ),
+      ),
+        title: 'Spotlight Login',
+        debugShowCheckedModeBanner: false,
+        /*home: LoginScreen(),*/
+        initialRoute: LoginScreen.id,
+        routes: {
+          LoginScreen.id : (context) => LoginScreen(),
+          SignUpScreen.id : (context) => SignUpScreen(),
+          Success.id : (context) => Success(),
+          AlreadyCreated.id : (context) => AlreadyCreated(),
+          LandPage.id : (context) => LandPage()
+        }
     );
   }
 }
