@@ -23,20 +23,30 @@ class _LandPageState extends State<LandPage> {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User loggedInUser;
 
+  String gyms;
+
   @override
   void initState() {
     getCurrentUser();
   }
 
-   getUserInfo() async{
-    return await _firestore.collection('SpotlightUsers').doc(firebaseUser.uid).get();
+   /*getGymInfo() async{
+    final gyms = await _firestore.collection("Gyms").get();
       //print(userInfo);
 
-    //for(var info in userInfo.docs) {
-    //  print(info.data());
-    //}
+    for(var info in gyms.docs) {
+      print(info.data());
+    }
+  }*/
 
+  void gymStream() async {
+   await for(var snapshot in _firestore.collection("Gyms").snapshots()) {
+     for(var info in snapshot.docs) {
+       print(info.data());
+     }
+   }
   }
+
 
   void getCurrentUser() async {
     try{
@@ -61,13 +71,15 @@ class _LandPageState extends State<LandPage> {
     Center(
       child: Text('Messages'),
     ),
-    Center(
-      child: Text('Location'),
-    ),
+    Column(
+      children: <Widget>[ Text("Gyms"),
+    ]),
     Center(
       child: Text('Calendar'),
     ),
   ];
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,6 +116,11 @@ class _LandPageState extends State<LandPage> {
       body: Column(
         children: <Widget>[
           Container(
+              child: Text(
+                  "Welcome " + loggedInUser.email
+              )
+          ),
+          Container(
           child: InkWell(
           child: Text("It's time to be someone at the Gym!",
           style: TextStyle(
@@ -116,7 +133,7 @@ class _LandPageState extends State<LandPage> {
           Image(
             image: AssetImage('assets/images/gym5.jpg'),
           ),
-          tabs[_currentIndex],
+            tabs[_currentIndex]
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -138,11 +155,11 @@ class _LandPageState extends State<LandPage> {
             label: 'Messages',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.place),
-            label: 'Location',
+            icon: Icon(Icons.fitness_center),
+            label: 'Gyms',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today_rounded ),
+            icon: Icon(Icons.calendar_today_rounded),
             label: 'Calendar',
           ),
         ],
@@ -150,12 +167,53 @@ class _LandPageState extends State<LandPage> {
           setState(() {
             _currentIndex = index;
             if(_currentIndex == 0) {
-              getUserInfo();
+              //getUserInfo();
             }
-
+            if(_currentIndex == 2) {
+              gymStream();
+            }
           });
         },
       ),
     );
   }
 }
+
+/*
+dynamic tabs = [
+  Center(
+    child: Text('Profile'),
+  ),
+  Center(
+    child: Text('Messages'),
+  ),
+  Column(
+      children: <Widget>[ Text("Gyms"),
+        Center(
+          child: StreamBuilder<QuerySnapshot>(
+              stream: _firestore.collection("Gyms").snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final gyms = snapshot.data.docs;
+                  List<Text> gymWidgets = [];
+                  for (var gym in gyms) {
+                    final gymAddress = gym.data()["Address"];
+                    final gymNumUsers = gym.data()["NumUsers"];
+                    final gymWidget = Text(
+                        "$gymAddress has $gymNumUsers Spotlight Users");
+                    gymWidgets.add(gymWidget);
+                  }
+                  return Column(
+                      children: gymWidgets
+                  );
+                }
+                return null;
+              }
+
+          ),
+        ),
+      ]),
+  Center(
+    child: Text('Calendar'),
+  ),
+];*/
