@@ -170,7 +170,7 @@ class _LandPageState extends State<LandPage> {
         onTap: (index){
           setState(() {
             _currentIndex = index;
-           /* if(_currentIndex == 0) {
+            /* if(_currentIndex == 0) {
               //getUserInfo();
             }
             if(_currentIndex == 2) {

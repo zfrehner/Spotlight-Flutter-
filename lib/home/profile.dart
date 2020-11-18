@@ -49,18 +49,22 @@ class _ProfileState extends State<Profile> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        Container(
-            child: Text(
-              "Welcome " + loggedInUser.email,
-              style: kLoginTextStyle,
-            )
-        ),
-        Container(
-          child: InkWell(
-              child: Text("It's time to be someone at the Gym!",
+        Center(
+          child: Container(
+              child: Text(
+                "Welcome " + loggedInUser.email,
                 style: kLoginTextStyle,
-              ),
-              onTap: () => launch('https://nullpointerexception.greenriverdev.com/Spotlight/index.php')
+              )
+          ),
+        ),
+        Center(
+          child: Container(
+            child: InkWell(
+                child: Text("It's time to be someone at the Gym!",
+                  style: kLoginTextStyle,
+                ),
+                onTap: () => launch('https://nullpointerexception.greenriverdev.com/Spotlight/index.php')
+            ),
           ),
         ),
         Image(
@@ -70,6 +74,3 @@ class _ProfileState extends State<Profile> {
     );
   }
 }
-
-
-

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'constants.dart';
 import 'package:flutter/services.dart';
@@ -158,8 +159,8 @@ class _LoginScreenState extends State<LoginScreen> {
             onPressed: () => print("Forgot password was pressed"),
             padding: EdgeInsets.only(right: 0),
             child: Text(
-                'Forgot Password?',
-                style: kLoginTextStyle,
+              'Forgot Password?',
+              style: kLoginTextStyle,
             )
         )
     );

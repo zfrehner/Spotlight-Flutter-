@@ -50,36 +50,35 @@ class _GymsState extends State<Gyms> {
   Widget build(BuildContext context) {
     return Column(
         children: <Widget>[ Text(
-            "Gyms",
-            style: kLoginTextStyle,
+          "Gyms",
+          style: kLoginTextStyle,
         ),
           Center(
-            child: StreamBuilder<QuerySnapshot>(
-                stream: _firestore.collection("Gyms").snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final gyms = snapshot.data.docs;
-                    List<Text> gymWidgets = [];
-                    for (var gym in gyms) {
-                      final gymAddress = gym.data()["Address"];
-                      final gymNumUsers = gym.data()["NumUsers"];
-                      final gymWidget = Text(
+              child: StreamBuilder<QuerySnapshot>(
+                  stream: _firestore.collection("Gyms").snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final gyms = snapshot.data.docs;
+                      List<Text> gymWidgets = [];
+                      for (var gym in gyms) {
+                        final gymAddress = gym.data()["Address"];
+                        final gymNumUsers = gym.data()["NumUsers"];
+                        final gymWidget = Text(
                           "$gymAddress has $gymNumUsers Spotlight Users",
-                        style: kLoginTextStyle,
+                          style: kLoginTextStyle,
+                        );
+                        gymWidgets.add(gymWidget);
+                      }
+                      return Column(
+                          children: gymWidgets
                       );
-                      gymWidgets.add(gymWidget);
                     }
-                    return Column(
-                        children: gymWidgets
-                    );
+                    //returning empty container to suppress
+                    //Rendflex error
+                    return Container();
                   }
-                  return null;
-                }
+              ),
             ),
-          ),
         ]);
   }
 }
-
-
-
