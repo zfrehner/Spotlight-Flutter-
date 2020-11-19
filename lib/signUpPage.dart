@@ -5,20 +5,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:spotlight_login/successPage.dart';
 import 'package:intl/intl.dart';
-import 'userAlreadyBeenCreatedPage.dart';
+//import 'userAlreadyBeenCreatedPage.dart';
 import 'constants.dart';
 
 class SignUpScreen extends StatefulWidget {
-
   static const String id = 'signup_screen';
 
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
-
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-
   //creating an instance of a user -
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
@@ -30,15 +27,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _password = TextEditingController();
   TextEditingController _confirmPassword = TextEditingController();
   // ***************************************************************************
-  List<ListItem> _dropdownItems = [
-    ListItem(1, "Choose..."),
-    ListItem(2, "Male"),
-    ListItem(3, "Female")
-  ];
+  // List<ListItem> _dropdownItems = [
+  //   ListItem(1, "Choose..."),
+  //   ListItem(2, "Male"),
+  //   ListItem(3, "Female")
+  // ];
 
-  List<DropdownMenuItem<ListItem>> _dropdownMenuItems;
-  //list item for selected gender
-  ListItem _gender;
+  // variable to store selected gender
+  String genderSelected = 'Choose..';
+  // list for gender dropdown
+  var genderOptions = ['Choose..', 'Male', 'Female'];
+
+  // List<DropdownMenuItem<ListItem>> _dropdownMenuItems;
+  // //list item for selected gender
+  // ListItem _gender;
 
   //form field variables
   String firstName;
@@ -55,11 +57,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   var phoneNumber;
   DateTime dateTime;
 
-  void initState() {
-    super.initState();
-    _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
-    _gender = _dropdownMenuItems[0].value;
-  }
+  // void initState() {
+  //   super.initState();
+  //   // _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
+  //   _gender = _dropdownMenuItems[0].value;
+  // }
 
 //**************************** First Name Input Field **************************
   Widget buildFirstNameField() {
@@ -76,7 +78,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           decoration: kSignUpBoxDecoration,
           height: 60,
           child: TextFormField(
-            onChanged: (value){
+            onChanged: (value) {
               firstName = value;
             },
             /*keyboardType: TextInputType.emailAddress,*/
@@ -97,10 +99,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14),
-              prefixIcon: Icon(
-                  Icons.person,
-                  color: Color(0xffFF3232)
-              ),
+              prefixIcon: Icon(Icons.person, color: Color(0xffFF3232)),
               hintText: 'First Name',
               hintStyle: TextStyle(
                 color: Colors.black38,
@@ -130,7 +129,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           decoration: kSignUpBoxDecoration,
           height: 60,
           child: TextFormField(
-            onChanged: (value){
+            onChanged: (value) {
               lastName = value;
             },
             /*keyboardType: TextInputType.emailAddress,*/
@@ -151,10 +150,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.only(top: 14),
-                prefixIcon: Icon(
-                    Icons.person,
-                    color: Color(0xffFF3232)
-                ),
+                prefixIcon: Icon(Icons.person, color: Color(0xffFF3232)),
                 hintText: 'Last Name',
                 hintStyle: TextStyle(
                   color: Colors.black38,
@@ -167,6 +163,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ],
     );
   }
+
 //**************************** Email Input Field *******************************
   Widget buildEmail() {
     return Column(
@@ -182,8 +179,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           decoration: kSignUpBoxDecoration,
           height: 60,
           child: TextFormField(
-            onChanged: (value){
-              email = value;
+            onChanged: (value) {
+              email = value.trim();
             },
             keyboardType: TextInputType.emailAddress,
             // ************ Artems code: validator *************************
@@ -191,9 +188,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Pattern pattern =
                   r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
               RegExp regex = new RegExp(pattern);
-              if (email.isEmpty)
+              if (email.trim().isEmpty)
                 return 'Please enter an email';
-              else if (!regex.hasMatch(email))
+              else if (!regex.hasMatch(email.trim()))
                 return 'Invalid email';
               else
                 return null;
@@ -202,10 +199,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14),
-              prefixIcon: Icon(
-                  Icons.email,
-                  color: Color(0xffFF3232)
-              ),
+              prefixIcon: Icon(Icons.email, color: Color(0xffFF3232)),
               hintText: 'Email',
               hintStyle: TextStyle(
                 color: Colors.black38,
@@ -231,7 +225,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         SizedBox(height: 10),
         FormBuilderCountryPicker(
-          onChanged: (value){
+          onChanged: (value) {
             country = value.toString();
           },
           attribute: 'country_picker',
@@ -247,7 +241,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            'Address',
+            'Address (for promotions/coupons)',
             style: kLoginTextStyle,
           ),
           SizedBox(height: 10),
@@ -256,27 +250,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
             decoration: kSignUpBoxDecoration,
             height: 60,
             child: TextFormField(
-              onChanged: (value){
+              onChanged: (value) {
                 address = value;
               },
-              /*keyboardType: TextInputType.emailAddress,*/
-              // ************ Artems code: validator *************************
-              validator: (value) {
-                // trim off whitespace
-                value = value.trim();
-                if (value.isEmpty)
-                  return 'Please enter an address';
-                else
-                  return null;
-              },
-              // *************************************************************
               decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.only(top: 14),
-                prefixIcon: Icon(
-                    Icons.house,
-                    color: Color(0xffFF3232)
-                ),
+                prefixIcon: Icon(Icons.house, color: Color(0xffFF3232)),
                 // ************* artems code: errorStyle *******************
                 errorStyle: kErrorTextStyle,
                 // *********************************************************
@@ -287,8 +267,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
           ),
-        ]
-    );
+        ]);
   }
 
 //**************************** City Input Field ********************************
@@ -306,27 +285,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
           decoration: kSignUpBoxDecoration,
           height: 60,
           child: TextFormField(
-            onChanged: (value){
+            onChanged: (value) {
               city = value;
             },
-            /*keyboardType: TextInputType.emailAddress,*/
-            // ************ Artems code: validator *************************
-            validator: (city) {
-              // trim off whitespace
-              city = city.trim();
-              if (city.isEmpty)
-                return 'Please enter a city';
-              else
-                return null;
-            },
-            // *************************************************************
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14),
-              prefixIcon: Icon(
-                  Icons.location_city,
-                  color: Color(0xffFF3232)
-              ),
+              prefixIcon: Icon(Icons.location_city, color: Color(0xffFF3232)),
               hintText: 'City',
               // ************* artems code: errorStyle *******************
               errorStyle: kErrorTextStyle,
@@ -356,31 +321,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
           decoration: kSignUpBoxDecoration,
           height: 60,
           child: TextFormField(
-            onChanged: (value){
+            onChanged: (value) {
               state = value;
             },
-            /*keyboardType: TextInputType.emailAddress,*/
-            // ************ Artems code: validator *************************
-            validator: (value) {
-              // trim off whitespace
-              value = value.trim();
-              if (value.isEmpty)
-                return 'Please enter a State or Province';
-              else
-                return null;
-            },
-            // *************************************************************
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14),
-              prefixIcon: Icon(
-                  Icons.landscape_sharp,
-                  color: Color(0xffFF3232)
-              ),
+              prefixIcon: Icon(Icons.landscape_sharp, color: Color(0xffFF3232)),
               hintText: 'State or Province',
               // ************* artems code: errorStyle *******************
-              errorStyle:
-              kErrorTextStyle,
+              errorStyle: kErrorTextStyle,
               // *********************************************************
               hintStyle: TextStyle(
                 color: Colors.black38,
@@ -407,25 +357,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
             decoration: kSignUpBoxDecoration,
             height: 60,
             child: TextFormField(
-              onChanged: (value){
+              onChanged: (value) {
                 zipCode = value;
               },
-              /*keyboardType: TextInputType.emailAddress,*/
-              // ************ Artems code: validator *************************
-              validator: (zip) {
-                if (zip.isEmpty)
-                  return 'Please re-enter zip code';
-                else
-                  return null;
-              },
-              // *************************************************************
               decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.only(top: 14),
-                prefixIcon: Icon(
-                    Icons.location_on_sharp,
-                    color: Color(0xffFF3232)
-                ),
+                prefixIcon:
+                    Icon(Icons.location_on_sharp, color: Color(0xffFF3232)),
                 // ************* artems code: errorStyle *******************
                 errorStyle: kErrorTextStyle,
                 // *********************************************************
@@ -436,8 +375,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
           ),
-        ]
-    );
+        ]);
   }
 
 //**************************** First Name Input Field **************************
@@ -449,13 +387,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
           'Birthday',
           style: kLoginTextStyle,
         ),
-
         Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: Row(
             children: <Widget>[
-              Text(dateTime == null ? 'Please Select:' :
-              DateFormat('MMMM-dd-yyyy').format(dateTime),
+              Text(
+                dateTime == null
+                    ? 'Please Select:'
+                    : DateFormat('MMMM-dd-yyyy').format(dateTime),
                 style: kLoginTextStyle,
               ),
             ],
@@ -464,24 +403,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
         Padding(
           padding: EdgeInsets.only(left: 10.0),
           child: RaisedButton(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15)
-            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             color: Colors.white,
-            child: Text('Pick a date',
+            child: Text(
+              'Pick a date',
               style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold
-              ),
+                  color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold),
             ),
             onPressed: () {
-              showDatePicker(context: context,
-                  initialDate: dateTime == null ? DateTime.now() :
-                  dateTime,
-                  firstDate: DateTime(1900),
-                  lastDate: DateTime.now()
-              ).then((date) {
+              showDatePicker(
+                      context: context,
+                      initialDate: dateTime == null ? DateTime.now() : dateTime,
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime.now())
+                  .then((date) {
                 setState(() {
                   dateTime = date;
                 });
@@ -495,9 +431,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
 //**************************** Gender Input Field ******************************
   Widget buildGenderChoice() {
-
     return Row(
-      //crossAxisAlignment: CrossAxisAlignment.start,
+        //crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             'Gender',
@@ -505,7 +440,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
           SizedBox(height: 10),
           Padding(
-            padding: const EdgeInsets.only(top:5.0, left: 130.0),
+            padding: const EdgeInsets.only(top: 5.0, left: 130.0),
             child: Container(
               padding: EdgeInsets.only(left: 15.0),
               decoration: BoxDecoration(
@@ -513,17 +448,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 color: Colors.white,
               ),
               child: DropdownButtonHideUnderline(
-                child: DropdownButton<ListItem>(
+                child: DropdownButton<String>(
                     style: TextStyle(
                         color: Colors.red,
                         fontSize: 16,
-                        fontWeight: FontWeight.bold
-                    ),
-                    value: _gender,
-                    items: _dropdownMenuItems,
+                        fontWeight: FontWeight.bold),
+                    value: genderSelected,
+                    items: genderOptions.map((String dropDownStringItem) {
+                      return DropdownMenuItem<String>(
+                        value: dropDownStringItem,
+                        child: Text(dropDownStringItem),
+                      );
+                    }).toList(),
                     onChanged: (value) {
                       setState(() {
-                        gender = value.name;
+                        genderSelected = value;
+                        gender = value;
+                        print(value);
                       });
                     }),
               ),
@@ -581,7 +522,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             decoration: kSignUpBoxDecoration,
             height: 60,
             child: TextFormField(
-              onChanged: (value){
+              onChanged: (value) {
                 password = value;
               },
               // ******** artems code: add contorller *********************
@@ -601,10 +542,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.only(top: 14),
-                prefixIcon: Icon(
-                    Icons.lock,
-                    color: Color(0xffFF3232)
-                ),
+                prefixIcon: Icon(Icons.lock, color: Color(0xffFF3232)),
                 hintText: 'Password',
                 hintStyle: TextStyle(
                   color: Colors.black38,
@@ -615,8 +553,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
           ),
-        ]
-    );
+        ]);
   }
 
 //************************ Confirm Password Input Field ************************
@@ -634,7 +571,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               decoration: kSignUpBoxDecoration,
               height: 60,
               child: TextFormField(
-                // ******** artems code: add contorller *********************
+                  // ******** artems code: add contorller *********************
                   controller: _confirmPassword,
                   // ***********************************************************
                   obscureText: true,
@@ -651,10 +588,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.only(top: 14),
-                    prefixIcon: Icon(
-                        Icons.lock_open,
-                        color: Color(0xffFF3232)
-                    ),
+                    prefixIcon: Icon(Icons.lock_open, color: Color(0xffFF3232)),
                     hintText: 'Confirm Password',
                     hintStyle: TextStyle(
                       color: Colors.black38,
@@ -662,39 +596,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     // ************* artems code: errorStyle *******************
                     errorStyle: kErrorTextStyle,
                     // *********************************************************
-                  )
-              )
-          )
-        ]
-    );
+                  )))
+        ]);
   }
 
 //****************************** Continue Field ********************************
   Widget buildContBtn() {
     return GestureDetector(
-      // ***************** Artems code *****************************************
-      // onTap: () => Navigator.push(
-      //       context,
-      //       MaterialPageRoute(builder: (context) => SignUpContinue()),
-      //     ),
+        // ***************** Artems code *****************************************
+        // onTap: () => Navigator.push(
+        //       context,
+        //       MaterialPageRoute(builder: (context) => SignUpContinue()),
+        //     ),
         onTap: () async {
           print(firstName);
           print(lastName);
           print(email);
-          print(country);//getting null
+          print(country); //getting null
           print(address);
           print(city);
           print(state);
           print(zipCode);
           print(dateTime);
-          print(gender);//getting instance of ListItem
-          print(phoneNumber);//getting null
+          print(gender); //getting instance of ListItem
+          print(phoneNumber); //getting null
           print(password);
 
-
-          setState(() async{
+          setState(() async {
             if (_formKey.currentState.validate()) {
-
               //registering the user with the form fields
               //returns a "Future"
               //capture the new user
@@ -703,25 +632,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 final newUser = await _auth.createUserWithEmailAndPassword(
                     email: email, password: password);
 
-                if(newUser != null) {
+                if (newUser != null) {
                   Navigator.pushNamed(context, Success.id);
                 }
-              }
-              catch(e) {
+              } catch (e) {
                 print(e);
               }
               _firestore.collection('SpotlightUsers').add({
-                'firstName' : firstName,
-                'lastName' : lastName,
+                'firstName': firstName,
+                'lastName': lastName,
                 'email': email,
-                'country' : country,
-                'address' : address,
-                'city' : city,
-                'state' : state,
-                'zipCode' : zipCode,
-                'birthday' : dateTime,
-                'gender' : gender,
-                'phoneNumber' : phoneNumber
+                'country': country,
+                'address': address,
+                'city': city,
+                'state': state,
+                'zipCode': zipCode,
+                'birthday': dateTime,
+                'gender': gender,
+                'phoneNumber': phoneNumber
               });
               // if validate = true, take user to next page
               //Navigator.pushNamed(context, Success.id);
@@ -730,21 +658,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
         },
         // *********************************************************************
         child: RichText(
-            text: TextSpan(
-                children: [
-                  TextSpan(
-                      text: 'Continue',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.underline,
-                      )
-                  )
-                ]
-            )
-        )
-    );
+            text: TextSpan(children: [
+          TextSpan(
+              text: 'Continue',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                decoration: TextDecoration.underline,
+              ))
+        ])));
   }
 
 //****************************** MAIN SCAFFOLD *********************************
@@ -756,125 +679,100 @@ class _SignUpScreenState extends State<SignUpScreen> {
           body: AnnotatedRegion<SystemUiOverlayStyle>(
               value: SystemUiOverlayStyle.light,
               child: GestureDetector(
-                  child: Stack(
-                      children: <Widget>[
-                        Container(
-                            height: double.infinity,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Color(0xffFF3232),
-                                      Color(0xccFF3232),
-                                      Color(0xccFF3232),
-                                      Color(0xffFF3232),
-                                    ]
-                                )
-                            ),
-                            child: SingleChildScrollView(
-                                physics: AlwaysScrollableScrollPhysics(),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 25,
-                                    vertical: 25
-                                ),
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(right: 40),
-                                            child: Text(
-                                                'Sign Up',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 30,
-                                                  fontWeight: FontWeight.bold,
-                                                )
-                                            ),
-                                          ),
-                                          Hero(
-                                            tag: 'logo',
-                                            child: CircleAvatar(
-                                              radius: 50,
-                                              backgroundImage: AssetImage('assets/images/LOGO 4.jpg'),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-
-                                      SizedBox(height: 10),
-                                      buildFirstNameField(),
-                                      SizedBox(height: 10),
-                                      buildLastNameField(),
-                                      SizedBox(height: 10),
-                                      buildEmail(),
-
-                                      SizedBox(height: 10),
-                                      buildCountryPicker(),
-                                      SizedBox(height: 10),
-                                      buildAddressField(),
-                                      SizedBox(height: 10),
-                                      buildCityField(),
-                                      SizedBox(height: 10),
-                                      buildStateField(),
-                                      SizedBox(height: 10),
-                                      buildZipField(),
-
-                                      SizedBox(height: 30),
-                                      buildAgeField(),
-                                      SizedBox(height: 30),
-                                      buildGenderChoice(),
-                                      SizedBox(height: 30),
-                                      buildPhoneNumber(),
-
-
-
-                                      SizedBox(height: 10),
-                                      buildPassword(),
-
-                                      SizedBox(height: 10),
-                                      buildConfirmPassword(),
-
-                                      SizedBox(height: 10),
-                                      buildContBtn()
-
-                                    ]
-                                )
-                            )
-                        )
-                      ]
-                  )
-              )
-          )
-      ),
+                  child: Stack(children: <Widget>[
+                Container(
+                    height: double.infinity,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                          Color(0xffFF3232),
+                          Color(0xccFF3232),
+                          Color(0xccFF3232),
+                          Color(0xffFF3232),
+                        ])),
+                    child: SingleChildScrollView(
+                        physics: AlwaysScrollableScrollPhysics(),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 40),
+                                    child: Text('Sign Up',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                  ),
+                                  Hero(
+                                    tag: 'logo',
+                                    child: CircleAvatar(
+                                      radius: 50,
+                                      backgroundImage: AssetImage(
+                                          'assets/images/LOGO 4.jpg'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              buildFirstNameField(),
+                              SizedBox(height: 10),
+                              buildLastNameField(),
+                              SizedBox(height: 10),
+                              buildEmail(),
+                              SizedBox(height: 10),
+                              buildCountryPicker(),
+                              SizedBox(height: 10),
+                              buildAddressField(),
+                              SizedBox(height: 10),
+                              buildCityField(),
+                              SizedBox(height: 10),
+                              buildStateField(),
+                              SizedBox(height: 10),
+                              buildZipField(),
+                              SizedBox(height: 30),
+                              buildAgeField(),
+                              SizedBox(height: 30),
+                              buildGenderChoice(),
+                              SizedBox(height: 30),
+                              buildPhoneNumber(),
+                              SizedBox(height: 10),
+                              buildPassword(),
+                              SizedBox(height: 10),
+                              buildConfirmPassword(),
+                              SizedBox(height: 10),
+                              buildContBtn()
+                            ])))
+              ])))),
     );
   }
 }
 
 //****************************** Drop Down Menu ********************************
-List<DropdownMenuItem<ListItem>> buildDropDownMenuItems(List listItems) {
-  List<DropdownMenuItem<ListItem>> items = List();
-  for (ListItem listItem in listItems) {
-    items.add(
-      DropdownMenuItem(
-        child: Text(listItem.name),
-        value: listItem,
-      ),
-    );
-  }
-  return items;
-}
+// List<DropdownMenuItem<ListItem>> buildDropDownMenuItems(List listItems) {
+//   List<DropdownMenuItem<ListItem>> items = List();
+//   for (ListItem listItem in listItems) {
+//     items.add(
+//       DropdownMenuItem(
+//         child: Text(listItem.name),
+//         value: listItem,
+//       ),
+//     );
+//   }
+//   return items;
+// }
 
 //****************************** List Item Class *******************************
-class ListItem {
-  ListItem(this.value, this.name);
-  int value;
-  String name;
-
-
-}
-
+// class ListItem {
+//   ListItem(this.value, this.name);
+//   int value;
+//   String name;
+// }
