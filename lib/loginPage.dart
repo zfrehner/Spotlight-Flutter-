@@ -1,4 +1,4 @@
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'constants.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +7,7 @@ import 'package:spotlight_login/homePage.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+
 
 class LoginScreen extends StatefulWidget {
 
@@ -23,7 +24,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool showSpinner = false;
   String email;
   String password;
-
   bool isChecked = false;
 
   // **************** artems code: var *****************************************
@@ -31,6 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
   var _formKey = GlobalKey<FormState>();
   // ***************************************************************************
 
+//*********************** Email Widget *****************************************
   Widget buildEmail() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,6 +195,36 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+//******************************* Show Dialogue Box ****************************
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Spotlight Notice!'),
+          backgroundColor: Colors.white,
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Incorrect email/password'),
+                Text('Please try again'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Approve'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 //************************ Login BTN Widget ************************************
   Widget buildLoginBtn() {
     return Container(
@@ -207,7 +238,7 @@ class _LoginScreenState extends State<LoginScreen> {
               });
               try {
                 final user = await _auth.signInWithEmailAndPassword(
-                    email: email, password: password);
+                    email: email.trim(), password: password.trim());
                 if (user != null) {
                   Navigator.pushNamed(context, LandPage.id);
                 }
@@ -216,14 +247,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 });
               }
               catch(e) {
+                Navigator.pushNamed(context, LoginScreen.id);
+                _showMyDialog();
                 print(e);
               }
               /*setState(() {
               if (_formKey.currentState.validate()) {
                 // if validate = true, take user to home screen
                 Navigator.pushNamed(context, Success.id);
-              }
-            });*/
+              }*/
             },
             padding: EdgeInsets.all(15),
             shape: RoundedRectangleBorder(
