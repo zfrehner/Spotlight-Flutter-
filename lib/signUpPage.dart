@@ -5,8 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:spotlight_login/successPage.dart';
 import 'package:intl/intl.dart';
-//import 'userAlreadyBeenCreatedPage.dart';
 import 'constants.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:spotlight_login/constants.dart';
 
 class SignUpScreen extends StatefulWidget {
   static const String id = 'signup_screen';
@@ -19,13 +20,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
   //creating an instance of a user -
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
+  //var firebaseUser = FirebaseAuth.instance.currentUser;
+
+  User loggedInUser;
+  var uid;
+
+  void initState() {
+    getCurrentUser();
+  }
+
+  void getCurrentUser() async {
+    try {
+      final user = _auth.currentUser;
+      final fireUser = FirebaseAuth.instance.currentUser.uid;
+
+      if (user != null) {
+        loggedInUser = user;
+        uid = fireUser;
+
+        //print(loggedInUser.email);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   // **************** artems code: fields *****************************************
   // creating a global key for use for the form
   var _formKey = GlobalKey<FormState>();
+
   // fields to validate password/confirmPassword
   TextEditingController _password = TextEditingController();
   TextEditingController _confirmPassword = TextEditingController();
+
   // ***************************************************************************
   // List<ListItem> _dropdownItems = [
   //   ListItem(1, "Choose..."),
@@ -35,6 +62,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   // variable to store selected gender
   String genderSelected = 'Choose..';
+
   // list for gender dropdown
   var genderOptions = ['Choose..', 'Male', 'Female'];
 
@@ -53,6 +81,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String password;
   String email;
   String gender;
+
   //variable for phone number
   var phoneNumber;
   DateTime dateTime;
@@ -622,35 +651,44 @@ class _SignUpScreenState extends State<SignUpScreen> {
           print(phoneNumber); //getting null
           print(password);
 
-          setState(() async {
+          setState(() {
             if (_formKey.currentState.validate()) {
               //registering the user with the form fields
               //returns a "Future"
               //capture the new user
               //async and await mean the user is authenticated before we go on
               try {
-                final newUser = await _auth.createUserWithEmailAndPassword(
-                    email: email, password: password);
-
-                if (newUser != null) {
-                  Navigator.pushNamed(context, Success.id);
-                }
+                  _auth
+                    .createUserWithEmailAndPassword(
+                        email: email, password: password)
+                    .then(
+                      (loggedInUser) => _firestore
+                          .collection('SpotlightUsers')
+                          .doc(uid)
+                          .set(
+                        {
+                          'uid': uid,
+                          'firstName': firstName,
+                          'lastName': lastName,
+                          'email': email,
+                          'country': country,
+                          'address': address,
+                          'city': city,
+                          'state': state,
+                          'zipCode': zipCode,
+                          'birthday': dateTime,
+                          'gender': gender,
+                          'phoneNumber': phoneNumber
+                        },
+                      ),
+                    );
               } catch (e) {
                 print(e);
               }
-              _firestore.collection('SpotlightUsers').add({
-                'firstName': firstName,
-                'lastName': lastName,
-                'email': email,
-                'country': country,
-                'address': address,
-                'city': city,
-                'state': state,
-                'zipCode': zipCode,
-                'birthday': dateTime,
-                'gender': gender,
-                'phoneNumber': phoneNumber
-              });
+              if (uid != null) {
+                Navigator.pushNamed(context, Success.id);
+              }
+
               // if validate = true, take user to next page
               //Navigator.pushNamed(context, Success.id);
             }
