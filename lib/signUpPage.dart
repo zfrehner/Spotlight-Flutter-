@@ -23,7 +23,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   //var firebaseUser = FirebaseAuth.instance.currentUser;
 
   User loggedInUser;
-  var uid;
+  var userID;
 
   void initState() {
     getCurrentUser();
@@ -36,7 +36,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       if (user != null) {
         loggedInUser = user;
-        uid = fireUser;
+        userID = fireUser;
 
         //print(loggedInUser.email);
       }
@@ -664,10 +664,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     .then(
                       (loggedInUser) => _firestore
                           .collection('SpotlightUsers')
-                          .doc(uid)
+                          .doc(_auth.currentUser.uid)
                           .set(
                         {
-                          'uid': uid,
+                          'uid': _auth.currentUser.uid,
                           'firstName': firstName,
                           'lastName': lastName,
                           'email': email,
@@ -685,7 +685,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               } catch (e) {
                 print(e);
               }
-              if (uid != null) {
+              if (_auth.currentUser.uid != null) {
                 Navigator.pushNamed(context, Success.id);
               }
 
