@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:spotlight_login/constants.dart';
-import 'package:url_launcher/url_launcher.dart';
+
 //****************************************
 
 class LandPage extends StatefulWidget {
@@ -33,14 +33,6 @@ class _LandPageState extends State<LandPage> {
   void initState() {
     getCurrentUser();
   }
-
-  /*getGymInfo() async{
-    final gyms = await _firestore.collection("Gyms").get();
-      //print(userInfo);
-    for(var info in gyms.docs) {
-      print(info.data());
-    }
-  }*/
 
   void gymStream() async {
     await for(var snapshot in _firestore.collection("Gyms").snapshots()) {
