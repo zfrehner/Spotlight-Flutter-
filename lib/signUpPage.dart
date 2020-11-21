@@ -681,18 +681,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'phoneNumber': phoneNumber
                         },
                       ),
+
                     );
+
               } catch (e) {
                 print(e);
               }
-              if (_auth.currentUser.uid != null) {
-                Navigator.pushNamed(context, Success.id);
-              }
+
 
               // if validate = true, take user to next page
               //Navigator.pushNamed(context, Success.id);
             }
           });
+          if (_auth.currentUser.uid != null) {
+            Navigator.pushNamed(context, Success.id);
+          }
         },
         // *********************************************************************
         child: RichText(

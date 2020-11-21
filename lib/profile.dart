@@ -100,6 +100,11 @@ class _ProfileState extends State<Profile> {
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
+          child: Text("Phone: ${user["phoneNumber"]}",
+              style: kLoginTextStyle),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Text("Birthday: ${DateFormat('MM/dd/yyyy').format(user["birthday"].toDate())}",
               style: kLoginTextStyle),
         ),
