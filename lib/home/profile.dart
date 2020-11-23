@@ -79,15 +79,21 @@ class _ProfileState extends State<Profile> {
 
   Widget displayUserInfo(context, snapshot) {
     final user = snapshot.data;
-    final authUser = getAuthUserInfo();
+    //final authUser = getAuthUserInfo();
+    var phone = user["phoneNumber"];
+    if(phone == null) {
+      phone = "";
+    }
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("First Name: ${user["firstName"]}",
-              style: kLoginTextStyle),
-        ),
+          padding: EdgeInsets.all(8.0),
+              child: Text("First Name: ${user["firstName"]}",
+                  style: kLoginTextStyle,
+                  ),
+              ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text("Last Name: ${user["lastName"]}",
@@ -100,7 +106,12 @@ class _ProfileState extends State<Profile> {
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text("Birthday: ${user["birthday"].toUpperCase()}",
+          child: Text("Phone: $phone",//{user["phoneNumber"]}
+              style: kLoginTextStyle),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text("Birthday: ${DateFormat('MM/dd/yyyy').format(user["birthday"].toDate())}",
               style: kLoginTextStyle),
         ),
         Padding(
@@ -130,7 +141,7 @@ class _ProfileState extends State<Profile> {
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text("County: ${user["country"]}",
+          child: Text("Country: ${user["country"]}",
               style: kLoginTextStyle),
         ),
       ],
@@ -155,7 +166,9 @@ class _ProfileState extends State<Profile> {
                       style: kLoginTextStyle)*/
                 }
                 else {
-                  return CircularProgressIndicator();
+                  return CircularProgressIndicator(
+                    backgroundColor: Colors.red,
+                  );
                 }
               }
             ),
@@ -171,8 +184,13 @@ class _ProfileState extends State<Profile> {
                       'https://nullpointerexception.greenriverdev.com/Spotlight/index.php')),
             ),
           ),
-          Image(
-            image: AssetImage('assets/images/gym5.jpg'),
+          Column(
+            children: [
+              CircleAvatar(
+                backgroundImage: AssetImage('assets/images/gym5.jpg'),
+                radius: 100
+              ),
+            ],
           ),
           Center(
             child: FutureBuilder(
@@ -181,7 +199,9 @@ class _ProfileState extends State<Profile> {
                   if (snapshot.connectionState == ConnectionState.done) {
                     return displayUserInfo(context, snapshot);
                   } else {
-                    return CircularProgressIndicator();
+                    return CircularProgressIndicator(
+                      backgroundColor: Colors.red,
+                    );
                   }
                 })
           ),

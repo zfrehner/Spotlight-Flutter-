@@ -255,7 +255,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         SizedBox(height: 10),
         FormBuilderCountryPicker(
           onChanged: (value) {
-            country = value.toString();
+            country = value;
           },
           attribute: 'country_picker',
           initialValue: 'Canada',
@@ -443,9 +443,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             onPressed: () {
               showDatePicker(
                       context: context,
-                      initialDate: dateTime == null ? DateTime.now() : dateTime,
+                      initialDate: dateTime == null ? DateTime.now().subtract(Duration(days: 5844)) : dateTime,
                       firstDate: DateTime(1900),
-                      lastDate: DateTime.now())
+                      lastDate: DateTime.now().subtract(Duration(days: 5844)))
                   .then((date) {
                 setState(() {
                   dateTime = date;
@@ -651,14 +651,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
           print(phoneNumber); //getting null
           print(password);
 
-          setState(() {
+          setState(() async {
             if (_formKey.currentState.validate()) {
               //registering the user with the form fields
               //returns a "Future"
               //capture the new user
               //async and await mean the user is authenticated before we go on
               try {
-                  _auth
+                   await _auth
                     .createUserWithEmailAndPassword(
                         email: email, password: password)
                     .then(
@@ -680,9 +680,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'gender': gender,
                           'phoneNumber': phoneNumber
                         },
+
                       ),
 
                     );
+
+                   if (_auth.currentUser.uid != null) {
+                     Navigator.pushNamed(context, Success.id);
+                   }
 
               } catch (e) {
                 print(e);
@@ -693,9 +698,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               //Navigator.pushNamed(context, Success.id);
             }
           });
-          if (_auth.currentUser.uid != null) {
-            Navigator.pushNamed(context, Success.id);
-          }
         },
         // *********************************************************************
         child: RichText(

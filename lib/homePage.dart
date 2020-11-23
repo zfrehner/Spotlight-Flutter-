@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:spotlight_login/classes/SpotUser.dart';
 import 'package:spotlight_login/constants.dart';
 
 //****************************************
@@ -26,8 +27,8 @@ class _LandPageState extends State<LandPage> {
   var firebaseUser =  FirebaseAuth.instance.currentUser;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User loggedInUser;
-
   String gyms;
+
 
   @override
   void initState() {
@@ -85,7 +86,7 @@ class _LandPageState extends State<LandPage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: (){
-            //does nothing for now
+            print("Hello");
           },
           icon: Hero(
             tag: 'logo',
