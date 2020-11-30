@@ -1,12 +1,14 @@
-import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:spotlight_login/constants.dart';
+
 import 'package:spotlight_login/gymViews/gymCardView.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'package:spotlight_login/gymViews/gym1View.dart';
+import 'package:spotlight_login/gymViews/gym2View.dart';
+import 'package:spotlight_login/gymViews/gym3View.dart';
+import 'package:spotlight_login/gymViews/gym4View.dart';
 
 class Gyms extends StatefulWidget {
   @override
@@ -37,7 +39,7 @@ class _GymsState extends State<Gyms> {
           markerId: MarkerId("1"),
           position: LatLng(43.847000, -79.551850),
           infoWindow: InfoWindow(title: "Good Life Fitness #1",
-              onTap: () {print("icon 1 tapped");},
+              onTap: () {Navigator.pushNamed(context, GymCardOneView.id);},
           snippet: "3420 Major MacKenzie Dr W #201 Vaughan, ON L4H 4J6"),
           )); //icon: _markerIcon-- add this to add an image for marker icons
 
@@ -45,21 +47,21 @@ class _GymsState extends State<Gyms> {
           markerId: MarkerId("2"),
           position: LatLng(43.790910, -79.544790),
           infoWindow: InfoWindow(title: "Good Life Fitness #2",
-              onTap: () {print("icon 2 tapped");},
+              onTap: () {Navigator.pushNamed(context, GymCardTwoView.id);},
               snippet: "57 Northview Blvd Woodbridge, ON L4L 8X9")));
 
       _markers.add(Marker(
           markerId: MarkerId("3"),
           position: LatLng(43.790050, -79.529910),
           infoWindow: InfoWindow(title: "Good Life Fitness #3",
-              onTap: () {print("icon 3 tapped");},
+              onTap: () {Navigator.pushNamed(context, GymCardThreeView.id);},
               snippet: "90 Interchange Way Concord, ON L4K 5Z8")));
 
       _markers.add(Marker(
           markerId: MarkerId("4"),
           position: LatLng(43.798580, -79.501129),
           infoWindow: InfoWindow(title: "Good Life Fitness #4",
-              onTap: () {print("icon 4 tapped");},
+              onTap: () {Navigator.pushNamed(context, GymCardFourView.id);},
               snippet: "7700 Keele St Concord, ON L4K 2A1")));
     });
   }

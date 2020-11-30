@@ -86,7 +86,7 @@ class _LandPageState extends State<LandPage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: (){
-            print("Hello");
+            //print("Hello");
           },
           icon: Hero(
             tag: 'logo',

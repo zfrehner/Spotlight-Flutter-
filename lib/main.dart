@@ -6,6 +6,11 @@ import 'package:spotlight_login/signUpPage.dart';
 import 'package:spotlight_login/successPage.dart';
 import 'package:spotlight_login/homePage.dart';
 import 'userAlreadyBeenCreatedPage.dart';
+import 'package:spotlight_login/gymViews/gymCardView.dart';
+import 'package:spotlight_login/gymViews/gym1View.dart';
+import 'package:spotlight_login/gymViews/gym2View.dart';
+import 'package:spotlight_login/gymViews/gym3View.dart';
+import 'package:spotlight_login/gymViews/gym4View.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,7 +45,12 @@ class MyApp extends StatelessWidget {
           SignUpScreen.id : (context) => SignUpScreen(),
           Success.id : (context) => Success(),
           AlreadyCreated.id : (context) => AlreadyCreated(),
-          LandPage.id : (context) => LandPage()
+          LandPage.id : (context) => LandPage(),
+          GymCardView.id : (context) => GymCardView(),
+          GymCardOneView.id : (context) => GymCardOneView(),
+          GymCardTwoView.id : (context) => GymCardTwoView(),
+          GymCardThreeView.id : (context) => GymCardThreeView(),
+          GymCardFourView.id : (context) => GymCardFourView()
         }
     );
   }

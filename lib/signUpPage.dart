@@ -647,8 +647,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           print(state);
           print(zipCode);
           print(dateTime);
-          print(gender); //getting instance of ListItem
-          print(phoneNumber); //getting null
+          print(gender);
+          print(phoneNumber);
           print(password);
 
           setState(() async {

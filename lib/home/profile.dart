@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:spotlight_login/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:spotlight_login/classes/SpotUser.dart';
+
 import 'package:intl/intl.dart';
 
 class Profile extends StatefulWidget {
@@ -42,18 +41,6 @@ class _ProfileState extends State<Profile> {
       print(e);
     }
   }
-
-  /*void _onPressed() {
-    //var firebaseUser =  FirebaseAuth.instance.currentUser;
-    getCurrentUser();
-    //var userId = loggedInUser.email;
-    var name = _firestore
-        .collection("SpotlightUsers")
-        .doc(loggedInUser.uid) //"7uUbB9zLN7hyqPGiDpQjb3onWf73"
-        .get()
-        .then((value) => print(value.data()["firstName"]));
-    print(loggedInUser.email);
-  }*/
 
   getName() {
     return _firestore
@@ -209,80 +196,4 @@ class _ProfileState extends State<Profile> {
   }
 }
 
-/*Container(
-child: StreamBuilder<QuerySnapshot>(
-stream: _firestore.collection("SpotlightUsers").snapshots(),
-builder: (context, snapshot) {
-if (snapshot.hasData) {
-final users = snapshot.data.docs;
-List<Text> userWidgets = [];
-for (var SpotUser in users) {
-//print(SpotUser.data()["uid"]);
-//print(_auth.currentUser.uid);
-if (SpotUser.data()["uid"] == _auth.currentUser.uid) {
 
-final firstName = SpotUser.data()["firstName"];
-final lastName = SpotUser.data()["lastName"];
-final country = SpotUser.data()["country"];
-final address = SpotUser.data()["address"];
-final city = SpotUser.data()["state"];
-final state = SpotUser.data()["state"];
-final zipCode = SpotUser.data()["zipCode"];
-final email = SpotUser.data()["email"];
-final gender = SpotUser.data()["gender"];
-final phoneNumber = SpotUser.data()["phoneNumber"];
-final dateTime = SpotUser.data()["birthday"]; //age
-
-final userWidget = Text(
-"First Name: " + firstName + "\n"
-+ "Last Name: " + lastName + "\n"
-+ "Email: " + email + "\n"
-+ "Phone Number: " + phoneNumber + "\n"
-+ "Gender: " + gender + "\n"
-+ "Birthday: " + dateTime + "\n"
-+ "Address: " + address + "\n" +
-"City: " + city + "\n" +
-"State: " + state + "\n" +
-"Zip Code: " + zipCode + "\n" +
-"Country: " + country,
-style: kLoginTextStyle
-);
-
-userWidgets.add(userWidget);
-
-
-return Column(
-children: [
-ListView(
-scrollDirection: Axis.vertical,
-shrinkWrap: true,
-children: userWidgets,
-)
-]
-);
-}
-}
-}
-return Container();
-}
-))*/
-
-/*Padding(
-padding: const EdgeInsets.all(8.0),
-child: Text("User Since: ${DateFormat('MM/dd/yyyy').format(authUser.metadata.creationTime)}",
-style: kLoginTextStyle),
-)*/
-
-
-/*
-Center(
-child: FutureBuilder(
-future: getUserInfo(),
-builder: (context, snapshot) {
-if (snapshot.connectionState == ConnectionState.done) {
-return displayUserInfo(context, snapshot);
-} else {
-return CircularProgressIndicator();
-}
-}),
-)*/
