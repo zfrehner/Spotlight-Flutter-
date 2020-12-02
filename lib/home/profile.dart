@@ -1,15 +1,17 @@
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:spotlight_login/constants.dart';
+import 'package:flutter/rendering.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:intl/intl.dart';
 
 class Profile extends StatefulWidget {
-
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -21,8 +23,6 @@ class _ProfileState extends State<Profile> {
 
   User loggedInUser;
   var uid;
-
-
 
   void initState() {
     getCurrentUser();
@@ -67,132 +67,208 @@ class _ProfileState extends State<Profile> {
 
   Widget displayUserInfo(context, snapshot) {
     final user = snapshot.data;
-    //final authUser = getAuthUserInfo();
+
+    // Variable to show empty strings instead of null
+    // if user leaves any of these blanlk
+
+    // check if phone is left blank
     var phone = user["phoneNumber"];
-    if(phone == null) {
+    if (phone == null) {
       phone = "";
+    }
+    // check if address is left blank
+    var address = user["address"];
+    if (address == null) {
+      address = "";
+    }
+    // check if city is left blank
+    var city = user["city"];
+    if (city == null) {
+      city = "";
+    }
+    // check if state is left blank
+    var state = user["state"];
+    if (state == null) {
+      state = "";
+    }
+    // check if zipcode is left blank
+    var zip = user["zipCode"];
+    if (zip == null) {
+      zip = "";
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Text("First Name: ${user["firstName"]}",
-            style: kLoginTextStyle,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("Last Name: ${user["lastName"]}",
-              style: kLoginTextStyle),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("Email: ${user["email"]}",
-              style: kLoginTextStyle),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("Phone: $phone",//{user["phoneNumber"]}
-              style: kLoginTextStyle),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("Birthday: ${DateFormat('MM/dd/yyyy').format(user["birthday"].toDate())}",
-              style: kLoginTextStyle),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("Gender: ${user["gender"]}",
-              style: kLoginTextStyle),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("Address: ${user["address"]}",
-              style: kLoginTextStyle),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("City: ${user["city"]}",
-              style: kLoginTextStyle),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("Sate: ${user["state"]}",
-              style: kLoginTextStyle),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("Postal Code: ${user["zipCode"]}",
-              style: kLoginTextStyle),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("Country: ${user["country"]}",
-              style: kLoginTextStyle),
-        ),
+        buildTextField("First Name", "${user["firstName"]}"),
+        buildTextField("Last Name", "${user["lastName"]}"),
+        buildTextField("Email", "${user["email"]}"),
+        buildTextField("Phone", "$phone"),
+        //buildTextField("Birthday", "${user["birthday"].toDate()}"),
+        buildTextField("Address", "$address"),
+        buildTextField("City", "$city"),
+        buildTextField("State", "$state"),
+        buildTextField("Postal code", "$zip"),
+        buildTextField("Country", "${user["country"]}"),
+        // extra fields for optional info
+        buildTextField("Interests/Hobbies", ""),
+        buildTextField("Favorite workout", ""),
+        SizedBox(
+          height: 10,
+        )
       ],
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        child: Column(
+    return ListView(
+      children: [
+        Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Column(
-                  children: <Widget> [FutureBuilder(
-                      future: getFirestoreUser(),
-                      builder: (context, snapshot) {
-                        if(snapshot.connectionState == ConnectionState.done) {
-                          return Text("Welcome ${snapshot.data["firstName"].toUpperCase() + "!"}",
-                              style: kLoginTextStyle);
-                          /*Text("${snapshot.data.email}",
-                      style: kLoginTextStyle)*/
-                        }
-                        else {
-                          return CircularProgressIndicator(
-                            backgroundColor: Colors.red,
-                          );
-                        }
-                      }
-                  ),
-                  ]),
-              Center(
-                child: Container(
-                  child: InkWell(
-                      child: Text(
-                        "It's time to be someone at the Gym!",
-                        style: kLoginTextStyle,
-                      ),
-                      onTap: () => launch(
-                          'https://nullpointerexception.greenriverdev.com/Spotlight/index.php')),
-                ),
-              ),
-              Column(
-                children: [
-                  CircleAvatar(
-                      backgroundImage: AssetImage('assets/images/gym5.jpg'),
-                      radius: 100
-                  ),
-                ],
-              ),
-              Center(
-                  child: FutureBuilder(
+              Column(children: <Widget>[
+                Row(children: [
+                  FutureBuilder(
                       future: getFirestoreUser(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
-                          return displayUserInfo(context, snapshot);
+                          return Expanded(
+                              child: Center(
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(20, 7, 0, 0),
+                                  child: Text(
+                                    "Welcome ${snapshot.data["firstName"].toUpperCase() + "!"}",
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      //fontStyle: FontStyle.italic,
+                                      foreground: Paint()
+                                        ..style = PaintingStyle.stroke
+                                        ..strokeWidth = 2
+                                        ..color = Colors.red[400].withOpacity(0.8),
+                                    ),
+                                  ),
+                                ),
+                              ));
+                          /*Text("${snapshot.data.email}",
+                      style: kLoginTextStyle)*/
                         } else {
                           return CircularProgressIndicator(
                             backgroundColor: Colors.red,
                           );
                         }
-                      })
+                      }),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    child: Icon(
+                      Icons.settings,
+                    ),
+                  ),
+                ]),
+              ]),
+              Center(
+                child: Container(
+                  child: InkWell(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                        child: Text(
+                          "It's time to be someone at the Gym!",
+                          style: TextStyle(
+                            fontSize: 20,
+                            //fontStyle: FontStyle.italic,
+                            foreground: Paint()
+                              ..style = PaintingStyle.fill
+                              ..color = Colors.red[400].withOpacity(0.8),
+                          ),
+                        ),
+                      ),
+                      onTap: () => launch(
+                          'https://nullpointerexception.greenriverdev.com/Spotlight/index.php')),
+                ),
               ),
-            ]));
+              Center(
+                child: Stack(
+                  children: [
+                    // CircleAvatar(
+                    //     backgroundImage: AssetImage('assets/images/gym5.jpg'),
+                    //     radius: 100),
+                    Container(
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              width: 4, color: Colors.white.withOpacity(0.9)),
+                          boxShadow: [
+                            BoxShadow(
+                                spreadRadius: 3,
+                                blurRadius: 6,
+                                color: Colors.white)
+                          ],
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: AssetImage('assets/images/gym5.jpg'))),
+                    ),
+                    Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          height: 40,
+                          width: 40,
+                          decoration: BoxDecoration(
+                              color: Colors.red.withOpacity(0.8),
+                              shape: BoxShape.circle,
+                              border:
+                              Border.all(width: 3, color: Colors.white)),
+                          child: Icon(
+                            Icons.edit,
+                            color: Colors.white,
+                          ),
+                        ))
+                  ],
+                ),
+              ),
+              Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 25, right: 25),
+                    child: FutureBuilder(
+                        future: getFirestoreUser(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            return displayUserInfo(context, snapshot);
+                          } else {
+                            return CircularProgressIndicator(
+                              backgroundColor: Colors.red,
+                            );
+                          }
+                        }),
+                  )),
+            ])
+      ],
+    );
+  }
+
+  TextField buildTextField(String labelText, String placeholder) {
+    return TextField(
+      onSubmitted: (text) {
+        print(text);
+      },
+      style: TextStyle(
+          fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white70),
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.only(bottom: 2, top: 10),
+        labelText: labelText,
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        hintText: placeholder,
+        labelStyle: TextStyle(
+            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red[400]),
+        hintStyle: TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+          color: Colors.white70,
+        ),
+      ),
+    );
   }
 }
+
