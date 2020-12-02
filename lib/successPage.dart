@@ -26,12 +26,12 @@ class Success extends StatefulWidget {
 
   void getCurrentUser() async {
     try{
-    final user = _auth.currentUser;
+      final user = _auth.currentUser;
 
-    if(user != null) {
-      loggedInUser = user;
-      print(loggedInUser.email);
-    } }
+      if(user != null) {
+        loggedInUser = user;
+        print(loggedInUser.email);
+      } }
     catch(e) {
       print(e);
     }
@@ -69,11 +69,11 @@ class _SuccessState extends State<Success> {
           padding: const EdgeInsets.only(top: 50.0, bottom: 50.0),
           child: Text('Thank you for signing up with SPOTLIGHT!',
               textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold
-            )
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold
+              )
           ),
         )
       ],

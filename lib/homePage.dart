@@ -8,8 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:spotlight_login/classes/SpotUser.dart';
-import 'package:spotlight_login/constants.dart';
+
 
 //****************************************
 
@@ -148,8 +147,8 @@ class _LandPageState extends State<LandPage> {
             label: 'Profile',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.markunread),
-            label: 'Messages',
+            icon: Icon(Icons.menu_book_rounded),
+            label: 'Education',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.fitness_center),
@@ -163,53 +162,11 @@ class _LandPageState extends State<LandPage> {
         onTap: (index){
           setState(() {
             _currentIndex = index;
-            /* if(_currentIndex == 0) {
-              //getUserInfo();
-            }
-            if(_currentIndex == 2) {
-              gymStream();
-            }*/
-          });
+
+          }
+          );
         },
       ),
     );
   }
 }
-
-/*
-dynamic tabs = [
-  Center(
-    child: Text('Profile'),
-  ),
-  Center(
-    child: Text('Messages'),
-  ),
-  Column(
-      children: <Widget>[ Text("Gyms"),
-        Center(
-          child: StreamBuilder<QuerySnapshot>(
-              stream: _firestore.collection("Gyms").snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final gyms = snapshot.data.docs;
-                  List<Text> gymWidgets = [];
-                  for (var gym in gyms) {
-                    final gymAddress = gym.data()["Address"];
-                    final gymNumUsers = gym.data()["NumUsers"];
-                    final gymWidget = Text(
-                        "$gymAddress has $gymNumUsers Spotlight Users");
-                    gymWidgets.add(gymWidget);
-                  }
-                  return Column(
-                      children: gymWidgets
-                  );
-                }
-                return null;
-              }
-          ),
-        ),
-      ]),
-  Center(
-    child: Text('Calendar'),
-  ),
-];*/

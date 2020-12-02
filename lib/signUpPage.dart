@@ -439,6 +439,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               'Birthday',
               style: kLoginTextStyle,
             ),
+            SizedBox(
+              height: 10.0,
+            ),
             Text(
               'Age: ',
               style: kLoginTextStyle,
@@ -456,6 +459,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ? 'Please Select:'
                         : DateFormat('MMMM-dd-yyyy').format(dateTime),
                     style: kLoginTextStyle,
+                  ),
+                  SizedBox(
+                    height: 10.0,
                   ),
                   Text(
                     age == null
