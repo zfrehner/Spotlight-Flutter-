@@ -23,6 +23,7 @@ class _ProfileState extends State<Profile> {
   var uid;
 
 
+
   void initState() {
     getCurrentUser();
   }
@@ -77,10 +78,10 @@ class _ProfileState extends State<Profile> {
       children: [
         Padding(
           padding: EdgeInsets.all(8.0),
-              child: Text("First Name: ${user["firstName"]}",
-                  style: kLoginTextStyle,
-                  ),
-              ),
+          child: Text("First Name: ${user["firstName"]}",
+            style: kLoginTextStyle,
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text("Last Name: ${user["lastName"]}",
@@ -139,61 +140,59 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Column(
-            children: <Widget> [FutureBuilder(
-              future: getFirestoreUser(),
-              builder: (context, snapshot) {
-                if(snapshot.connectionState == ConnectionState.done) {
-                  return Text("Welcome ${snapshot.data["firstName"].toUpperCase() + "!"}",
-                      style: kLoginTextStyle);
-                  /*Text("${snapshot.data.email}",
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Column(
+                  children: <Widget> [FutureBuilder(
+                      future: getFirestoreUser(),
+                      builder: (context, snapshot) {
+                        if(snapshot.connectionState == ConnectionState.done) {
+                          return Text("Welcome ${snapshot.data["firstName"].toUpperCase() + "!"}",
+                              style: kLoginTextStyle);
+                          /*Text("${snapshot.data.email}",
                       style: kLoginTextStyle)*/
-                }
-                else {
-                  return CircularProgressIndicator(
-                    backgroundColor: Colors.red,
-                  );
-                }
-              }
-            ),
-          ]),
-          Center(
-            child: Container(
-              child: InkWell(
-                  child: Text(
-                    "It's time to be someone at the Gym!",
-                    style: kLoginTextStyle,
+                        }
+                        else {
+                          return CircularProgressIndicator(
+                            backgroundColor: Colors.red,
+                          );
+                        }
+                      }
                   ),
-                  onTap: () => launch(
-                      'https://nullpointerexception.greenriverdev.com/Spotlight/index.php')),
-            ),
-          ),
-          Column(
-            children: [
-              CircleAvatar(
-                backgroundImage: AssetImage('assets/images/gym5.jpg'),
-                radius: 100
+                  ]),
+              Center(
+                child: Container(
+                  child: InkWell(
+                      child: Text(
+                        "It's time to be someone at the Gym!",
+                        style: kLoginTextStyle,
+                      ),
+                      onTap: () => launch(
+                          'https://nullpointerexception.greenriverdev.com/Spotlight/index.php')),
+                ),
               ),
-            ],
-          ),
-          Center(
-            child: FutureBuilder(
-                future: getFirestoreUser(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return displayUserInfo(context, snapshot);
-                  } else {
-                    return CircularProgressIndicator(
-                      backgroundColor: Colors.red,
-                    );
-                  }
-                })
-          ),
-        ]));
+              Column(
+                children: [
+                  CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/gym5.jpg'),
+                      radius: 100
+                  ),
+                ],
+              ),
+              Center(
+                  child: FutureBuilder(
+                      future: getFirestoreUser(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return displayUserInfo(context, snapshot);
+                        } else {
+                          return CircularProgressIndicator(
+                            backgroundColor: Colors.red,
+                          );
+                        }
+                      })
+              ),
+            ]));
   }
 }
-
-

@@ -28,7 +28,7 @@ class _GymsState extends State<Gyms> {
 
   //used to set the icon for the map icons - getting from an asset image
   //void _setMarkerIcon() async {
-    //_markerIcon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(), "assets/images/.jpg");
+  //_markerIcon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(), "assets/images/.jpg");
   //}
 
   void _onMapCreated(GoogleMapController controller) {
@@ -36,12 +36,12 @@ class _GymsState extends State<Gyms> {
 
     setState(() {
       _markers.add(Marker(
-          markerId: MarkerId("1"),
-          position: LatLng(43.847000, -79.551850),
-          infoWindow: InfoWindow(title: "Good Life Fitness #1",
-              onTap: () {Navigator.pushNamed(context, GymCardOneView.id);},
-          snippet: "3420 Major MacKenzie Dr W #201 Vaughan, ON L4H 4J6"),
-          )); //icon: _markerIcon-- add this to add an image for marker icons
+        markerId: MarkerId("1"),
+        position: LatLng(43.847000, -79.551850),
+        infoWindow: InfoWindow(title: "Good Life Fitness #1",
+            onTap: () {Navigator.pushNamed(context, GymCardOneView.id);},
+            snippet: "3420 Major MacKenzie Dr W #201 Vaughan, ON L4H 4J6"),
+      )); //icon: _markerIcon-- add this to add an image for marker icons
 
       _markers.add(Marker(
           markerId: MarkerId("2"),
@@ -70,29 +70,29 @@ class _GymsState extends State<Gyms> {
   Widget build(BuildContext context) {
     return Container(
       child: Stack(
-        children: <Widget>[ GoogleMap(
-          onMapCreated: _onMapCreated,
-          markers: _markers,
-          //myLocationEnabled: true,
-          initialCameraPosition: CameraPosition(
-              target: LatLng(43.7983, -79.5079),//this is the lat/lng for concord, CANADA
-              zoom: 10
+          children: <Widget>[ GoogleMap(
+            onMapCreated: _onMapCreated,
+            markers: _markers,
+            //myLocationEnabled: true,
+            initialCameraPosition: CameraPosition(
+                target: LatLng(43.7983, -79.5079),//this is the lat/lng for concord, CANADA
+                zoom: 10
+            ),
           ),
-        ),
-          Container(
-            alignment: Alignment.bottomCenter,
-            padding: EdgeInsets.only(bottom: 30),
-            child: FloatingActionButton(
-              onPressed: () {
-                //navigate to the list view of gyms
-                Navigator.pushNamed(context, GymCardView.id);
-              },
-              child: Icon(Icons.format_list_numbered_rounded),
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
+            Container(
+                alignment: Alignment.bottomCenter,
+                padding: EdgeInsets.only(bottom: 30),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    //navigate to the list view of gyms
+                    Navigator.pushNamed(context, GymCardView.id);
+                  },
+                  child: Icon(Icons.format_list_numbered_rounded),
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                )
             )
-          )
-      ]),
+          ]),
     );
   }
 }
@@ -102,14 +102,10 @@ class _GymsState extends State<Gyms> {
   final _auth = FirebaseAuth.instance;
   var firebaseUser = FirebaseAuth.instance.currentUser;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   User loggedInUser;
-
-
   void initState() {
     getCurrentUser();
   }
-
   */
 /*void gymStream() async {
     await for(var snapshot in _firestore.collection("Gyms").snapshots()) {
@@ -119,11 +115,9 @@ class _GymsState extends State<Gyms> {
     }
   }*/
 /*
-
   void getCurrentUser() async {
     try {
       final user = _auth.currentUser;
-
       if (user != null) {
         loggedInUser = user;
         //print(loggedInUser.email);
@@ -132,7 +126,6 @@ class _GymsState extends State<Gyms> {
       print(e);
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
@@ -157,17 +150,14 @@ class _GymsState extends State<Gyms> {
                 }
                 final gyms = snapshot.data.docs;
                 List<GymDisplay> gymWidgets = [];
-
                 for (var gym in gyms) {
                   final gymTitle = gym.data()["Title"];
                   final gymAddress = gym.data()["Address"];
                   final gymCity = gym.data()["City"];
                   final gymUsers = gym.data()["NumUsers"];
-
                   final gymWidget = GymDisplay(
                       title: gymTitle, address: gymAddress, city: gymCity,
                   numUsers: gymUsers);
-
                   gymWidgets.add(gymWidget);
                 }
                 //return the styling that we want here (Cards)
@@ -189,12 +179,10 @@ class _GymsState extends State<Gyms> {
 
 /*class GymDisplay extends StatelessWidget {
   GymDisplay({this.title, this.address, this.city, this.numUsers}); //, this.numUsers
-
   final String title;
   final String address;
   final String city;
   final int numUsers;
-
   //final int numUsers;
   @override
   Widget build(BuildContext context) {
@@ -266,9 +254,7 @@ class _GymsState extends State<Gyms> {
 }*/
 
 /*class GymDisplay extends StatelessWidget {
-
   GymDisplay({this.title, this.address});//, this.numUsers
-
   final String title;
   final String address;
   //final int numUsers;
@@ -357,11 +343,7 @@ children: gymWidgets,
           ),
         ],
       ),
-
     ),
   );
-
 }
 }*/
-
-

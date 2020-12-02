@@ -25,12 +25,12 @@ class _CalendarState extends State<Calendar> {
         ),
         thisMonthDayBorderColor: Colors.white,
         daysTextStyle: TextStyle(
-          color: Colors.white
+            color: Colors.white
         ),
         headerTextStyle: TextStyle(
-          color: Colors.white,
-          fontSize: 20,
-          fontWeight: FontWeight.bold
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold
         ),
         iconColor: Colors.white,
 //      weekDays: null, /// for pass null when you do not want to render weekDays
@@ -50,7 +50,6 @@ class _CalendarState extends State<Calendar> {
             ) {
           /// If you return null, [CalendarCarousel] will build container for current [day] with default function.
           /// This way you can build custom containers for specific days only, leaving rest as default.
-
           // Example: every 15th of month, we have a flight, we can place an icon in the container like that:
           if (day.day == 15) {
             return Center(
@@ -70,4 +69,4 @@ class _CalendarState extends State<Calendar> {
       ),
     );
   }
-  }
+}
