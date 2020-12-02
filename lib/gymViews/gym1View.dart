@@ -149,85 +149,85 @@ class _GymCardOneViewState extends State<GymCardOneView> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-                onPressed: () {
-                  //do something
-                },
-                icon: CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/LOGO 4.jpg'),
-                )
-            ),
-            centerTitle: true,
-            title: Center(
-                child: Text('SPOTLIGHT',
-                    style: TextStyle(fontSize: 30.0))
-            ),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.close_rounded),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
-            ],
-          ),
-          body: Column(children: <Widget>[
-            Text(
-            "People checked-in to Gym 1!",
-            style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white
-            ),
-          ), Expanded(
-            child: Column(
-                children: <Widget>[StreamBuilder<QuerySnapshot>(
-                    stream: _firestore.collection("Gym1CheckedIn").snapshots(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return Center(
-                            child: CircularProgressIndicator(
-                              backgroundColor: Colors.white,
-                            ));
-                      }
-                      final users = snapshot.data.docs;
-                      List<UserDisplay> userWidgets = [];
-
-                      for (var user in users) {
-                        final userName = user.data()["Name"];
-                        final userGender = user.data()["Gender"];
-                        final userAge = user.data()["Age"];
-
-
-                        final gymWidget = UserDisplay(
-                            name: userName, gender: userGender, age: userAge);
-
-                        userWidgets.add(gymWidget);
-                      }
-
-                      //return the styling that we want here (Cards)
-                      return Expanded(
-                        child: ListView(
-                          padding:
-                          EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          children: userWidgets,
-                        ),
-                      );
-
-                    }),
-                ]),
-          ),
-              Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Remember to check-in and check out!",
-                style: kLoginTextStyle),
+            appBar: AppBar(
+              leading: IconButton(
+                  onPressed: () {
+                    //do something
+                  },
+                  icon: CircleAvatar(
+                    backgroundImage: AssetImage('assets/images/LOGO 4.jpg'),
                   )
-              ]),
+              ),
+              centerTitle: true,
+              title: Center(
+                  child: Text('SPOTLIGHT',
+                      style: TextStyle(fontSize: 30.0))
+              ),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.close_rounded),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            ),
+            body: Column(children: <Widget>[
+              Text(
+                "People checked-in to Gym 1!",
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white
+                ),
+              ), Expanded(
+                child: Column(
+                    children: <Widget>[StreamBuilder<QuerySnapshot>(
+                        stream: _firestore.collection("Gym1CheckedIn").snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(
+                                child: CircularProgressIndicator(
+                                  backgroundColor: Colors.white,
+                                ));
+                          }
+                          final users = snapshot.data.docs;
+                          List<UserDisplay> userWidgets = [];
+
+                          for (var user in users) {
+                            final userName = user.data()["Name"];
+                            final userGender = user.data()["Gender"];
+                            final userAge = user.data()["Age"];
+
+
+                            final gymWidget = UserDisplay(
+                                name: userName, gender: userGender, age: userAge);
+
+                            userWidgets.add(gymWidget);
+                          }
+
+                          //return the styling that we want here (Cards)
+                          return Expanded(
+                            child: ListView(
+                              padding:
+                              EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              children: userWidgets,
+                            ),
+                          );
+
+                        }),
+                    ]),
+              ),
+              Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text("Remember to check-in and check out!",
+                          style: kLoginTextStyle),
+                    )
+                  ]),
               Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -260,24 +260,24 @@ class _GymCardOneViewState extends State<GymCardOneView> {
 
                           var count = await getNumUsers();
 
-                            if(!user.exists && !user2.exists && !user3.exists && !user4.exists) {
-                              //check the user into the gym by adding info to new collection
-                              _firestore.collection("Gym1CheckedIn")
-                                  .doc(_auth.currentUser.uid)
-                                  .set({
-                                "Name": first + " " + last,
-                                "Gender": gender,
-                                "Age": differenceInYears
-                              });
-                              _firestore.collection("Gyms")
-                                  .doc("Gym 1")
-                                  .update({
-                                "NumUsers": count + 1
-                              });
-                            }
-                            else {
-                              _showMyDialog();
-                            }
+                          if(!user.exists && !user2.exists && !user3.exists && !user4.exists) {
+                            //check the user into the gym by adding info to new collection
+                            _firestore.collection("Gym1CheckedIn")
+                                .doc(_auth.currentUser.uid)
+                                .set({
+                              "Name": first + " " + last,
+                              "Gender": gender,
+                              "Age": differenceInYears
+                            });
+                            _firestore.collection("Gyms")
+                                .doc("Gym 1")
+                                .update({
+                              "NumUsers": count + 1
+                            });
+                          }
+                          else {
+                            _showMyDialog();
+                          }
                           //add 1 to the count of NumUsers in the Gym 1
 
                         },
