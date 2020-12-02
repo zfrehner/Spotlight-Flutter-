@@ -81,6 +81,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String password;
   String email;
   String gender;
+  int age;
 
   //variable for phone number
   var phoneNumber;
@@ -91,6 +92,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
   //   // _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
   //   _gender = _dropdownMenuItems[0].value;
   // }
+  // *********************** Age calculator Function ***************************
+  calculateAge (DateTime birthdate) {
+    DateTime current = DateTime.now();
+    age = current.year - birthdate.year;
+    int month1 = current.month;
+    int month2 = birthdate.month;
+    if(month1 < month2) {
+      age--;
+    }
+    if(month1 == month2) {
+      int day1 = current.day;
+      int day2 = birthdate.day;
+      if(day1 < day2) {
+        age--;
+      }
+    }
+    return age;
+  }
+
+
 
 //**************************** First Name Input Field **************************
   Widget buildFirstNameField() {
@@ -393,7 +414,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.only(top: 14),
                 prefixIcon:
-                    Icon(Icons.location_on_sharp, color: Color(0xffFF3232)),
+                Icon(Icons.location_on_sharp, color: Color(0xffFF3232)),
                 // ************* artems code: errorStyle *******************
                 errorStyle: kErrorTextStyle,
                 // *********************************************************
@@ -412,19 +433,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          'Birthday',
-          style: kLoginTextStyle,
+        Column(
+          children: [
+            Text(
+              'Birthday',
+              style: kLoginTextStyle,
+            ),
+            Text(
+              'Age: ',
+              style: kLoginTextStyle,
+            ),
+          ],
         ),
         Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: Row(
             children: <Widget>[
-              Text(
-                dateTime == null
-                    ? 'Please Select:'
-                    : DateFormat('MMMM-dd-yyyy').format(dateTime),
-                style: kLoginTextStyle,
+              Column(
+                children: [
+                  Text(
+                    dateTime == null
+                        ? 'Please Select:'
+                        : DateFormat('MMMM-dd-yyyy').format(dateTime),
+                    style: kLoginTextStyle,
+                  ),
+                  Text(
+                    age == null
+                        ? ' '
+                        : age.toString(),
+                    style: kLoginTextStyle,
+                  ),
+                ],
               ),
             ],
           ),
@@ -433,7 +472,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           padding: EdgeInsets.only(left: 10.0),
           child: RaisedButton(
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             color: Colors.white,
             child: Text(
               'Pick a date',
@@ -442,13 +481,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
             onPressed: () {
               showDatePicker(
-                      context: context,
-                      initialDate: dateTime == null ? DateTime.now().subtract(Duration(days: 5844)) : dateTime,
-                      firstDate: DateTime(1900),
-                      lastDate: DateTime.now().subtract(Duration(days: 5844)))
+                  context: context,
+                  initialDate: dateTime == null ? DateTime.now().subtract(Duration(days: 5844)) : dateTime,
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime.now().subtract(Duration(days: 5844)))
                   .then((date) {
                 setState(() {
                   dateTime = date;
+                  age = calculateAge(date);
                 });
               });
             },
@@ -461,7 +501,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 //**************************** Gender Input Field ******************************
   Widget buildGenderChoice() {
     return Row(
-        //crossAxisAlignment: CrossAxisAlignment.start,
+      //crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             'Gender',
@@ -600,7 +640,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               decoration: kSignUpBoxDecoration,
               height: 60,
               child: TextFormField(
-                  // ******** artems code: add contorller *********************
+                // ******** artems code: add contorller *********************
                   controller: _confirmPassword,
                   // ***********************************************************
                   obscureText: true,
@@ -632,11 +672,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
 //****************************** Continue Field ********************************
   Widget buildContBtn() {
     return GestureDetector(
-        // ***************** Artems code *****************************************
-        // onTap: () => Navigator.push(
-        //       context,
-        //       MaterialPageRoute(builder: (context) => SignUpContinue()),
-        //     ),
+      // ***************** Artems code *****************************************
+      // onTap: () => Navigator.push(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => SignUpContinue()),
+      //     ),
         onTap: () async {
           print(firstName);
           print(lastName);
@@ -658,36 +698,36 @@ class _SignUpScreenState extends State<SignUpScreen> {
               //capture the new user
               //async and await mean the user is authenticated before we go on
               try {
-                   await _auth
+                await _auth
                     .createUserWithEmailAndPassword(
-                        email: email, password: password)
+                    email: email, password: password)
                     .then(
                       (loggedInUser) => _firestore
-                          .collection('SpotlightUsers')
-                          .doc(_auth.currentUser.uid)
-                          .set(
-                        {
-                          'uid': _auth.currentUser.uid,
-                          'firstName': firstName,
-                          'lastName': lastName,
-                          'email': email,
-                          'country': country,
-                          'address': address,
-                          'city': city,
-                          'state': state,
-                          'zipCode': zipCode,
-                          'birthday': dateTime,
-                          'gender': gender,
-                          'phoneNumber': phoneNumber
-                        },
+                      .collection('SpotlightUsers')
+                      .doc(_auth.currentUser.uid)
+                      .set(
+                    {
+                      'uid': _auth.currentUser.uid,
+                      'firstName': firstName,
+                      'lastName': lastName,
+                      'email': email,
+                      'country': country,
+                      'address': address,
+                      'city': city,
+                      'state': state,
+                      'zipCode': zipCode,
+                      'birthday': dateTime,
+                      'gender': gender,
+                      'phoneNumber': phoneNumber
+                    },
 
-                      ),
+                  ),
 
-                    );
+                );
 
-                   if (_auth.currentUser.uid != null) {
-                     Navigator.pushNamed(context, Success.id);
-                   }
+                if (_auth.currentUser.uid != null) {
+                  Navigator.pushNamed(context, Success.id);
+                }
 
               } catch (e) {
                 print(e);
@@ -702,15 +742,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
         // *********************************************************************
         child: RichText(
             text: TextSpan(children: [
-          TextSpan(
-              text: 'Continue',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                decoration: TextDecoration.underline,
-              ))
-        ])));
+              TextSpan(
+                  text: 'Continue',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
+                  ))
+            ])));
   }
 
 //****************************** MAIN SCAFFOLD *********************************
@@ -723,78 +763,78 @@ class _SignUpScreenState extends State<SignUpScreen> {
               value: SystemUiOverlayStyle.light,
               child: GestureDetector(
                   child: Stack(children: <Widget>[
-                Container(
-                    height: double.infinity,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                          Color(0xffFF3232),
-                          Color(0xccFF3232),
-                          Color(0xccFF3232),
-                          Color(0xffFF3232),
-                        ])),
-                    child: SingleChildScrollView(
-                        physics: AlwaysScrollableScrollPhysics(),
-                        padding:
+                    Container(
+                        height: double.infinity,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Color(0xffFF3232),
+                                  Color(0xccFF3232),
+                                  Color(0xccFF3232),
+                                  Color(0xffFF3232),
+                                ])),
+                        child: SingleChildScrollView(
+                            physics: AlwaysScrollableScrollPhysics(),
+                            padding:
                             EdgeInsets.symmetric(horizontal: 25, vertical: 25),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Row(
+                            child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 40),
-                                    child: Text('Sign Up',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold,
-                                        )),
+                                children: <Widget>[
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 40),
+                                        child: Text('Sign Up',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 30,
+                                              fontWeight: FontWeight.bold,
+                                            )),
+                                      ),
+                                      Hero(
+                                        tag: 'logo',
+                                        child: CircleAvatar(
+                                          radius: 50,
+                                          backgroundImage: AssetImage(
+                                              'assets/images/LOGO 4.jpg'),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  Hero(
-                                    tag: 'logo',
-                                    child: CircleAvatar(
-                                      radius: 50,
-                                      backgroundImage: AssetImage(
-                                          'assets/images/LOGO 4.jpg'),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              buildFirstNameField(),
-                              SizedBox(height: 10),
-                              buildLastNameField(),
-                              SizedBox(height: 10),
-                              buildEmail(),
-                              SizedBox(height: 10),
-                              buildCountryPicker(),
-                              SizedBox(height: 10),
-                              buildAddressField(),
-                              SizedBox(height: 10),
-                              buildCityField(),
-                              SizedBox(height: 10),
-                              buildStateField(),
-                              SizedBox(height: 10),
-                              buildZipField(),
-                              SizedBox(height: 30),
-                              buildAgeField(),
-                              SizedBox(height: 30),
-                              buildGenderChoice(),
-                              SizedBox(height: 30),
-                              buildPhoneNumber(),
-                              SizedBox(height: 10),
-                              buildPassword(),
-                              SizedBox(height: 10),
-                              buildConfirmPassword(),
-                              SizedBox(height: 10),
-                              buildContBtn()
-                            ])))
-              ])))),
+                                  SizedBox(height: 10),
+                                  buildFirstNameField(),
+                                  SizedBox(height: 10),
+                                  buildLastNameField(),
+                                  SizedBox(height: 10),
+                                  buildEmail(),
+                                  SizedBox(height: 10),
+                                  buildCountryPicker(),
+                                  SizedBox(height: 10),
+                                  buildAddressField(),
+                                  SizedBox(height: 10),
+                                  buildCityField(),
+                                  SizedBox(height: 10),
+                                  buildStateField(),
+                                  SizedBox(height: 10),
+                                  buildZipField(),
+                                  SizedBox(height: 30),
+                                  buildAgeField(),
+                                  SizedBox(height: 30),
+                                  buildGenderChoice(),
+                                  SizedBox(height: 30),
+                                  buildPhoneNumber(),
+                                  SizedBox(height: 10),
+                                  buildPassword(),
+                                  SizedBox(height: 10),
+                                  buildConfirmPassword(),
+                                  SizedBox(height: 10),
+                                  buildContBtn()
+                                ])))
+                  ])))),
     );
   }
 }
