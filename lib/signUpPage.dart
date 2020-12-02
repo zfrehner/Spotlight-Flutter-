@@ -73,7 +73,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   //form field variables
   String firstName;
   String lastName;
-  String country;
+  String country = "Canada";
   String address;
   String city;
   String state;
@@ -276,7 +276,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         SizedBox(height: 10),
         FormBuilderCountryPicker(
           onChanged: (value) {
-            country = value;
+            country = value.name;
           },
           attribute: 'country_picker',
           initialValue: 'Canada',
@@ -436,7 +436,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         Column(
           children: [
             Text(
-              'Birthday',
+              'Birthday:',
               style: kLoginTextStyle,
             ),
             SizedBox(
@@ -844,24 +844,3 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 }
-
-//****************************** Drop Down Menu ********************************
-// List<DropdownMenuItem<ListItem>> buildDropDownMenuItems(List listItems) {
-//   List<DropdownMenuItem<ListItem>> items = List();
-//   for (ListItem listItem in listItems) {
-//     items.add(
-//       DropdownMenuItem(
-//         child: Text(listItem.name),
-//         value: listItem,
-//       ),
-//     );
-//   }
-//   return items;
-// }
-
-//****************************** List Item Class *******************************
-// class ListItem {
-//   ListItem(this.value, this.name);
-//   int value;
-//   String name;
-// }
