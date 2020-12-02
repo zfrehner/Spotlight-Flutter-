@@ -1,7 +1,7 @@
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
-
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,6 +23,8 @@ class _ProfileState extends State<Profile> {
 
   User loggedInUser;
   var uid;
+
+  String imageUrl;
 
   void initState() {
     getCurrentUser();
@@ -97,22 +99,40 @@ class _ProfileState extends State<Profile> {
       zip = "";
     }
 
+    var date = DateFormat('MM/dd/yyyy').format(user["birthday"].toDate());
+    if(date == null) {
+      date = "";
+    }
+
+    // check if hobbies is left blank
+    var hobbies = user["hobbies"];
+    if (hobbies == null) {
+      hobbies = "";
+    }
+
+    // check if workouts is left blank
+    var workout = user["workout"];
+    if (workout == null) {
+      workout = "";
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        buildTextField("First Name", "${user["firstName"]}"),
-        buildTextField("Last Name", "${user["lastName"]}"),
-        buildTextField("Email", "${user["email"]}"),
-        buildTextField("Phone", "$phone"),
-        //buildTextField("Birthday", "${user["birthday"].toDate()}"),
-        buildTextField("Address", "$address"),
-        buildTextField("City", "$city"),
-        buildTextField("State", "$state"),
-        buildTextField("Postal code", "$zip"),
-        buildTextField("Country", "${user["country"]}"),
+        buildTextField("First Name", "${user["firstName"]}", "firstName"),
+        buildTextField("Last Name", "${user["lastName"]}", "lastName"),
+        buildTextField("Email", "${user["email"]}", "email"),
+        buildTextField("Phone", "$phone","phoneNumber"),
+
+        buildTextField("Birthday", "$date", "birthday"),
+        buildTextField("Address", "$address", "address"),
+        buildTextField("City", "$city", "city"),
+        buildTextField("State", "$state", "state"),
+        buildTextField("Postal code", "$zip", "zipCode"),
+        buildTextField("Country", "${user["country"]}", "country"),
         // extra fields for optional info
-        buildTextField("Interests/Hobbies", ""),
-        buildTextField("Favorite workout", ""),
+        buildTextField("Interests/Hobbies", "$hobbies", "hobbies"),
+        buildTextField("Favorite workout", "$workout", "workout"),
         SizedBox(
           height: 10,
         )
@@ -122,6 +142,8 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return ListView(
       children: [
         Column(
@@ -193,7 +215,13 @@ class _ProfileState extends State<Profile> {
                     //     backgroundImage: AssetImage('assets/images/gym5.jpg'),
                     //     radius: 100),
                     Container(
-                      width: 150,
+                      child: Column(children: <Widget>[
+                          (imageUrl != null)
+                              ? Image.network(imageUrl)
+                              : Placeholder(fallbackHeight: 200, fallbackWidth: double.infinity),
+                        ]
+                      ),
+                        width: 150,
                       height: 150,
                       decoration: BoxDecoration(
                           border: Border.all(
@@ -207,8 +235,7 @@ class _ProfileState extends State<Profile> {
                           shape: BoxShape.circle,
                           image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: AssetImage('assets/images/gym5.jpg'))),
-                    ),
+                              image: AssetImage(" ")))),
                     Positioned(
                         bottom: 0,
                         right: 0,
@@ -220,9 +247,12 @@ class _ProfileState extends State<Profile> {
                               shape: BoxShape.circle,
                               border:
                               Border.all(width: 3, color: Colors.white)),
-                          child: Icon(
-                            Icons.edit,
-                            color: Colors.white,
+                          child: IconButton(
+                            onPressed: () => uploadImage(),
+                             icon: Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                            ),
                           ),
                         ))
                   ],
@@ -248,10 +278,58 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  TextField buildTextField(String labelText, String placeholder) {
+  uploadImage() async {
+    final _picker = ImagePicker();
+    final _storage = FirebaseStorage.instance;
+
+    PickedFile image;
+
+    //check permissions
+    await Permission.photos.request();
+
+    var permissionStatus = await Permission.photos.status;
+
+    if(permissionStatus.isGranted) {
+      //select image
+      image = await _picker.getImage(source: ImageSource.gallery);
+      var file = File(image.path);
+
+      if(image != null) {
+        //upload to firebase
+        var snapshot = await _storage.ref()
+            .child("$uid/imageName")
+            .putFile(file);
+
+        var downloadUrl = await snapshot.ref.getDownloadURL();
+
+        setState(() {
+          imageUrl = downloadUrl;
+        });
+
+      }
+      else {
+        print("No path received.");
+      }
+
+    } else {
+      print("Please grant permission.");
+    }
+
+
+
+
+  }
+
+  TextField buildTextField(String labelText, String placeholder, String database) {
     return TextField(
       onSubmitted: (text) {
-        print(text);
+        _firestore.collection("SpotlightUsers")
+            .doc(_auth.currentUser.uid)
+            .update({
+          database : text
+        });
+        //print(text)
+
       },
       style: TextStyle(
           fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white70),
@@ -272,3 +350,6 @@ class _ProfileState extends State<Profile> {
   }
 }
 
+
+/*(imageUrl != null)
+? Image.network(imageUrl) : Placeholder("assets/images/gym5.jpg")*/
