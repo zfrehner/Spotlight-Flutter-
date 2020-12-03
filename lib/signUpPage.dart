@@ -87,6 +87,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   var phoneNumber;
   DateTime dateTime;
 
+
+
   // void initState() {
   //   super.initState();
   //   // _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
@@ -109,6 +111,66 @@ class _SignUpScreenState extends State<SignUpScreen> {
       }
     }
     return age;
+  }
+
+  //******************************* Show Dialogue Box ****************************
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Spotlight Notice!'),
+          backgroundColor: Colors.white,
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Please choose your age.'),
+                Text('You must be at least 16 years old.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Continue'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  //***************************show gender dialog ****************************
+
+  Future<void> _showGenderDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Spotlight Notice!'),
+          backgroundColor: Colors.white,
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Please choose your gender.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Continue'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
 
@@ -683,56 +745,61 @@ class _SignUpScreenState extends State<SignUpScreen> {
       //       context,
       //       MaterialPageRoute(builder: (context) => SignUpContinue()),
       //     ),
-        onTap: () async {
-          print(firstName);
-          print(lastName);
-          print(email);
-          print(country); //getting null
-          print(address);
-          print(city);
-          print(state);
-          print(zipCode);
-          print(dateTime);
-          print(gender);
-          print(phoneNumber);
-          print(password);
+        onTap: ()  {
+          //print("Gender: " +  gender);
+          //print("selected: " + genderSelected);
 
           setState(() async {
+
             if (_formKey.currentState.validate()) {
               //registering the user with the form fields
               //returns a "Future"
               //capture the new user
               //async and await mean the user is authenticated before we go on
               try {
-                await _auth
-                    .createUserWithEmailAndPassword(
-                    email: email, password: password)
-                    .then(
-                      (loggedInUser) => _firestore
-                      .collection('SpotlightUsers')
-                      .doc(_auth.currentUser.uid)
-                      .set(
-                    {
-                      'uid': _auth.currentUser.uid,
-                      'firstName': firstName,
-                      'lastName': lastName,
-                      'email': email,
-                      'country': country,
-                      'address': address,
-                      'city': city,
-                      'state': state,
-                      'zipCode': zipCode,
-                      'birthday': dateTime,
-                      'gender': gender,
-                      'phoneNumber': phoneNumber
-                    },
 
-                  ),
+                if(dateTime == null || gender == "Choose.." || genderSelected == "Choose..") {
+                  if(gender == "Choose.." || genderSelected == "Choose..") {
+                    _showGenderDialog();
+                  }
+                  if(dateTime == null) {
+                    _showMyDialog();
+                  }
+                } else {
+                  await _auth
+                      .createUserWithEmailAndPassword(
+                      email: email, password: password)
+                      .then(
+                        (loggedInUser) =>
+                        _firestore
+                            .collection('SpotlightUsers')
+                            .doc(_auth.currentUser.uid)
+                            .set(
+                          {
+                            'uid': _auth.currentUser.uid,
+                            'firstName': firstName,
+                            'lastName': lastName,
+                            'email': email,
+                            'country': country,
+                            'address': address,
+                            'city': city,
+                            'state': state,
+                            'zipCode': zipCode,
+                            'birthday': dateTime,
+                            'gender': gender,
+                            'phoneNumber': phoneNumber,
+                            'hobbies': null,
+                            'workout': null
+                          },
 
-                );
+                        ),
 
-                if (_auth.currentUser.uid != null) {
-                  Navigator.pushNamed(context, Success.id);
+                  );
+
+
+                  if (_auth.currentUser.uid != null) {
+                    Navigator.pushNamed(context, Success.id);
+                  }
                 }
 
               } catch (e) {
