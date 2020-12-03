@@ -34,6 +34,9 @@ dependencies:
   flutter_calendar_carousel: ^1.5.1
   google_maps_flutter: ^1.0.6
   webview_flutter: ^1.0.7
+  image_picker: ^0.6.7+14
+  firebase_storage: ^5.1.0
+  permission_handler: ^5.0.1+1
 
 
 
