@@ -8,7 +8,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/rendering.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import 'package:intl/intl.dart';
 
 class Profile extends StatefulWidget {
@@ -99,10 +98,11 @@ class _ProfileState extends State<Profile> {
       zip = "";
     }
 
-    var date = DateFormat('MM/dd/yyyy').format(user["birthday"].toDate());
-    if(date == null) {
-      date = "";
-    }
+      var date = DateFormat('MM/dd/yyyy').format(user["birthday"].toDate());
+      if (date == null) {
+        date = "";
+      }
+
 
     // check if hobbies is left blank
     var hobbies = user["hobbies"];
