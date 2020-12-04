@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/rendering.dart';
-import 'package:url_launcher/url_launcher.dart';
+
 import 'package:intl/intl.dart';
 
 class Profile extends StatefulWidget {
@@ -25,8 +25,15 @@ class _ProfileState extends State<Profile> {
 
   String imageUrl;
 
+  var URL;
+
   void initState() {
     getCurrentUser();
+    assignUrl();
+  }
+
+  void assignUrl() async {
+    URL = await getUrl();
   }
 
   void getCurrentUser() async {
@@ -140,8 +147,18 @@ class _ProfileState extends State<Profile> {
     );
   }
 
+  Future<String> getUrl() async {
+    final ref = FirebaseStorage.instance.ref().child('$uid/imageName');
+    var url = await ref.getDownloadURL();
+    print(url);
+    return url;
+  }
+
   @override
   Widget build(BuildContext context) {
+
+// no need of the file extension, the name will do fine.
+
 
 
     return ListView(
@@ -190,22 +207,19 @@ class _ProfileState extends State<Profile> {
               ]),
               Center(
                 child: Container(
-                  child: InkWell(
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                        child: Text(
-                          "It's time to be someone at the Gym!",
-                          style: TextStyle(
-                            fontSize: 20,
-                            //fontStyle: FontStyle.italic,
-                            foreground: Paint()
-                              ..style = PaintingStyle.fill
-                              ..color = Colors.red[400].withOpacity(0.8),
-                          ),
-                        ),
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: Text(
+                      "It's time to be someone at the Gym!",
+                      style: TextStyle(
+                        fontSize: 20,
+                        //fontStyle: FontStyle.italic,
+                        foreground: Paint()
+                          ..style = PaintingStyle.fill
+                          ..color = Colors.red[400].withOpacity(0.8),
                       ),
-                      onTap: () => launch(
-                          'https://nullpointerexception.greenriverdev.com/Spotlight/index.php')),
+                    ),
+                  ),
                 ),
               ),
               Center(
@@ -214,28 +228,29 @@ class _ProfileState extends State<Profile> {
                     // CircleAvatar(
                     //     backgroundImage: AssetImage('assets/images/gym5.jpg'),
                     //     radius: 100),
-                    Container(
-                      child: Column(children: <Widget>[
-                          (imageUrl != null)
-                              ? Image.network(imageUrl)
-                              : Placeholder(fallbackHeight: 200, fallbackWidth: double.infinity),
-                        ]
-                      ),
-                        width: 150,
-                      height: 150,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 4, color: Colors.white.withOpacity(0.9)),
-                          boxShadow: [
-                            BoxShadow(
-                                spreadRadius: 3,
-                                blurRadius: 6,
-                                color: Colors.white)
-                          ],
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage(" ")))),
+                  Container(
+                        child: Column(children: <Widget>[
+                            (URL != null)
+                                ? Image.network(URL)
+                                : Image.asset("assets/images/gym5.jpg")
+                          ]
+                        ),
+                          width: 150,
+                        height: 150,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                width: 4, color: Colors.white.withOpacity(0.9)),
+                            boxShadow: [
+                              BoxShadow(
+                                  spreadRadius: 3,
+                                  blurRadius: 6,
+                                  color: Colors.white)
+                            ],
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: AssetImage(" ")))),
+
                     Positioned(
                         bottom: 0,
                         right: 0,
@@ -248,8 +263,11 @@ class _ProfileState extends State<Profile> {
                               border:
                               Border.all(width: 3, color: Colors.white)),
                           child: IconButton(
-                            onPressed: () => uploadImage(),
-                             icon: Icon(
+                            onPressed: ()  {
+
+                              uploadImage();
+                            },
+                            icon: Icon(
                               Icons.edit,
                               color: Colors.white,
                             ),
@@ -322,7 +340,7 @@ class _ProfileState extends State<Profile> {
 
   TextField buildTextField(String labelText, String placeholder, String database) {
     return TextField(
-      onSubmitted: (text) {
+      onChanged: (text) {
         _firestore.collection("SpotlightUsers")
             .doc(_auth.currentUser.uid)
             .update({
