@@ -105,11 +105,10 @@ class _ProfileState extends State<Profile> {
       zip = "";
     }
 
-      var date = DateFormat('MM/dd/yyyy').format(user["birthday"].toDate());
-      if (date == null) {
-        date = "";
-      }
-
+    var date = DateFormat('MM/dd/yyyy').format(user["birthday"].toDate());
+    if (date == null) {
+      date = "";
+    }
 
     // check if hobbies is left blank
     var hobbies = user["hobbies"];
@@ -129,9 +128,33 @@ class _ProfileState extends State<Profile> {
         buildTextField("First Name", "${user["firstName"]}", "firstName"),
         buildTextField("Last Name", "${user["lastName"]}", "lastName"),
         buildTextField("Email", "${user["email"]}", "email"),
-        buildTextField("Phone", "$phone","phoneNumber"),
-
-        buildTextField("Birthday", "$date", "birthday"),
+        buildTextField("Phone", "$phone", "phoneNumber"),
+        TextField(
+          enabled: false,
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: Colors.white70,
+          ),
+          decoration: InputDecoration(
+            // enabledBorder: OutlineInputBorder(
+            //     borderRadius: BorderRadius.all(Radius.circular(20)),
+            //     borderSide: BorderSide(color: Colors.redAccent)),
+            contentPadding: EdgeInsets.only(bottom: 2, top: 10),
+            labelText: "Birthday",
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            hintText: '$date',
+            labelStyle: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.red[400]),
+            hintStyle: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.white70,
+            ),
+          ),
+        ),
         buildTextField("Address", "$address", "address"),
         buildTextField("City", "$city", "city"),
         buildTextField("State", "$state", "state"),
@@ -156,142 +179,154 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-
 // no need of the file extension, the name will do fine.
-
-
 
     return ListView(
       children: [
-        Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Column(children: <Widget>[
-                Row(children: [
-                  FutureBuilder(
-                      future: getFirestoreUser(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          return Expanded(
-                              child: Center(
-                                child: Padding(
-                                  padding: EdgeInsets.fromLTRB(20, 7, 0, 0),
-                                  child: Text(
-                                    "Welcome ${snapshot.data["firstName"].toUpperCase() + "!"}",
-                                    style: TextStyle(
-                                      fontSize: 25,
-                                      //fontStyle: FontStyle.italic,
-                                      foreground: Paint()
-                                        ..style = PaintingStyle.stroke
-                                        ..strokeWidth = 2
-                                        ..color = Colors.red[400].withOpacity(0.8),
-                                    ),
-                                  ),
-                                ),
-                              ));
-                          /*Text("${snapshot.data.email}",
-                      style: kLoginTextStyle)*/
-                        } else {
-                          return CircularProgressIndicator(
-                            backgroundColor: Colors.red,
-                          );
-                        }
-                      }),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    child: Icon(
-                      Icons.settings,
-                    ),
-                  ),
-                ]),
-              ]),
-              Center(
-                child: Container(
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    child: Text(
-                      "It's time to be someone at the Gym!",
-                      style: TextStyle(
-                        fontSize: 20,
-                        //fontStyle: FontStyle.italic,
-                        foreground: Paint()
-                          ..style = PaintingStyle.fill
-                          ..color = Colors.red[400].withOpacity(0.8),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Center(
-                child: Stack(
-                  children: [
-                    // CircleAvatar(
-                    //     backgroundImage: AssetImage('assets/images/gym5.jpg'),
-                    //     radius: 100),
-                  Container(
-                        child: Column(children: <Widget>[
-                            (URL != null)
-                                ? Image.network(URL)
-                                : Image.asset("assets/images/gym5.jpg")
-                          ]
-                        ),
-                          width: 150,
-                        height: 150,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 4, color: Colors.white.withOpacity(0.9)),
-                            boxShadow: [
-                              BoxShadow(
-                                  spreadRadius: 3,
-                                  blurRadius: 6,
-                                  color: Colors.white)
-                            ],
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: AssetImage(" ")))),
-
-                    Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              color: Colors.red.withOpacity(0.8),
-                              shape: BoxShape.circle,
-                              border:
-                              Border.all(width: 3, color: Colors.white)),
-                          child: IconButton(
-                            onPressed: ()  {
-
-                              uploadImage();
-                            },
-                            icon: Icon(
-                              Icons.edit,
-                              color: Colors.white,
+        Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <
+            Widget>[
+          Column(children: <Widget>[
+            Row(children: [
+              FutureBuilder(
+                  future: getFirestoreUser(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return Expanded(
+                          child: Center(
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(20, 7, 0, 0),
+                          child: Text(
+                            "Welcome ${snapshot.data["firstName"].toUpperCase() + "!"}",
+                            style: TextStyle(
+                              fontSize: 25,
+                              //fontStyle: FontStyle.italic,
+                              foreground: Paint()
+                                ..style = PaintingStyle.stroke
+                                ..strokeWidth = 2
+                                ..color = Colors.red[400].withOpacity(0.8),
                             ),
                           ),
-                        ))
-                  ],
+                        ),
+                      ));
+                      /*Text("${snapshot.data.email}",
+                      style: kLoginTextStyle)*/
+                    } else {
+                      return CircularProgressIndicator(
+                        backgroundColor: Colors.red,
+                      );
+                    }
+                  }),
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                child: Icon(
+                  Icons.settings,
                 ),
               ),
-              Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 25, right: 25),
-                    child: FutureBuilder(
-                        future: getFirestoreUser(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.done) {
-                            return displayUserInfo(context, snapshot);
-                          } else {
-                            return CircularProgressIndicator(
-                              backgroundColor: Colors.red,
-                            );
-                          }
-                        }),
-                  )),
-            ])
+            ]),
+          ]),
+          Center(
+            child: Container(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                child: Text(
+                  "It's time to be someone at the Gym!",
+                  style: TextStyle(
+                    fontSize: 20,
+                    //fontStyle: FontStyle.italic,
+                    foreground: Paint()
+                      ..style = PaintingStyle.fill
+                      ..color = Colors.red[400].withOpacity(0.8),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Center(
+            child: Stack(
+              children: [
+                // CircleAvatar(
+                //     backgroundImage: AssetImage('assets/images/gym5.jpg'),
+                //     radius: 100),
+                Container(
+                  child: Column(children: <Widget>[
+                    (URL != null)
+                        ? Container(
+                            width: 160,
+                            height: 160,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 4,
+                                    color: Colors.white.withOpacity(0.9)),
+                                boxShadow: [
+                                  BoxShadow(
+                                      spreadRadius: 3,
+                                      blurRadius: 6,
+                                      color: Colors.white)
+                                ],
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(URL))))
+                        : Container(
+                            width: 150,
+                            height: 150,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 4,
+                                    color: Colors.white.withOpacity(0.9)),
+                                boxShadow: [
+                                  BoxShadow(
+                                      spreadRadius: 3,
+                                      blurRadius: 6,
+                                      color: Colors.white)
+                                ],
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image:
+                                        AssetImage("assets/images/gym5.jpg"))))
+                  ]),
+                ),
+
+                Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                          color: Colors.red.withOpacity(0.8),
+                          shape: BoxShape.circle,
+                          border: Border.all(width: 3, color: Colors.white)),
+                      child: IconButton(
+                        onPressed: () {
+                          uploadImage();
+                        },
+                        icon: Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ))
+              ],
+            ),
+          ),
+          Center(
+              child: Padding(
+            padding: EdgeInsets.only(left: 25, right: 25),
+            child: FutureBuilder(
+                future: getFirestoreUser(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return displayUserInfo(context, snapshot);
+                  } else {
+                    return CircularProgressIndicator(
+                      backgroundColor: Colors.red,
+                    );
+                  }
+                }),
+          )),
+        ])
       ],
     );
   }
@@ -307,47 +342,38 @@ class _ProfileState extends State<Profile> {
 
     var permissionStatus = await Permission.photos.status;
 
-    if(permissionStatus.isGranted) {
+    if (permissionStatus.isGranted) {
       //select image
       image = await _picker.getImage(source: ImageSource.gallery);
       var file = File(image.path);
 
-      if(image != null) {
+      if (image != null) {
         //upload to firebase
-        var snapshot = await _storage.ref()
-            .child("$uid/imageName")
-            .putFile(file);
+        var snapshot =
+            await _storage.ref().child("$uid/imageName").putFile(file);
 
         var downloadUrl = await snapshot.ref.getDownloadURL();
 
         setState(() {
           imageUrl = downloadUrl;
         });
-
-      }
-      else {
+      } else {
         print("No path received.");
       }
-
     } else {
       print("Please grant permission.");
     }
-
-
-
-
   }
 
-  TextField buildTextField(String labelText, String placeholder, String database) {
+  TextField buildTextField(
+      String labelText, String placeholder, String database) {
     return TextField(
       onChanged: (text) {
-        _firestore.collection("SpotlightUsers")
+        _firestore
+            .collection("SpotlightUsers")
             .doc(_auth.currentUser.uid)
-            .update({
-          database : text
-        });
+            .update({database: text});
         //print(text)
-
       },
       style: TextStyle(
           fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white70),
@@ -367,7 +393,6 @@ class _ProfileState extends State<Profile> {
     );
   }
 }
-
 
 /*(imageUrl != null)
 ? Image.network(imageUrl) : Placeholder("assets/images/gym5.jpg")*/
