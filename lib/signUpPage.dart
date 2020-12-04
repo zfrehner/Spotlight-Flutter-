@@ -47,10 +47,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void showSnackBar (BuildContext context, String text) {
     Scaffold.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(SnackBar(
-          content: Text(text),
-        ),);
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        content: Text(text),
+      ),);
   }
 
   // **************** artems code: fields *****************************************
@@ -179,7 +179,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           decoration: kSignUpBoxDecoration,
           height: 60,
           child: Builder(
-          builder: (context) => TextFormField(
+            builder: (context) => TextFormField(
               onChanged: (value) {
                 firstName = value;
               },
@@ -209,10 +209,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 errorStyle: kErrorTextStyle,
               ),
               inputFormatters: [
-                 MaxLengthFormatter(20, (){
-                   showSnackBar(context, 'Only 20 characters allowed for First Name.');
-                 },
-               ),
+                MaxLengthFormatter(20, (){
+                  showSnackBar(context, 'Only 20 characters allowed for First Name.');
+                },
+                ),
               ],
             ),
           ),
@@ -596,44 +596,44 @@ class _SignUpScreenState extends State<SignUpScreen> {
 //**************************** Gender Input Field ******************************
   Widget buildGenderChoice() {
     return Row(
-        children: <Widget>[
-          Text(
-            'Gender',
-            style: kLoginTextStyle,
-          ),
-          SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.only(top: 5.0, left: 130.0),
-            child: Container(
-              padding: EdgeInsets.only(left: 15.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.0),
-                color: Colors.white,
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                    style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
-                    value: genderSelected,
-                    items: genderOptions.map((String dropDownStringItem) {
-                      return DropdownMenuItem<String>(
-                        value: dropDownStringItem,
-                        child: Text(dropDownStringItem),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        genderSelected = value;
-                        gender = value;
-                        print(value);
-                      });
-                    }),
-              ),
+      children: <Widget>[
+        Text(
+          'Gender',
+          style: kLoginTextStyle,
+        ),
+        SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.only(top: 5.0, left: 130.0),
+          child: Container(
+            padding: EdgeInsets.only(left: 15.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+              color: Colors.white,
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                  style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
+                  value: genderSelected,
+                  items: genderOptions.map((String dropDownStringItem) {
+                    return DropdownMenuItem<String>(
+                      value: dropDownStringItem,
+                      child: Text(dropDownStringItem),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      genderSelected = value;
+                      gender = value;
+                      print(value);
+                    });
+                  }),
             ),
           ),
-        ],
+        ),
+      ],
     );
   }
 
@@ -679,184 +679,185 @@ class _SignUpScreenState extends State<SignUpScreen> {
 //**************************** Password Input Field ****************************
   Widget buildPassword() {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            'Password',
-            style: kLoginTextStyle,
-          ),
-          SizedBox(height: 10),
-          Container(
-            alignment: Alignment.centerLeft,
-            decoration: kSignUpBoxDecoration,
-            height: 60,
-            child: Builder (
-              builder: (context) => TextFormField(
-                onChanged: (value) {
-                  password = value;
-                },
-                controller: _password,
-                obscureText: true,
-                validator: (password) {
-                  if (password.isEmpty)
-                    return '    Please enter a password';
-                  else if (password.length < 8)
-                    return '    Password too short';
-                  else
-                    return null;
-                },
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top: 14),
-                  prefixIcon: Icon(Icons.lock, color: Color(0xffFF3232)),
-                  hintText: 'Password',
-                  hintStyle: TextStyle(
-                    color: Colors.black38,
-                  ),
-                  errorStyle: kErrorTextStyle,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Password',
+          style: kLoginTextStyle,
+        ),
+        SizedBox(height: 10),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kSignUpBoxDecoration,
+          height: 60,
+          child: Builder (
+            builder: (context) => TextFormField(
+              onChanged: (value) {
+                password = value;
+              },
+              controller: _password,
+              obscureText: true,
+              validator: (password) {
+                if (password.isEmpty)
+                  return '    Please enter a password';
+                else if (password.length < 8)
+                  return '    Password too short';
+                else
+                  return null;
+              },
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(top: 14),
+                prefixIcon: Icon(Icons.lock, color: Color(0xffFF3232)),
+                hintText: 'Password',
+                hintStyle: TextStyle(
+                  color: Colors.black38,
                 ),
-                inputFormatters: [
-                  MaxLengthFormatter(25, (){
-                    showSnackBar(context, 'Only 25 characters are allowed for a Password.');
-                  },
-                  ),
-                ],
+                errorStyle: kErrorTextStyle,
               ),
+              inputFormatters: [
+                MaxLengthFormatter(25, (){
+                  showSnackBar(context, 'Only 25 characters are allowed for a Password.');
+                },
+                ),
+              ],
             ),
           ),
-        ],
+        ),
+      ],
     );
   }
 //************************ Confirm Password Input Field ************************
   Widget buildConfirmPassword() {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            'Confirm Password',
-            style: kLoginTextStyle,
-          ),
-          SizedBox(height: 10),
-          Container(
-              alignment: Alignment.centerLeft,
-              decoration: kSignUpBoxDecoration,
-              height: 60,
-              child: Builder (
-                builder: (context) => TextFormField(
-                  // ******** artems code: add controller *********************
-                    controller: _confirmPassword,
-                    // ***********************************************************
-                    obscureText: true,
-                    // ************ Artems code: validator *************************
-                    validator: (password) {
-                      if (password.isEmpty)
-                        return '    Please re-enter password';
-                      else if (_password.text != _confirmPassword.text)
-                        return '    Passwords must match';
-                      else
-                        return null;
-                    },
-                    // ***********************************************************
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.only(top: 14),
-                      prefixIcon: Icon(Icons.lock_open, color: Color(0xffFF3232)),
-                      hintText: 'Confirm Password',
-                      hintStyle: TextStyle(
-                        color: Colors.black38,
-                      ),
-                      // ************* artems code: errorStyle *******************
-                      errorStyle: kErrorTextStyle,
-                      // *********************************************************
-                    ),
-                    inputFormatters: [
-                      MaxLengthFormatter(25, (){
-                        showSnackBar(context, 'Only 25 characters are allowed for a Password.');
-                      },
-                      ),
-                    ],
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Confirm Password',
+          style: kLoginTextStyle,
+        ),
+        SizedBox(height: 10),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kSignUpBoxDecoration,
+          height: 60,
+          child: Builder (
+            builder: (context) => TextFormField(
+              // ******** artems code: add controller *********************
+              controller: _confirmPassword,
+              // ***********************************************************
+              obscureText: true,
+              // ************ Artems code: validator *************************
+              validator: (password) {
+                if (password.isEmpty)
+                  return '    Please re-enter password';
+                else if (_password.text != _confirmPassword.text)
+                  return '    Passwords must match';
+                else
+                  return null;
+              },
+              // ***********************************************************
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(top: 14),
+                prefixIcon: Icon(Icons.lock_open, color: Color(0xffFF3232)),
+                hintText: 'Confirm Password',
+                hintStyle: TextStyle(
+                  color: Colors.black38,
                 ),
+                // ************* artems code: errorStyle *******************
+                errorStyle: kErrorTextStyle,
+                // *********************************************************
               ),
-          )
-        ],
+              inputFormatters: [
+                MaxLengthFormatter(25, (){
+                  showSnackBar(context, 'Only 25 characters are allowed for a Password.');
+                },
+                ),
+              ],
+            ),
+          ),
+        )
+      ],
     );
   }
 
 //****************************** Continue Field ********************************
   Widget buildContBtn() {
     return GestureDetector(
-        onTap: ()  {
-          setState(() async {
+      onTap: ()  {
+        setState(() async {
 
-            if (_formKey.currentState.validate()) {
-              //registering the user with the form fields
-              //returns a "Future"
-              //capture the new user
-              //async and await mean the user is authenticated before we go on
-              try {
+          if (_formKey.currentState.validate()) {
+            //registering the user with the form fields
+            //returns a "Future"
+            //capture the new user
+            //async and await mean the user is authenticated before we go on
+            try {
 
-                if(dateTime == null || gender == "Choose.." || genderSelected == "Choose..") {
-                  if(gender == "Choose.." || genderSelected == "Choose..") {
-                    _showGenderDialog();
-                  }
-                  if(dateTime == null) {
-                    _showMyDialog();
-                  }
-                } else {
-                  await _auth
-                      .createUserWithEmailAndPassword(
-                      email: email, password: password)
-                      .then(
-                        (loggedInUser) =>
-                        _firestore
-                            .collection('SpotlightUsers')
-                            .doc(_auth.currentUser.uid)
-                            .set(
-                          {
-                            'uid': _auth.currentUser.uid,
-                            'firstName': firstName,
-                            'lastName': lastName,
-                            'email': email,
-                            'country': country,
-                            'address': address,
-                            'city': city,
-                            'state': state,
-                            'zipCode': zipCode,
-                            'birthday': dateTime,
-                            'gender': gender,
-                            'phoneNumber': phoneNumber,
-                            'hobbies': null,
-                            'workout': null
-                          },
-                        ),
-                  );
-
-                  if (_auth.currentUser.uid != null) {
-                    Navigator.pushNamed(context, Success.id);
-                  }
+              if(dateTime == null || gender == "Choose.." || genderSelected == "Choose..") {
+                if(gender == "Choose.." || genderSelected == "Choose..") {
+                  _showGenderDialog();
                 }
+                if(dateTime == null) {
+                  _showMyDialog();
+                }
+              } else {
+                await _auth
+                    .createUserWithEmailAndPassword(
+                    email: email, password: password)
+                    .then(
+                      (loggedInUser) =>
+                      _firestore
+                          .collection('SpotlightUsers')
+                          .doc(_auth.currentUser.uid)
+                          .set(
+                        {
+                          'uid': _auth.currentUser.uid,
+                          'firstName': firstName,
+                          'lastName': lastName,
+                          'email': email,
+                          'country': country,
+                          'address': address,
+                          'city': city,
+                          'state': state,
+                          'zipCode': zipCode,
+                          'birthday': dateTime,
+                          'gender': gender,
+                          'phoneNumber': phoneNumber,
+                          'hobbies': null,
+                          'workout': null,
+                          'imageString' : null
+                        },
+                      ),
+                );
 
-              } catch (e) {
-                print(e);
+                if (_auth.currentUser.uid != null) {
+                  Navigator.pushNamed(context, Success.id);
+                }
               }
+
+            } catch (e) {
+              print(e);
             }
-          },
-          );
+          }
         },
-        // *********************************************************************
-        child: RichText(
-            text: TextSpan(children: [
-              TextSpan(
-                  text: 'Continue',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.underline,
-                  ))
-            ],
-            ),
+        );
+      },
+      // *********************************************************************
+      child: RichText(
+        text: TextSpan(children: [
+          TextSpan(
+              text: 'Continue',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                decoration: TextDecoration.underline,
+              ))
+        ],
         ),
+      ),
     );
   }
 
@@ -866,88 +867,88 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Form(
       key: _formKey,
       child: Scaffold(
-          body: AnnotatedRegion<SystemUiOverlayStyle>(
-              value: SystemUiOverlayStyle.light,
-              child: GestureDetector(
-                  child: Stack(children: <Widget>[
-                    Container(
-                        height: double.infinity,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Color(0xffFF3232),
-                                  Color(0xccFF3232),
-                                  Color(0xccFF3232),
-                                  Color(0xffFF3232),
-                                ])),
-                        child: SingleChildScrollView(
-                            physics: AlwaysScrollableScrollPhysics(),
-                            padding:
-                            EdgeInsets.symmetric(horizontal: 25, vertical: 25),
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(right: 40),
-                                        child: Text('Sign Up',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 30,
-                                              fontWeight: FontWeight.bold,
-                                            )),
-                                      ),
-                                      Hero(
-                                        tag: 'logo',
-                                        child: CircleAvatar(
-                                          radius: 50,
-                                          backgroundImage: AssetImage(
-                                              'assets/images/LOGO 4.jpg'),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10),
-                                  buildFirstNameField(),
-                                  SizedBox(height: 10),
-                                  buildLastNameField(),
-                                  SizedBox(height: 10),
-                                  buildEmail(),
-                                  SizedBox(height: 10),
-                                  buildCountryPicker(),
-                                  SizedBox(height: 10),
-                                  buildAddressField(),
-                                  SizedBox(height: 10),
-                                  buildCityField(),
-                                  SizedBox(height: 10),
-                                  buildStateField(),
-                                  SizedBox(height: 10),
-                                  buildZipField(),
-                                  SizedBox(height: 30),
-                                  buildAgeField(),
-                                  SizedBox(height: 30),
-                                  buildGenderChoice(),
-                                  SizedBox(height: 30),
-                                  buildPhoneNumber(),
-                                  SizedBox(height: 10),
-                                  buildPassword(),
-                                  SizedBox(height: 10),
-                                  buildConfirmPassword(),
-                                  SizedBox(height: 10),
-                                  buildContBtn()
-                                ],
+        body: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.light,
+          child: GestureDetector(
+            child: Stack(children: <Widget>[
+              Container(
+                height: double.infinity,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xffFF3232),
+                          Color(0xccFF3232),
+                          Color(0xccFF3232),
+                          Color(0xffFF3232),
+                        ])),
+                child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  padding:
+                  EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 40),
+                            child: Text('Sign Up',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ),
+                          Hero(
+                            tag: 'logo',
+                            child: CircleAvatar(
+                              radius: 50,
+                              backgroundImage: AssetImage(
+                                  'assets/images/LOGO 4.jpg'),
                             ),
-                        ),
-                    ),
-                  ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      buildFirstNameField(),
+                      SizedBox(height: 10),
+                      buildLastNameField(),
+                      SizedBox(height: 10),
+                      buildEmail(),
+                      SizedBox(height: 10),
+                      buildCountryPicker(),
+                      SizedBox(height: 10),
+                      buildAddressField(),
+                      SizedBox(height: 10),
+                      buildCityField(),
+                      SizedBox(height: 10),
+                      buildStateField(),
+                      SizedBox(height: 10),
+                      buildZipField(),
+                      SizedBox(height: 30),
+                      buildAgeField(),
+                      SizedBox(height: 30),
+                      buildGenderChoice(),
+                      SizedBox(height: 30),
+                      buildPhoneNumber(),
+                      SizedBox(height: 10),
+                      buildPassword(),
+                      SizedBox(height: 10),
+                      buildConfirmPassword(),
+                      SizedBox(height: 10),
+                      buildContBtn()
+                    ],
                   ),
+                ),
               ),
+            ],
+            ),
           ),
+        ),
       ),
     );
   }
