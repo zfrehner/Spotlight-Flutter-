@@ -825,8 +825,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'birthday': dateTime,
                           'gender': gender,
                           'phoneNumber': phoneNumber,
-                          'hobbies': null,
-                          'workout': null,
+                          'hobbies': "",
+                          'workout': "",
                           'imageString' : null
                         },
                       ),
