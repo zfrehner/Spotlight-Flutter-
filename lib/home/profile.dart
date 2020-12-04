@@ -25,15 +25,11 @@ class _ProfileState extends State<Profile> {
 
   String imageUrl;
 
-  var URL;
+
 
   void initState() {
     getCurrentUser();
-    assignUrl();
-  }
 
-  void assignUrl() async {
-    URL = await getUrl();
   }
 
   void getCurrentUser() async {
@@ -85,7 +81,7 @@ class _ProfileState extends State<Profile> {
     final user = snapshot.data;
 
     // Variable to show empty strings instead of null
-    // if user leaves any of these blanlk
+    // if user leaves any of these blank
 
     // check if phone is left blank
     var phone = user["phoneNumber"];
@@ -178,13 +174,6 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Future<String> getUrl() async {
-    final ref = FirebaseStorage.instance.ref().child('$uid/imageName');
-    var url = await ref.getDownloadURL();
-    print(url);
-    return url;
-  }
-
   @override
   Widget build(BuildContext context) {
 // no need of the file extension, the name will do fine.
@@ -252,49 +241,56 @@ class _ProfileState extends State<Profile> {
           Center(
             child: Stack(
               children: [
-                // CircleAvatar(
-                //     backgroundImage: AssetImage('assets/images/gym5.jpg'),
-                //     radius: 100),
-                Container(
-                  child: Column(children: <Widget>[
-                    (URL != null)
-                        ? Container(
-                        width: 160,
-                        height: 160,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 4,
-                                color: Colors.white.withOpacity(0.9)),
-                            boxShadow: [
-                              BoxShadow(
-                                  spreadRadius: 3,
-                                  blurRadius: 6,
-                                  color: Colors.white)
-                            ],
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: NetworkImage(URL))))
-                        : Container(
-                        width: 150,
-                        height: 150,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 4,
-                                color: Colors.white.withOpacity(0.9)),
-                            boxShadow: [
-                              BoxShadow(
-                                  spreadRadius: 3,
-                                  blurRadius: 6,
-                                  color: Colors.white)
-                            ],
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image:
-                                AssetImage("assets/images/gym5.jpg"))))
-                  ]),
-                ),
+                Column(children: <Widget>[
+                FutureBuilder(
+                  future: getFirestoreUser(),
+                  // ignore: missing_return
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return
+                      (snapshot.data["imageString"] != null)
+                          ? Container(
+                              width: 160,
+                              height: 160,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      width: 4,
+                                      color: Colors.white.withOpacity(0.9)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        spreadRadius: 3,
+                                        blurRadius: 6,
+                                        color: Colors.white)
+                                  ],
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage(
+                                          snapshot.data["imageString"]),),),)
+                          : Container(
+                              width: 150,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      width: 4,
+                                      color: Colors.white.withOpacity(0.9)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        spreadRadius: 3,
+                                        blurRadius: 6,
+                                        color: Colors.white)
+                                  ],
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: AssetImage(
+                                          "assets/images/gym5.jpg"))));
+                    }
+                    return Container();
+                  })
+              ])
+            ]),
+          ),
 
                 Positioned(
                     bottom: 0,
@@ -318,7 +314,7 @@ class _ProfileState extends State<Profile> {
                     ))
               ],
             ),
-          ),
+
           Center(
               child: Padding(
                 padding: EdgeInsets.only(left: 25, right: 25),
@@ -334,9 +330,8 @@ class _ProfileState extends State<Profile> {
                       }
                     }),
               )),
-        ])
-      ],
-    );
+        ]);
+
   }
 
   uploadImage() async {
@@ -364,6 +359,10 @@ class _ProfileState extends State<Profile> {
 
         setState(() {
           imageUrl = downloadUrl;
+          _firestore
+              .collection("SpotlightUsers")
+              .doc(_auth.currentUser.uid)
+              .update({"imageString": imageUrl});
         });
       } else {
         print("No path received.");
