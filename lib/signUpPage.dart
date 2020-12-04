@@ -8,6 +8,8 @@ import 'package:intl/intl.dart';
 import 'constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:spotlight_login/constants.dart';
+import 'max_lengths_formatter.dart';
+import '';
 
 class SignUpScreen extends StatefulWidget {
   static const String id = 'signup_screen';
@@ -20,7 +22,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   //creating an instance of a user -
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
-  //var firebaseUser = FirebaseAuth.instance.currentUser;
 
   User loggedInUser;
   var userID;
@@ -38,11 +39,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
         loggedInUser = user;
         userID = fireUser;
 
-        //print(loggedInUser.email);
       }
     } catch (e) {
       print(e);
     }
+  }
+
+  void showSnackBar (BuildContext context, String text) {
+    Scaffold.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(
+          content: Text(text),
+        ),);
   }
 
   // **************** artems code: fields *****************************************
@@ -54,21 +62,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _confirmPassword = TextEditingController();
 
   // ***************************************************************************
-  // List<ListItem> _dropdownItems = [
-  //   ListItem(1, "Choose..."),
-  //   ListItem(2, "Male"),
-  //   ListItem(3, "Female")
-  // ];
 
   // variable to store selected gender
   String genderSelected = 'Choose..';
 
   // list for gender dropdown
   var genderOptions = ['Choose..', 'Male', 'Female'];
-
-  // List<DropdownMenuItem<ListItem>> _dropdownMenuItems;
-  // //list item for selected gender
-  // ListItem _gender;
 
   //form field variables
   String firstName;
@@ -87,13 +86,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   var phoneNumber;
   DateTime dateTime;
 
-
-
-  // void initState() {
-  //   super.initState();
-  //   // _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
-  //   _gender = _dropdownMenuItems[0].value;
-  // }
   // *********************** Age calculator Function ***************************
   calculateAge (DateTime birthdate) {
     DateTime current = DateTime.now();
@@ -144,7 +136,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   //***************************show gender dialog ****************************
-
   Future<void> _showGenderDialog() async {
     return showDialog<void>(
       context: context,
@@ -173,8 +164,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-
-
 //**************************** First Name Input Field **************************
   Widget buildFirstNameField() {
     return Column(
@@ -189,38 +178,44 @@ class _SignUpScreenState extends State<SignUpScreen> {
           alignment: Alignment.centerLeft,
           decoration: kSignUpBoxDecoration,
           height: 60,
-          child: TextFormField(
-            onChanged: (value) {
-              firstName = value;
-            },
-            /*keyboardType: TextInputType.emailAddress,*/
-            // ************ Artems code: validator ***************************
-            validator: (name) {
-              // trim off whitespace
-              name = name.trim();
-              Pattern pattern = r'^[A-Za-z]+(?:[ _-][A-Za-z]+)*$';
-              RegExp regex = new RegExp(pattern);
-              if (name.isEmpty)
-                return 'Please enter a first name';
-              else if (!regex.hasMatch(name))
-                return 'Invalid first name';
-              else
-                return null;
-            },
-            // ***************************************************************
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14),
-              prefixIcon: Icon(Icons.person, color: Color(0xffFF3232)),
-              hintText: 'First Name',
-              hintStyle: TextStyle(
-                color: Colors.black38,
+          child: Builder(
+          builder: (context) => TextFormField(
+              onChanged: (value) {
+                firstName = value;
+              },
+              validator: (name) {
+                // trim off whitespace
+                name = name.trim();
+                Pattern pattern = r'^[A-Za-z]+(?:[ _-][A-Za-z]+)*$';
+                RegExp regex = new RegExp(pattern);
+                if (name.isEmpty)
+                  return '    Please enter a first name';
+                else if (!regex.hasMatch(name))
+                  return '    Invalid first name';
+                else
+                  return null;
+              },
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(top: 14),
+                prefixIcon: Icon(
+                  Icons.person,
+                  color: Color(0xffFF3232),
+                ),
+                hintText: 'First Name',
+                hintStyle: TextStyle(
+                  color: Colors.black38,
+                ),
+                errorStyle: kErrorTextStyle,
               ),
-              // ************* artems code: errorStyle *********************
-              errorStyle: kErrorTextStyle,
+              inputFormatters: [
+                 MaxLengthFormatter(20, (){
+                   showSnackBar(context, 'Only 20 characters allowed for First Name.');
+                 },
+               ),
+              ],
             ),
           ),
-          // *******************************************************************
         ),
       ],
     );
@@ -240,37 +235,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
           alignment: Alignment.centerLeft,
           decoration: kSignUpBoxDecoration,
           height: 60,
-          child: TextFormField(
-            onChanged: (value) {
-              lastName = value;
-            },
-            /*keyboardType: TextInputType.emailAddress,*/
-            // ************ Artems code: validator *************************
-            validator: (name) {
-              // trim off whitespace
-              name = name.trim();
-              Pattern pattern = r'^[A-Za-z]+(?:[ _-][A-Za-z]+)*$';
-              RegExp regex = new RegExp(pattern);
-              if (name.isEmpty)
-                return 'Please enter a last name';
-              else if (!regex.hasMatch(name))
-                return 'Invalid last name';
-              else
-                return null;
-            },
-            // *************************************************************
-            decoration: InputDecoration(
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.only(top: 14),
-                prefixIcon: Icon(Icons.person, color: Color(0xffFF3232)),
-                hintText: 'Last Name',
-                hintStyle: TextStyle(
-                  color: Colors.black38,
+          child: Builder(
+            builder: (context) => TextFormField(
+              onChanged: (value) {
+                lastName = value;
+              },
+              validator: (name) {
+                // trim off whitespace
+                name = name.trim();
+                Pattern pattern = r'^[A-Za-z]+(?:[ _-][A-Za-z]+)*$';
+                RegExp regex = new RegExp(pattern);
+                if (name.isEmpty)
+                  return '    Please enter a last name';
+                else if (!regex.hasMatch(name))
+                  return '    Invalid last name';
+                else
+                  return null;
+              },
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.only(top: 14),
+                  prefixIcon: Icon(Icons.person, color: Color(0xffFF3232)),
+                  hintText: 'Last Name',
+                  hintStyle: TextStyle(
+                    color: Colors.black38,
+                  ),
+                  errorStyle: kErrorTextStyle
+              ),
+              inputFormatters: [
+                MaxLengthFormatter(20, (){
+                  showSnackBar(context, 'Only 20 characters are allowed for Last Name.');
+                },
                 ),
-                // ************* artems code: errorStyle ***************************
-                errorStyle: kErrorTextStyle),
+              ],
+            ),
           ),
-          // *****************************************************************
         ),
       ],
     );
@@ -290,35 +289,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
           alignment: Alignment.centerLeft,
           decoration: kSignUpBoxDecoration,
           height: 60,
-          child: TextFormField(
-            onChanged: (value) {
-              email = value.trim();
-            },
-            keyboardType: TextInputType.emailAddress,
-            // ************ Artems code: validator *************************
-            validator: (email) {
-              Pattern pattern =
-                  r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-              RegExp regex = new RegExp(pattern);
-              if (email.trim().isEmpty)
-                return 'Please enter an email';
-              else if (!regex.hasMatch(email.trim()))
-                return 'Invalid email';
-              else
-                return null;
-            },
-            // *************************************************************
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14),
-              prefixIcon: Icon(Icons.email, color: Color(0xffFF3232)),
-              hintText: 'Email',
-              hintStyle: TextStyle(
-                color: Colors.black38,
+          child: Builder(
+            builder: (context) => TextFormField(
+              onChanged: (value) {
+                email = value.trim();
+              },
+              keyboardType: TextInputType.emailAddress,
+              validator: (email) {
+                Pattern pattern =
+                    r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                RegExp regex = new RegExp(pattern);
+                if (email.trim().isEmpty)
+                  return '    Please enter an email';
+                else if (!regex.hasMatch(email.trim()))
+                  return '    Invalid email';
+                else
+                  return null;
+              },
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(top: 14),
+                prefixIcon: Icon(Icons.email, color: Color(0xffFF3232)),
+                hintText: 'Email',
+                hintStyle: TextStyle(
+                  color: Colors.black38,
+                ),
+                errorStyle: kErrorTextStyle,
               ),
-              // ************* artems code: errorStyle *********************
-              errorStyle: kErrorTextStyle,
-              // ***********************************************************
+              inputFormatters: [
+                MaxLengthFormatter(25, (){
+                  showSnackBar(context, 'Only 25 characters are allowed for Email.');
+                },
+                ),
+              ],
             ),
           ),
         ),
@@ -361,21 +364,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
             alignment: Alignment.centerLeft,
             decoration: kSignUpBoxDecoration,
             height: 60,
-            child: TextFormField(
-              onChanged: (value) {
-                address = value;
-              },
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.only(top: 14),
-                prefixIcon: Icon(Icons.house, color: Color(0xffFF3232)),
-                // ************* artems code: errorStyle *******************
-                errorStyle: kErrorTextStyle,
-                // *********************************************************
-                hintText: 'Address',
-                hintStyle: TextStyle(
-                  color: Colors.black38,
+            child: Builder(
+              builder: (context) => TextFormField(
+                onChanged: (value) {
+                  address = value;
+                },
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.only(top: 14),
+                  prefixIcon: Icon(Icons.house, color: Color(0xffFF3232)),
+                  errorStyle: kErrorTextStyle,
+                  hintText: 'Address',
+                  hintStyle: TextStyle(
+                    color: Colors.black38,
+                  ),
                 ),
+                inputFormatters: [
+                  MaxLengthFormatter(20, (){
+                    showSnackBar(context, 'Only 20 characters are allowed for Address.');
+                  },
+                  ),
+                ],
               ),
             ),
           ),
@@ -396,21 +405,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
           alignment: Alignment.centerLeft,
           decoration: kSignUpBoxDecoration,
           height: 60,
-          child: TextFormField(
-            onChanged: (value) {
-              city = value;
-            },
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14),
-              prefixIcon: Icon(Icons.location_city, color: Color(0xffFF3232)),
-              hintText: 'City',
-              // ************* artems code: errorStyle *******************
-              errorStyle: kErrorTextStyle,
-              // *********************************************************
-              hintStyle: TextStyle(
-                color: Colors.black38,
+          child: Builder(
+            builder: (context) => TextFormField(
+              onChanged: (value) {
+                city = value;
+              },
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(top: 14),
+                prefixIcon: Icon(Icons.location_city, color: Color(0xffFF3232)),
+                hintText: 'City',
+                errorStyle: kErrorTextStyle,
+                hintStyle: TextStyle(
+                  color: Colors.black38,
+                ),
               ),
+              inputFormatters: [
+                MaxLengthFormatter(20, (){
+                  showSnackBar(context, 'Only 20 characters are allowed for a City.');
+                },
+                ),
+              ],
             ),
           ),
         ),
@@ -432,21 +447,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
           alignment: Alignment.centerLeft,
           decoration: kSignUpBoxDecoration,
           height: 60,
-          child: TextFormField(
-            onChanged: (value) {
-              state = value;
-            },
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14),
-              prefixIcon: Icon(Icons.landscape_sharp, color: Color(0xffFF3232)),
-              hintText: 'State or Province',
-              // ************* artems code: errorStyle *******************
-              errorStyle: kErrorTextStyle,
-              // *********************************************************
-              hintStyle: TextStyle(
-                color: Colors.black38,
+          child: Builder(
+            builder: (context) => TextFormField(
+              onChanged: (value) {
+                state = value;
+              },
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(top: 14),
+                prefixIcon: Icon(Icons.landscape_sharp, color: Color(0xffFF3232)),
+                hintText: 'State or Province',
+                errorStyle: kErrorTextStyle,
+                hintStyle: TextStyle(
+                  color: Colors.black38,
+                ),
               ),
+              inputFormatters: [
+                MaxLengthFormatter(20, (){
+                  showSnackBar(context, 'Only 20 characters are allowed.');
+                },
+                ),
+              ],
             ),
           ),
         ),
@@ -477,14 +498,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 contentPadding: EdgeInsets.only(top: 14),
                 prefixIcon:
                 Icon(Icons.location_on_sharp, color: Color(0xffFF3232)),
-                // ************* artems code: errorStyle *******************
                 errorStyle: kErrorTextStyle,
-                // *********************************************************
                 hintText: 'Zip Code',
                 hintStyle: TextStyle(
                   color: Colors.black38,
                 ),
               ),
+              inputFormatters: [
+                MaxLengthFormatter(10, (){
+                  showSnackBar(context, 'Only 10 characters are allowed for the Zip Code.');
+                },
+                ),
+              ],
             ),
           ),
         ]);
@@ -557,8 +582,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 setState(() {
                   dateTime = date;
                   age = calculateAge(date);
-                });
-              });
+                },
+                );
+              },
+              );
             },
           ),
         ),
@@ -569,7 +596,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 //**************************** Gender Input Field ******************************
   Widget buildGenderChoice() {
     return Row(
-      //crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             'Gender',
@@ -607,7 +633,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
           ),
-        ]);
+        ],
+    );
   }
 
 //**************************** Phone Number Input Field ************************
@@ -620,25 +647,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
           style: kLoginTextStyle,
         ),
         SizedBox(height: 10),
-        //SizedBox(height: 15),
-        FormBuilderPhoneField(
-          attribute: 'phone_number',
-          initialValue: ' ',
-          style: kLoginTextStyle,
-// defaultSelectedCountryIsoCode: 'KE',
-          cursorColor: Colors.white,
-// style: TextStyle(color: Colors.black, fontSize: 18),
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'Phone Number',
+        Builder(
+          builder: (context) => FormBuilderPhoneField(
+            attribute: 'phone_number',
+            initialValue: ' ',
+            style: kLoginTextStyle,
+            cursorColor: Colors.white,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Phone Number',
+            ),
+            onChanged: (value) {
+              phoneNumber = value;
+            },
+            priorityListByIsoCode: ['US'],
+            validators: [
+              FormBuilderValidators.required(errorText: 'This field required')
+            ],
+            inputFormatters: [
+              MaxLengthFormatter(16, (){
+                showSnackBar(context, 'Only 16 characters are allowed for Phone Number.');
+              },
+              ),
+            ],
           ),
-          onChanged: (value) {
-            phoneNumber = value;
-          },
-          priorityListByIsoCode: ['US'],
-          validators: [
-            FormBuilderValidators.required(errorText: 'This field required')
-          ],
         ),
       ],
     );
@@ -658,41 +690,43 @@ class _SignUpScreenState extends State<SignUpScreen> {
             alignment: Alignment.centerLeft,
             decoration: kSignUpBoxDecoration,
             height: 60,
-            child: TextFormField(
-              onChanged: (value) {
-                password = value;
-              },
-              // ******** artems code: add contorller *********************
-              controller: _password,
-              // ***********************************************************
-              obscureText: true,
-              // ************ Artems code: validator ***********************
-              validator: (password) {
-                if (password.isEmpty)
-                  return 'Please enter a password';
-                else if (password.length < 8)
-                  return 'Password too short';
-                else
-                  return null;
-              },
-              // ***********************************************************
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.only(top: 14),
-                prefixIcon: Icon(Icons.lock, color: Color(0xffFF3232)),
-                hintText: 'Password',
-                hintStyle: TextStyle(
-                  color: Colors.black38,
+            child: Builder (
+              builder: (context) => TextFormField(
+                onChanged: (value) {
+                  password = value;
+                },
+                controller: _password,
+                obscureText: true,
+                validator: (password) {
+                  if (password.isEmpty)
+                    return '    Please enter a password';
+                  else if (password.length < 8)
+                    return '    Password too short';
+                  else
+                    return null;
+                },
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.only(top: 14),
+                  prefixIcon: Icon(Icons.lock, color: Color(0xffFF3232)),
+                  hintText: 'Password',
+                  hintStyle: TextStyle(
+                    color: Colors.black38,
+                  ),
+                  errorStyle: kErrorTextStyle,
                 ),
-                // ************* artems code: errorStyle *******************
-                errorStyle: kErrorTextStyle,
-                // *********************************************************
+                inputFormatters: [
+                  MaxLengthFormatter(25, (){
+                    showSnackBar(context, 'Only 25 characters are allowed for a Password.');
+                  },
+                  ),
+                ],
               ),
             ),
           ),
-        ]);
+        ],
+    );
   }
-
 //************************ Confirm Password Input Field ************************
   Widget buildConfirmPassword() {
     return Column(
@@ -707,48 +741,51 @@ class _SignUpScreenState extends State<SignUpScreen> {
               alignment: Alignment.centerLeft,
               decoration: kSignUpBoxDecoration,
               height: 60,
-              child: TextFormField(
-                // ******** artems code: add contorller *********************
-                  controller: _confirmPassword,
-                  // ***********************************************************
-                  obscureText: true,
-                  // ************ Artems code: validator *************************
-                  validator: (password) {
-                    if (password.isEmpty)
-                      return 'Please re-enter password';
-                    else if (_password.text != _confirmPassword.text)
-                      return 'Passwords must match';
-                    else
-                      return null;
-                  },
-                  // ***********************************************************
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.only(top: 14),
-                    prefixIcon: Icon(Icons.lock_open, color: Color(0xffFF3232)),
-                    hintText: 'Confirm Password',
-                    hintStyle: TextStyle(
-                      color: Colors.black38,
+              child: Builder (
+                builder: (context) => TextFormField(
+                  // ******** artems code: add controller *********************
+                    controller: _confirmPassword,
+                    // ***********************************************************
+                    obscureText: true,
+                    // ************ Artems code: validator *************************
+                    validator: (password) {
+                      if (password.isEmpty)
+                        return '    Please re-enter password';
+                      else if (_password.text != _confirmPassword.text)
+                        return '    Passwords must match';
+                      else
+                        return null;
+                    },
+                    // ***********************************************************
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.only(top: 14),
+                      prefixIcon: Icon(Icons.lock_open, color: Color(0xffFF3232)),
+                      hintText: 'Confirm Password',
+                      hintStyle: TextStyle(
+                        color: Colors.black38,
+                      ),
+                      // ************* artems code: errorStyle *******************
+                      errorStyle: kErrorTextStyle,
+                      // *********************************************************
                     ),
-                    // ************* artems code: errorStyle *******************
-                    errorStyle: kErrorTextStyle,
-                    // *********************************************************
-                  )))
-        ]);
+                    inputFormatters: [
+                      MaxLengthFormatter(25, (){
+                        showSnackBar(context, 'Only 25 characters are allowed for a Password.');
+                      },
+                      ),
+                    ],
+                ),
+              ),
+          )
+        ],
+    );
   }
 
 //****************************** Continue Field ********************************
   Widget buildContBtn() {
     return GestureDetector(
-      // ***************** Artems code *****************************************
-      // onTap: () => Navigator.push(
-      //       context,
-      //       MaterialPageRoute(builder: (context) => SignUpContinue()),
-      //     ),
         onTap: ()  {
-          //print("Gender: " +  gender);
-          //print("selected: " + genderSelected);
-
           setState(() async {
 
             if (_formKey.currentState.validate()) {
@@ -791,11 +828,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             'hobbies': null,
                             'workout': null
                           },
-
                         ),
-
                   );
-
 
                   if (_auth.currentUser.uid != null) {
                     Navigator.pushNamed(context, Success.id);
@@ -805,12 +839,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               } catch (e) {
                 print(e);
               }
-
-
-              // if validate = true, take user to next page
-              //Navigator.pushNamed(context, Success.id);
             }
-          });
+          },
+          );
         },
         // *********************************************************************
         child: RichText(
@@ -823,7 +854,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     fontWeight: FontWeight.bold,
                     decoration: TextDecoration.underline,
                   ))
-            ])));
+            ],
+            ),
+        ),
+    );
   }
 
 //****************************** MAIN SCAFFOLD *********************************
@@ -906,8 +940,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   buildConfirmPassword(),
                                   SizedBox(height: 10),
                                   buildContBtn()
-                                ])))
-                  ])))),
+                                ],
+                            ),
+                        ),
+                    ),
+                  ],
+                  ),
+              ),
+          ),
+      ),
     );
   }
 }
