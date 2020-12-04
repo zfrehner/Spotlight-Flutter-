@@ -59,6 +59,20 @@ class _GymCardTwoViewState extends State<GymCardTwoView> {
         .then((value) => (value.data()["NumUsers"]));
   }
 
+  Future<String> getHobbies() {
+    return _firestore.collection("SpotlightUsers")
+        .doc(loggedInUser.uid)
+        .get()
+        .then((value) => (value.data()["hobbies"]));
+  }
+
+  Future<String> getWorkout() {
+    return _firestore.collection("SpotlightUsers")
+        .doc(loggedInUser.uid)
+        .get()
+        .then((value) => (value.data()["workout"]));
+  }
+
   void initState() {
     getCurrentUser();
   }
@@ -197,6 +211,8 @@ class _GymCardTwoViewState extends State<GymCardTwoView> {
                             final userName = user.data()["Name"];
                             final userGender = user.data()["Gender"];
                             final userAge = user.data()["Age"];
+                            final userHobbies = user.data()["Hobbies"];
+                            final userFavWorkout = user.data()["Workout"];
 
 
                             final gymWidget = UserDisplay(
@@ -238,6 +254,8 @@ class _GymCardTwoViewState extends State<GymCardTwoView> {
                           var first = await getFirstName();
                           var last = await getLastName();
                           var gender = await getGender();
+                          var hobbies = await getHobbies();
+                          var workout = await getWorkout();
                           // Find out your age
                           var birthday = await getBirthday();
 
@@ -245,11 +263,6 @@ class _GymCardTwoViewState extends State<GymCardTwoView> {
                           Duration dur = today.difference(birthday);
 
                           String differenceInYears = (dur.inDays/365).floor().toString();
-                          //print(birthday);
-                          //print(differenceInYears);
-                          //print(first);
-                          //print(last);
-                          //print(gender);
 
                           final user = await _firestore.collection("Gym1CheckedIn")
                               .doc(_auth.currentUser.uid).get();
@@ -272,7 +285,9 @@ class _GymCardTwoViewState extends State<GymCardTwoView> {
                                 .set({
                               "Name": first + " " + last,
                               "Gender": gender,
-                              "Age": differenceInYears
+                              "Age": differenceInYears,
+                              "Hobbies" : hobbies,
+                              "Workout" : workout
                             });
                             _firestore.collection("Gyms")
                                 .doc("Gym 2")
@@ -334,11 +349,13 @@ class _GymCardTwoViewState extends State<GymCardTwoView> {
 }
 
 class UserDisplay extends StatelessWidget {
-  UserDisplay({this.name, this.gender, this.age});
+  UserDisplay({this.name, this.gender, this.age, this.hobbies, this.workout});
 
   final String name;
   final String gender;
   final String age;
+  final String hobbies;
+  final String workout;
 
 
 
@@ -391,6 +408,39 @@ class UserDisplay extends StatelessWidget {
                     ],
                   ),
                 ),
+                Padding(
+                  padding: EdgeInsets.only(top: 8.0, left: 8.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Hobbies: $hobbies",
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 8.0, left: 8.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Favorite Workout: $workout",
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
                 Padding(
                   padding: EdgeInsets.only(left: 8.0, bottom: 8.0),
                   child: Row(

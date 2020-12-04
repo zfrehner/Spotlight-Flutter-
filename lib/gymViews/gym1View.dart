@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:spotlight_login/constants.dart';
+import 'package:spotlight_login/functions/functions.dart';
 
 
 class GymCardOneView extends StatefulWidget {
