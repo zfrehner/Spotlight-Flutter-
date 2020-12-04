@@ -182,45 +182,47 @@ class _ProfileState extends State<Profile> {
       children: [
         Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <
             Widget>[
-          Column(children: <Widget>[
-            Row(children: [
-              FutureBuilder(
-                  future: getFirestoreUser(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return Expanded(
-                          child: Center(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(20, 7, 0, 0),
-                              child: Text(
-                                "Welcome ${snapshot.data["firstName"].toUpperCase() + "!"}",
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  //fontStyle: FontStyle.italic,
-                                  foreground: Paint()
-                                    ..style = PaintingStyle.stroke
-                                    ..strokeWidth = 2
-                                    ..color = Colors.red[400].withOpacity(0.8),
+          Container(
+            child: Column(children: <Widget>[
+              Row(children: [
+                FutureBuilder(
+                    future: getFirestoreUser(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return Expanded(
+                            child: Center(
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(20, 7, 0, 0),
+                                child: Text(
+                                  "Welcome ${snapshot.data["firstName"].toUpperCase() + "!"}",
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    //fontStyle: FontStyle.italic,
+                                    foreground: Paint()
+                                      ..style = PaintingStyle.stroke
+                                      ..strokeWidth = 2
+                                      ..color = Colors.red[400].withOpacity(0.8),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ));
-                      /*Text("${snapshot.data.email}",
-                      style: kLoginTextStyle)*/
-                    } else {
-                      return CircularProgressIndicator(
-                        backgroundColor: Colors.red,
-                      );
-                    }
-                  }),
-              Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                child: Icon(
-                  Icons.settings,
+                            ));
+                        /*Text("${snapshot.data.email}",
+                        style: kLoginTextStyle)*/
+                      } else {
+                        return CircularProgressIndicator(
+                          backgroundColor: Colors.red,
+                        );
+                      }
+                    }),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  child: Icon(
+                    Icons.settings,
+                  ),
                 ),
-              ),
+              ]),
             ]),
-          ]),
+          ),
           Center(
             child: Container(
               child: Padding(
@@ -288,9 +290,8 @@ class _ProfileState extends State<Profile> {
                     }
                     return Container();
                   })
-              ])
-            ]),
-          ),
+              ]),
+
 
                 Positioned(
                     bottom: 0,
@@ -307,15 +308,16 @@ class _ProfileState extends State<Profile> {
                           uploadImage();
                         },
                         icon: Icon(
-                          Icons.edit,
-                          color: Colors.white,
-                        ),
+                        Icons.edit,
+                        color: Colors.white,
                       ),
-                    ))
-              ],
-            ),
-
-          Center(
+                    ),
+                  ))
+            ]),
+          ),
+        ],
+      ),
+      Center(
               child: Padding(
                 padding: EdgeInsets.only(left: 25, right: 25),
                 child: FutureBuilder(
