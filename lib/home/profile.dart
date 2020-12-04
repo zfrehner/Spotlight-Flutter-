@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/rendering.dart';
-
+import 'package:spotlight_login/max_lengths_formatter.dart';
 import 'package:intl/intl.dart';
 
 class Profile extends StatefulWidget {
@@ -49,6 +49,14 @@ class _ProfileState extends State<Profile> {
     } catch (e) {
       print(e);
     }
+  }
+
+  void showSnackBar (BuildContext context, String text) {
+    Scaffold.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        content: Text(text),
+      ),);
   }
 
   getName() {
@@ -193,21 +201,21 @@ class _ProfileState extends State<Profile> {
                     if (snapshot.connectionState == ConnectionState.done) {
                       return Expanded(
                           child: Center(
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(20, 7, 0, 0),
-                          child: Text(
-                            "Welcome ${snapshot.data["firstName"].toUpperCase() + "!"}",
-                            style: TextStyle(
-                              fontSize: 25,
-                              //fontStyle: FontStyle.italic,
-                              foreground: Paint()
-                                ..style = PaintingStyle.stroke
-                                ..strokeWidth = 2
-                                ..color = Colors.red[400].withOpacity(0.8),
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(20, 7, 0, 0),
+                              child: Text(
+                                "Welcome ${snapshot.data["firstName"].toUpperCase() + "!"}",
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  //fontStyle: FontStyle.italic,
+                                  foreground: Paint()
+                                    ..style = PaintingStyle.stroke
+                                    ..strokeWidth = 2
+                                    ..color = Colors.red[400].withOpacity(0.8),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ));
+                          ));
                       /*Text("${snapshot.data.email}",
                       style: kLoginTextStyle)*/
                     } else {
@@ -251,40 +259,40 @@ class _ProfileState extends State<Profile> {
                   child: Column(children: <Widget>[
                     (URL != null)
                         ? Container(
-                            width: 160,
-                            height: 160,
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 4,
-                                    color: Colors.white.withOpacity(0.9)),
-                                boxShadow: [
-                                  BoxShadow(
-                                      spreadRadius: 3,
-                                      blurRadius: 6,
-                                      color: Colors.white)
-                                ],
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(URL))))
+                        width: 160,
+                        height: 160,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                width: 4,
+                                color: Colors.white.withOpacity(0.9)),
+                            boxShadow: [
+                              BoxShadow(
+                                  spreadRadius: 3,
+                                  blurRadius: 6,
+                                  color: Colors.white)
+                            ],
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(URL))))
                         : Container(
-                            width: 150,
-                            height: 150,
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 4,
-                                    color: Colors.white.withOpacity(0.9)),
-                                boxShadow: [
-                                  BoxShadow(
-                                      spreadRadius: 3,
-                                      blurRadius: 6,
-                                      color: Colors.white)
-                                ],
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image:
-                                        AssetImage("assets/images/gym5.jpg"))))
+                        width: 150,
+                        height: 150,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                width: 4,
+                                color: Colors.white.withOpacity(0.9)),
+                            boxShadow: [
+                              BoxShadow(
+                                  spreadRadius: 3,
+                                  blurRadius: 6,
+                                  color: Colors.white)
+                            ],
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image:
+                                AssetImage("assets/images/gym5.jpg"))))
                   ]),
                 ),
 
@@ -313,19 +321,19 @@ class _ProfileState extends State<Profile> {
           ),
           Center(
               child: Padding(
-            padding: EdgeInsets.only(left: 25, right: 25),
-            child: FutureBuilder(
-                future: getFirestoreUser(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return displayUserInfo(context, snapshot);
-                  } else {
-                    return CircularProgressIndicator(
-                      backgroundColor: Colors.red,
-                    );
-                  }
-                }),
-          )),
+                padding: EdgeInsets.only(left: 25, right: 25),
+                child: FutureBuilder(
+                    future: getFirestoreUser(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return displayUserInfo(context, snapshot);
+                      } else {
+                        return CircularProgressIndicator(
+                          backgroundColor: Colors.red,
+                        );
+                      }
+                    }),
+              )),
         ])
       ],
     );
@@ -350,7 +358,7 @@ class _ProfileState extends State<Profile> {
       if (image != null) {
         //upload to firebase
         var snapshot =
-            await _storage.ref().child("$uid/imageName").putFile(file);
+        await _storage.ref().child("$uid/imageName").putFile(file);
 
         var downloadUrl = await snapshot.ref.getDownloadURL();
 
@@ -390,6 +398,12 @@ class _ProfileState extends State<Profile> {
           color: Colors.white70,
         ),
       ),
+      inputFormatters: [
+        MaxLengthFormatter(25, (){
+          showSnackBar(context, 'Only 25 characters are allowed.');
+        },
+        ),
+      ],
     );
   }
 }
