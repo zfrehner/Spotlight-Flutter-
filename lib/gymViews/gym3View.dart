@@ -216,7 +216,8 @@ class _GymCardThreeViewState extends State<GymCardThreeView> {
 
 
                             final gymWidget = UserDisplay(
-                                name: userName, gender: userGender, age: userAge);
+                                name: userName, gender: userGender, age: userAge,
+                                hobbies: userHobbies, workout: userFavWorkout);
 
                             userWidgets.add(gymWidget);
                           }
