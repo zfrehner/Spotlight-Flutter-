@@ -7,6 +7,7 @@ import 'package:spotlight_login/homePage.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:spotlight_login/forgotPassword.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -157,7 +158,9 @@ class _LoginScreenState extends State<LoginScreen> {
     return Container(
         alignment: Alignment.centerRight,
         child: FlatButton(
-            onPressed: () => print("Forgot password was pressed"),
+            onPressed: () {
+              Navigator.pushNamed(context, ForgotPassword.id);
+            },
             padding: EdgeInsets.only(right: 0),
             child: Text(
               'Forgot Password?',
