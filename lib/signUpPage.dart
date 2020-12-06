@@ -317,7 +317,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 errorStyle: kErrorTextStyle,
               ),
               inputFormatters: [
-                MaxLengthFormatter(25, (){
+                MaxLengthFormatter(50,(){
                   showSnackBar(context, 'Only 25 characters are allowed for Email.');
                 },
                 ),
@@ -889,6 +889,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   padding:
                   EdgeInsets.symmetric(horizontal: 25, vertical: 25),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Row(
