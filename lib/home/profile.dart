@@ -161,7 +161,7 @@ class _ProfileState extends State<Profile> {
         ),
         buildTextField("Address", "$address", "address"),
         buildTextField("City", "$city", "city"),
-        buildTextField("State", "$state", "state"),
+        buildTextField("State/Province", "$state", "state"),
         buildTextField("Postal code", "$zip", "zipCode"),
         buildTextField("Country", "${user["country"]}", "country"),
         // extra fields for optional info
