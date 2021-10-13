@@ -163,7 +163,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                               )
                                           ),
                                           Text(
-                                              "It's time to be someone at the gym!",
+                                              "It's Time To Be Someone At The Gym!",
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 16,

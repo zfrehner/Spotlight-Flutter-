@@ -73,9 +73,9 @@ class _LandPageState extends State<LandPage> {
       child: Text('Calendar'),
     ),*/
     Profile(),
-    Messenger(),
-    Gyms(),
     Calendar(),
+    Gyms(),
+    Messenger(),
   ];
 
 
@@ -147,16 +147,16 @@ class _LandPageState extends State<LandPage> {
             label: 'Profile',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book_rounded),
-            label: 'Education',
+            icon: Icon(Icons.calendar_today_rounded),
+            label: 'Calendar',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.fitness_center),
             label: 'Gyms',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today_rounded),
-            label: 'Calendar',
+            icon: Icon(Icons.menu_book_rounded),
+            label: 'Education',
           ),
         ],
         onTap: (index){

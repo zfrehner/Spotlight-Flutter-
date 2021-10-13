@@ -161,7 +161,7 @@ class _ProfileState extends State<Profile> {
         ),
         buildTextField("Address", "$address", "address"),
         buildTextField("City", "$city", "city"),
-        buildTextField("State", "$state", "state"),
+        buildTextField("State/Province", "$state", "state"),
         buildTextField("Postal code", "$zip", "zipCode"),
         buildTextField("Country", "${user["country"]}", "country"),
         // extra fields for optional info
@@ -228,7 +228,7 @@ class _ProfileState extends State<Profile> {
               child: Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                 child: Text(
-                  "It's time to be someone at the Gym!",
+                  "It's Time To Be Someone At The Gym!",
                   style: TextStyle(
                     fontSize: 20,
                     //fontStyle: FontStyle.italic,
