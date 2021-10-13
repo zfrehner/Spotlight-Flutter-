@@ -114,6 +114,12 @@ class _ProfileState extends State<Profile> {
       date = "";
     }
 
+    // check if About Me is left blank (NEW)
+    /*var aboutMe = user["aboutMe"];
+    if (aboutMe == null) {
+      aboutMe = "Test Description for Testing!";
+    }*/
+
     // check if hobbies is left blank
     var hobbies = user["hobbies"];
     if (hobbies == null) {
@@ -167,6 +173,7 @@ class _ProfileState extends State<Profile> {
         // extra fields for optional info
         buildTextField("Interests/Hobbies", "$hobbies", "hobbies"),
         buildTextField("Favorite workout", "$workout", "workout"),
+        //buildTextField("About Me: ", "$aboutMe", "aboutMe"),
         SizedBox(
           height: 10,
         )

@@ -77,6 +77,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String city;
   String state;
   String zipCode;
+  String aboutMe; // New field
   String password;
   String email;
   String gender;
@@ -675,7 +676,49 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ],
     );
   }
-
+//******************************* About Me Field (NEW) *************************
+  Widget buildAboutMe() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'About You',
+          style: kLoginTextStyle,
+        ),
+        SizedBox(height: 10),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kSignUpBoxDecoration,
+          height: 60,
+          child: Builder(
+            builder: (context) => TextFormField(
+              onChanged: (value) {
+                aboutMe = value;
+              },
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(top: 14),
+                prefixIcon: Icon(
+                  Icons.person,
+                  color: Color(0xffFF3232),
+                ),
+                hintText: 'About You',
+                hintStyle: TextStyle(
+                  color: Colors.black38,
+                ),
+                errorStyle: kErrorTextStyle,
+              ),
+              inputFormatters: [
+                MaxLengthFormatter(300, (){
+                  showSnackBar(context, 'Only 300 characters allowed for About Me');
+                })
+              ],
+            ),
+          ),
+        )
+      ],
+    );
+  }
 //**************************** Password Input Field ****************************
   Widget buildPassword() {
     return Column(
@@ -825,6 +868,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'birthday': dateTime,
                           'gender': gender,
                           'phoneNumber': phoneNumber,
+                          // (NEW) Uncomment when you can add the About ME section to Firebase
+                          // 'aboutMe': aboutMe,
                           'hobbies': "",
                           'workout': "",
                           'imageString' : null
@@ -938,6 +983,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       buildPhoneNumber(),
                       SizedBox(height: 10),
                       buildPassword(),
+                      SizedBox(height: 30),
+                      buildAboutMe(),
                       SizedBox(height: 10),
                       buildConfirmPassword(),
                       SizedBox(height: 10),
