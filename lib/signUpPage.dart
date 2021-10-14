@@ -171,7 +171,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'First Name',
+          '* First Name',
           style: kLoginTextStyle,
         ),
         SizedBox(height: 10),
@@ -228,7 +228,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Last Name',
+          '* Last Name',
           style: kLoginTextStyle,
         ),
         SizedBox(height: 10),
@@ -282,7 +282,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Email',
+          '* Email',
           style: kLoginTextStyle,
         ),
         SizedBox(height: 10),
@@ -531,7 +531,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               height: 10.0,
             ),
             Text(
-              'Age: ',
+              '* Age: ',
               style: kLoginTextStyle,
             ),
           ],
@@ -599,7 +599,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Row(
       children: <Widget>[
         Text(
-          'Gender',
+          '* Gender',
           style: kLoginTextStyle,
         ),
         SizedBox(height: 10),
@@ -725,7 +725,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Password',
+          '* Password',
           style: kLoginTextStyle,
         ),
         SizedBox(height: 10),
@@ -959,6 +959,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ],
                       ),
+                      Text('* = Indicates a required field',
+                          style: kLoginTextStyle),
                       SizedBox(height: 10),
                       buildFirstNameField(),
                       SizedBox(height: 10),
@@ -981,10 +983,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       buildGenderChoice(),
                       SizedBox(height: 30),
                       buildPhoneNumber(),
-                      SizedBox(height: 10),
-                      buildPassword(),
                       SizedBox(height: 30),
                       buildAboutMe(),
+                      SizedBox(height: 10),
+                      buildPassword(),
                       SizedBox(height: 10),
                       buildConfirmPassword(),
                       SizedBox(height: 10),
