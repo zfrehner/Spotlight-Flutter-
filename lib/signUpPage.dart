@@ -72,11 +72,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   //form field variables
   String firstName;
   String lastName;
+  String username;
   String country = "Canada";
   String address;
   String city;
   String state;
   String zipCode;
+  String aboutMe; // New field
   String password;
   String email;
   String gender;
@@ -170,7 +172,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'First Name',
+          '* First Name',
           style: kLoginTextStyle,
         ),
         SizedBox(height: 10),
@@ -227,7 +229,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Last Name',
+          '* Last Name',
           style: kLoginTextStyle,
         ),
         SizedBox(height: 10),
@@ -275,13 +277,58 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
+  //**************************** Username Field *******************************
+  Widget buildUsernameField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          '* Username',
+          style: kLoginTextStyle,
+        ),
+        SizedBox(height: 10),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kSignUpBoxDecoration,
+          height: 60,
+          child: Builder(
+            builder: (context) => TextFormField(
+              onChanged: (value) {
+                username = value;
+              },
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(top: 14),
+                prefixIcon: Icon(
+                  Icons.person,
+                  color: Color(0xffFF3232),
+                ),
+                hintText: 'Username',
+                hintStyle: TextStyle(
+                  color: Colors.black38,
+                ),
+                errorStyle: kErrorTextStyle,
+              ),
+              inputFormatters: [
+                MaxLengthFormatter(30, (){
+                  showSnackBar(context, 'Only 30 characters allowed for Username.');
+                },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
 //**************************** Email Input Field *******************************
   Widget buildEmail() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Email',
+          '* Email',
           style: kLoginTextStyle,
         ),
         SizedBox(height: 10),
@@ -530,7 +577,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               height: 10.0,
             ),
             Text(
-              'Age: ',
+              '* Age: ',
               style: kLoginTextStyle,
             ),
           ],
@@ -598,7 +645,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Row(
       children: <Widget>[
         Text(
-          'Gender',
+          '* Gender',
           style: kLoginTextStyle,
         ),
         SizedBox(height: 10),
@@ -675,14 +722,59 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ],
     );
   }
-
+//******************************* About Me Field (NEW) *************************
+  Widget buildAboutMe() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'About You',
+          style: kLoginTextStyle,
+        ),
+        SizedBox(height: 10),
+        Container(
+          alignment: Alignment.topLeft,
+          decoration: kSignUpBoxDecoration,
+          height: 100,
+          child: Builder(
+            builder: (context) => TextFormField(
+              onChanged: (value) {
+                aboutMe = value;
+              },
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(top: 14),
+                prefixIcon: Icon(
+                  Icons.person,
+                  color: Color(0xffFF3232),
+                ),
+                hintText: 'About You',
+                hintStyle: TextStyle(
+                  color: Colors.black38,
+                ),
+                errorStyle: kErrorTextStyle,
+              ),
+              keyboardType: TextInputType.multiline,
+              maxLength: 300,
+              maxLines: null,
+              inputFormatters: [
+                MaxLengthFormatter(300, (){
+                  showSnackBar(context, 'Only 300 characters allowed for About Me');
+                })
+              ],
+            ),
+          ),
+        )
+      ],
+    );
+  }
 //**************************** Password Input Field ****************************
   Widget buildPassword() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Password',
+          '* Password',
           style: kLoginTextStyle,
         ),
         SizedBox(height: 10),
@@ -816,6 +908,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'uid': _auth.currentUser.uid,
                           'firstName': firstName,
                           'lastName': lastName,
+                          // (NEW) username field
+                          'username': username,
                           'email': email,
                           'country': country,
                           'address': address,
@@ -825,6 +919,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'birthday': dateTime,
                           'gender': gender,
                           'phoneNumber': phoneNumber,
+                          // (NEW) Uncomment when you can add the About ME section to Firebase
+                          'aboutMe': aboutMe,
                           'hobbies': "",
                           'workout': "",
                           'imageString' : null
@@ -914,10 +1010,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ],
                       ),
+                      Text('* = Indicates a required field',
+                          style: kLoginTextStyle),
                       SizedBox(height: 10),
                       buildFirstNameField(),
                       SizedBox(height: 10),
                       buildLastNameField(),
+                      SizedBox(height:10),
+                      buildUsernameField(),
                       SizedBox(height: 10),
                       buildEmail(),
                       SizedBox(height: 10),
@@ -936,6 +1036,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       buildGenderChoice(),
                       SizedBox(height: 30),
                       buildPhoneNumber(),
+                      SizedBox(height: 30),
+                      buildAboutMe(),
                       SizedBox(height: 10),
                       buildPassword(),
                       SizedBox(height: 10),

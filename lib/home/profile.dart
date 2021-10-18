@@ -114,6 +114,12 @@ class _ProfileState extends State<Profile> {
       date = "";
     }
 
+    // check if About Me is left blank (NEW)
+    var aboutMe = user["aboutMe"];
+    if (aboutMe == null) {
+      aboutMe = "Test Description for Testing!";
+    }
+
     // check if hobbies is left blank
     var hobbies = user["hobbies"];
     if (hobbies == null) {
@@ -131,6 +137,7 @@ class _ProfileState extends State<Profile> {
       children: [
         buildTextField("First Name", "${user["firstName"]}", "firstName"),
         buildTextField("Last Name", "${user["lastName"]}", "lastName"),
+        buildTextField("Username", "${user["username"]}", "username"),
         buildTextField("Email", "${user["email"]}", "email"),
         buildTextField("Phone", "$phone", "phoneNumber"),
         TextField(
@@ -167,6 +174,7 @@ class _ProfileState extends State<Profile> {
         // extra fields for optional info
         buildTextField("Interests/Hobbies", "$hobbies", "hobbies"),
         buildTextField("Favorite workout", "$workout", "workout"),
+        buildTextFieldMultiLine("About Me: ", "$aboutMe", "aboutMe"),
         SizedBox(
           height: 10,
         )
@@ -401,6 +409,42 @@ class _ProfileState extends State<Profile> {
       ),
       inputFormatters: [
         MaxLengthFormatter(25, (){
+          showSnackBar(context, 'Only 25 characters are allowed.');
+        },
+        ),
+      ],
+    );
+  }
+
+  TextField buildTextFieldMultiLine(
+      String labelText, String placeholder, String database) {
+    return TextField(
+      onChanged: (text) {
+        _firestore
+            .collection("SpotlightUsers")
+            .doc(_auth.currentUser.uid)
+            .update({database: text});
+        //print(text)
+      },
+      maxLength: null,
+      maxLines: null,
+      style: TextStyle(
+          fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white70),
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.only(bottom: 2, top: 10),
+        labelText: labelText,
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        hintText: placeholder,
+        labelStyle: TextStyle(
+            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red[400]),
+        hintStyle: TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+          color: Colors.white70,
+        ),
+      ),
+      inputFormatters: [
+        MaxLengthFormatter(300, (){
           showSnackBar(context, 'Only 25 characters are allowed.');
         },
         ),

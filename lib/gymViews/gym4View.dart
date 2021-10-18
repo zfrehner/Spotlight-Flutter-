@@ -19,21 +19,29 @@ class _GymCardFourViewState extends State<GymCardFourView> {
   User loggedInUser;
   var userID;
 
-  Future<String> getFirstName() {
+  // Future<String> getFirstName() {
+  //   return _firestore
+  //       .collection("SpotlightUsers")
+  //       .doc(loggedInUser.uid) //"7uUbB9zLN7hyqPGiDpQjb3onWf73"
+  //       .get()
+  //       .then((value) => (value.data()["firstName"]));
+  //
+  // }
+  //
+  // Future<String> getLastName() {
+  //   return _firestore
+  //       .collection("SpotlightUsers")
+  //       .doc(loggedInUser.uid) //"7uUbB9zLN7hyqPGiDpQjb3onWf73"
+  //       .get()
+  //       .then((value) => ( value.data()["lastName"]));
+  // }
+
+  Future<String> getUsername(){
     return _firestore
         .collection("SpotlightUsers")
-        .doc(loggedInUser.uid) //"7uUbB9zLN7hyqPGiDpQjb3onWf73"
+        .doc(loggedInUser.uid)
         .get()
-        .then((value) => (value.data()["firstName"]));
-
-  }
-
-  Future<String> getLastName() {
-    return _firestore
-        .collection("SpotlightUsers")
-        .doc(loggedInUser.uid) //"7uUbB9zLN7hyqPGiDpQjb3onWf73"
-        .get()
-        .then((value) => ( value.data()["lastName"]));
+        .then((value) => (value.data()["username"]));
   }
 
   Future<String> getGender()  {
@@ -208,7 +216,7 @@ class _GymCardFourViewState extends State<GymCardFourView> {
                           List<UserDisplay> userWidgets = [];
 
                           for (var user in users) {
-                            final userName = user.data()["Name"];
+                            final username = user.data()["Username"];
                             final userGender = user.data()["Gender"];
                             final userAge = user.data()["Age"];
                             final userHobbies = user.data()["Hobbies"];
@@ -216,7 +224,7 @@ class _GymCardFourViewState extends State<GymCardFourView> {
 
 
                             final gymWidget = UserDisplay(
-                                name: userName, gender: userGender, age: userAge,
+                                username: username, gender: userGender, age: userAge,
                                 hobbies: userHobbies, workout: userFavWorkout);
 
                             userWidgets.add(gymWidget);
@@ -252,8 +260,9 @@ class _GymCardFourViewState extends State<GymCardFourView> {
                       child: FloatingActionButton(
                         heroTag: "check-in",
                         onPressed: () async {
-                          var first = await getFirstName();
-                          var last = await getLastName();
+                          // var first = await getFirstName();
+                          // var last = await getLastName();
+                          var username = await getUsername();
                           var gender = await getGender();
                           var hobbies = await getHobbies();
                           var workout = await getWorkout();
@@ -284,7 +293,7 @@ class _GymCardFourViewState extends State<GymCardFourView> {
                             _firestore.collection("Gym4CheckedIn")
                                 .doc(_auth.currentUser.uid)
                                 .set({
-                              "Name": first + " " + last,
+                              "Username": username,
                               "Gender": gender,
                               "Age": differenceInYears,
                               "Hobbies" : hobbies,
@@ -350,9 +359,9 @@ class _GymCardFourViewState extends State<GymCardFourView> {
 }
 
 class UserDisplay extends StatelessWidget {
-  UserDisplay({this.name, this.gender, this.age, this.hobbies, this.workout});
+  UserDisplay({this.username, this.gender, this.age, this.hobbies, this.workout});
 
-  final String name;
+  final String username;
   final String gender;
   final String age;
   final String hobbies;
@@ -383,7 +392,7 @@ class UserDisplay extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "$name",
+                        "$username",
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
