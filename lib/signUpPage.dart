@@ -687,9 +687,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         SizedBox(height: 10),
         Container(
-          alignment: Alignment.centerLeft,
+          alignment: Alignment.topLeft,
           decoration: kSignUpBoxDecoration,
-          height: 60,
+          height: 100,
           child: Builder(
             builder: (context) => TextFormField(
               onChanged: (value) {
@@ -708,6 +708,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 errorStyle: kErrorTextStyle,
               ),
+              keyboardType: TextInputType.multiline,
+              maxLength: 300,
+              maxLines: null,
               inputFormatters: [
                 MaxLengthFormatter(300, (){
                   showSnackBar(context, 'Only 300 characters allowed for About Me');
