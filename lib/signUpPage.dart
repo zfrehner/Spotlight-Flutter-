@@ -72,6 +72,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   //form field variables
   String firstName;
   String lastName;
+  String username;
   String country = "Canada";
   String address;
   String city;
@@ -266,6 +267,51 @@ class _SignUpScreenState extends State<SignUpScreen> {
               inputFormatters: [
                 MaxLengthFormatter(20, (){
                   showSnackBar(context, 'Only 20 characters are allowed for Last Name.');
+                },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  //**************************** Username Field *******************************
+  Widget buildUsernameField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          '* Username',
+          style: kLoginTextStyle,
+        ),
+        SizedBox(height: 10),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kSignUpBoxDecoration,
+          height: 60,
+          child: Builder(
+            builder: (context) => TextFormField(
+              onChanged: (value) {
+                username = value;
+              },
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(top: 14),
+                prefixIcon: Icon(
+                  Icons.person,
+                  color: Color(0xffFF3232),
+                ),
+                hintText: 'Username',
+                hintStyle: TextStyle(
+                  color: Colors.black38,
+                ),
+                errorStyle: kErrorTextStyle,
+              ),
+              inputFormatters: [
+                MaxLengthFormatter(30, (){
+                  showSnackBar(context, 'Only 30 characters allowed for Username.');
                 },
                 ),
               ],
@@ -862,6 +908,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'uid': _auth.currentUser.uid,
                           'firstName': firstName,
                           'lastName': lastName,
+                          // (NEW) username field
+                          'username': username,
                           'email': email,
                           'country': country,
                           'address': address,
@@ -968,6 +1016,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       buildFirstNameField(),
                       SizedBox(height: 10),
                       buildLastNameField(),
+                      SizedBox(height:10),
+                      buildUsernameField(),
                       SizedBox(height: 10),
                       buildEmail(),
                       SizedBox(height: 10),

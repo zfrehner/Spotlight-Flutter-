@@ -137,6 +137,7 @@ class _ProfileState extends State<Profile> {
       children: [
         buildTextField("First Name", "${user["firstName"]}", "firstName"),
         buildTextField("Last Name", "${user["lastName"]}", "lastName"),
+        buildTextField("Username", "${user["username"]}", "username"),
         buildTextField("Email", "${user["email"]}", "email"),
         buildTextField("Phone", "$phone", "phoneNumber"),
         TextField(
