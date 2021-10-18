@@ -869,7 +869,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'gender': gender,
                           'phoneNumber': phoneNumber,
                           // (NEW) Uncomment when you can add the About ME section to Firebase
-                          // 'aboutMe': aboutMe,
+                          'aboutMe': aboutMe,
                           'hobbies': "",
                           'workout': "",
                           'imageString' : null
