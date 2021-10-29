@@ -75,7 +75,7 @@ class _LandPageState extends State<LandPage> {
     Profile(),
     Calendar(),
     Gyms(),
-    Messenger(),
+    Messenger()
   ];
 
 
