@@ -172,7 +172,7 @@ class _ProfileState extends State<Profile> {
         buildTextField("Postal code", "$zip", "zipCode"),
         buildTextField("Country", "${user["country"]}", "country"),
         // extra fields for optional info
-        buildTextField("Interests/Hobbies", "$hobbies", "hobbies"),
+        buildTextFieldMultiLine("Interests/Hobbies", "$hobbies", "hobbies"),
         buildTextField("Favorite workout", "$workout", "workout"),
         buildTextFieldMultiLine("About Me: ", "$aboutMe", "aboutMe"),
         SizedBox(
