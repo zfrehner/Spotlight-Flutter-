@@ -15,6 +15,7 @@ import 'package:spotlight_login/forgotPassword.dart';
 import 'home/workout.dart';
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
