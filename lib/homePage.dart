@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 
+
 //****************************************
 
 class LandPage extends StatefulWidget {
@@ -82,6 +83,7 @@ class _LandPageState extends State<LandPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: AppBar(
         leading: IconButton(
           onPressed: (){
@@ -111,27 +113,7 @@ class _LandPageState extends State<LandPage> {
           ),
         ],
       ),//***********************************************************
-      body: /*Column(
-        children: <Widget>[
-          Container(
-              child: Text(
-                  "Welcome " + loggedInUser.email
-              )
-          ),
-          Container(
-            child: InkWell(
-                child: Text("It's time to be someone at the Gym!",
-                    style: kLoginTextStyle,
-                ),
-                onTap: () => launch('https://nullpointerexception.greenriverdev.com/Spotlight/index.php')
-            ),
-          ),
-          Image(
-            image: AssetImage('assets/images/gym5.jpg'),
-          ),
-          tabs[_currentIndex]
-        ],
-      ),*/
+      body:
       tabs[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         iconSize: 30.0,

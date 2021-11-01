@@ -3,6 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'workouts.dart';
 import 'package:intl/intl.dart';
+import 'package:spotlight_login/home/calendar.dart';
+import 'package:spotlight_login/home/gyms.dart';
+import 'package:spotlight_login/home/messenger.dart';
+import 'package:spotlight_login/home/profile.dart';
 
 
 
@@ -28,26 +32,22 @@ class _WorkoutState extends State<Workout> {
     Center(
       child: Text('Calendar'),
     ),*/
-
+    Profile(),
+    Calendar(),
+    Gyms(),
+    Messenger(),
     Workouts()
   ];
 
-  int _currentIndex = 0;
+  int _currentIndex = 4;
   var today = new DateTime.now();
 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: (){
-            //print("Hello");
-          },
-          icon: Hero(
-            tag: 'logo',
-            child: CircleAvatar(
-              backgroundImage: AssetImage('assets/images/LOGO 4.jpg'),
-            ),
-          ),
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
         ),
         centerTitle: true,
         title: Center(
@@ -90,7 +90,9 @@ class _WorkoutState extends State<Workout> {
       tabs[_currentIndex],
 
       bottomNavigationBar: BottomNavigationBar(
-        iconSize: 30.0,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        iconSize: 0.0,
         unselectedFontSize: 14.0,
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.white,

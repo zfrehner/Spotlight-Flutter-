@@ -12,7 +12,7 @@ import 'package:spotlight_login/gymViews/gym2View.dart';
 import 'package:spotlight_login/gymViews/gym3View.dart';
 import 'package:spotlight_login/gymViews/gym4View.dart';
 import 'package:spotlight_login/forgotPassword.dart';
-import 'home/workout.dart';
+import 'workout_classes/workout.dart';
 
 void main() async {
 

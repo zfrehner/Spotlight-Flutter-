@@ -2,7 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
-import 'workout.dart';
+import '../workout_classes/workout.dart';
+
 
 class Calendar extends StatefulWidget {
   @override
@@ -19,8 +20,10 @@ class _CalendarState extends State<Calendar> {
       margin: EdgeInsets.symmetric(horizontal: 16.0),
       child: CalendarCarousel(
         onDayPressed: (DateTime date, List events) {
-          //this.setState(() => _currentDate = date);
-          Navigator.pushNamed(context, Workout.id);
+          this.setState(() => _currentDate = date);
+          Navigator.pushNamed(context, Workout.id,arguments: {
+            '_currentDay': _currentDate
+          });
         },
         weekendTextStyle: TextStyle(
           color: Colors.red,
