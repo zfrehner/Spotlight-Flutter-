@@ -2,7 +2,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'workouts.dart';
-import 'package:intl/intl.dart';
 import 'package:spotlight_login/home/calendar.dart';
 import 'package:spotlight_login/home/gyms.dart';
 import 'package:spotlight_login/home/messenger.dart';
