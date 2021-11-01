@@ -11,6 +11,7 @@ import 'package:spotlight_login/home/profile.dart';
 
 
 class Workout extends StatefulWidget {
+  static const String route = '/workout';
   static const String id = "workout";
   @override
   _WorkoutState createState() => _WorkoutState();
@@ -40,9 +41,14 @@ class _WorkoutState extends State<Workout> {
   ];
 
   int _currentIndex = 4;
-  var today = new DateTime.now();
+  
+  
 
   Widget build(BuildContext context) {
+    // var today = _currentDate;
+    var args = ModalRoute.of(context).settings.arguments;
+    var today = args.toString();
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -52,8 +58,8 @@ class _WorkoutState extends State<Workout> {
         centerTitle: true,
         title: Center(
           child: Text(
-               DateFormat("MMMMd").format(today)+' workout',
-              style: TextStyle(fontSize: 30.0,)
+               args.toString().substring(0,10)+' workout',
+              style: TextStyle(fontSize: 25.0,)
           ),
         ),
         actions: <Widget>[

@@ -21,9 +21,9 @@ class _CalendarState extends State<Calendar> {
       child: CalendarCarousel(
         onDayPressed: (DateTime date, List events) {
           this.setState(() => _currentDate = date);
-          Navigator.pushNamed(context, Workout.id,arguments: {
-            '_currentDay': _currentDate
-          });
+          // Navigator.pushNamed(context, '/workout',
+          //     arguments: 7);
+          Navigator.pushNamed(context, Workout.id,arguments: _currentDate);
         },
         weekendTextStyle: TextStyle(
           color: Colors.red,
