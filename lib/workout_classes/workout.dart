@@ -3,6 +3,17 @@ import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'workouts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/rendering.dart';
+import 'package:spotlight_login/max_lengths_formatter.dart';
+import 'package:intl/intl.dart';
 
 
 class Workout extends StatefulWidget {
@@ -14,6 +25,12 @@ class Workout extends StatefulWidget {
 
 class _WorkoutState extends State<Workout> {
   @override
+  final _auth = FirebaseAuth.instance;
+  var firebaseUser = FirebaseAuth.instance.currentUser;
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  User loggedInUser;
+  var uid;
 
   Map<String, bool> workouts = {
     'Biceps':false,
@@ -74,6 +91,37 @@ class _WorkoutState extends State<Workout> {
                 }).toList(),
               )
           )
+    );
+  }
+  TextField buildTextFieldMultiLine(
+      String labelText, String placeholder, String database) {
+    return TextField(
+      onChanged: (text) {
+        _firestore
+            .collection("SpotlightUsers")
+            .doc(_auth.currentUser.uid)
+            .update({database: text});
+        //print(text)
+      },
+      maxLength: null,
+      maxLines: null,
+      style: TextStyle(
+          fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white70),
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.only(bottom: 2, top: 10),
+        labelText: labelText,
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        hintText: placeholder,
+        labelStyle: TextStyle(
+            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red[400]),
+        hintStyle: TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+          color: Colors.white70,
+        ),
+      ),
+      inputFormatters: [
+      ],
     );
   }
 }
