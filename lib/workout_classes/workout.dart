@@ -1,4 +1,5 @@
 
+import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'workouts.dart';
@@ -46,7 +47,8 @@ class _WorkoutState extends State<Workout> {
   Widget build(BuildContext context) {
     // var today = _currentDate;
     var args = ModalRoute.of(context).settings.arguments;
-    var today = args.toString();
+    var today = formatDate(DateTime.parse(args.toString().substring(0,10)),[MM,' - ',dd]);
+
 
     return Scaffold(
       appBar: AppBar(
@@ -57,7 +59,7 @@ class _WorkoutState extends State<Workout> {
         centerTitle: true,
         title: Center(
           child: Text(
-               args.toString().substring(0,10)+' workout',
+               today+' Workout',
               style: TextStyle(fontSize: 25.0,)
           ),
         ),
