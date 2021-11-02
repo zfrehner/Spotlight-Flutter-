@@ -79,21 +79,57 @@ class _WorkoutState extends State<Workout> {
     'Chest': false,
     'Back': false,
     'Legs': false,
-
   };
 
   Widget getWorkoutNotes(context, snapshot) {
     final user = snapshot.data;
 
-    var workoutNotes = user["workoutNotes"];
-    if (workoutNotes == null) {
-      workoutNotes = "";
-    }
+    // var workoutNotes =
+    //     stream: _firestore.collection("SpotlightUsers").snapshots(),
+    //     .collection("SpotlightUsers")
+    //     .doc(_auth.currentUser.uid)
+    //     .collection("WorkoutNotes")
+    //     .doc("lBJwCxosn5TONAODxmDb");
+    // if (workoutNotes == null) {
+    //   workoutNotes = "";
+    // }
+
+    StreamBuilder<QuerySnapshot>(
+        stream: _firestore.collection("SpotlightUsers").snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.white,
+                ));
+          }
+          final gyms = snapshot.data.docs;
+
+
+          for (var gym in gyms) {
+            final gymTitle = gym.data()["Title"];
+            final gymAddress = gym.data()["Address"];
+            final gymCity = gym.data()["City"];
+            final gymUsers = gym.data()["NumUsers"];
+
+            final gymWidget = GymDisplay(
+                title: gymTitle, address: gymAddress, city: gymCity,
+                numUsers: gymUsers);
+
+            gymWidgets.add(gymWidget);
+          }
+        }),
+
+    var args = ModalRoute
+        .of(context)
+        .settings
+        .arguments;
 
     return Column(
       children: [
           buildTextFieldMultiLine
-            ("Workout Notes: ", "$workoutNotes", "workoutNotes"),
+            ("Workout Notes: ", "$workoutNotes", "workoutNotes",
+              args.toString().substring(0, 10)),
           SizedBox(
             height: 10,
           )
@@ -134,56 +170,56 @@ class _WorkoutState extends State<Workout> {
       ),
 
       body:
-          // SingleChildScrollView(
-          //   children: <Widget>[
 
-      ListTileTheme(
-          textColor: Colors.black,
-          tileColor: Colors.redAccent,
+      // ListTileTheme(
+      //     textColor: Colors.black,
+      //     tileColor: Colors.redAccent,
+      //
+      //     child: ListView(
+      //       children: workouts.keys.map((String key) {
+      //         return new CheckboxListTile(
+      //           checkColor: Colors.black,
+      //           contentPadding: EdgeInsets.fromLTRB(30, 0, 250, 0),
+      //           title: new Text(key),
+      //           value: workouts[key],
+      //           onChanged: (bool value) {
+      //             setState(() {
+      //               workouts[key] = value;
+      //             });
+      //           },
+      //         );
+      //       }).toList(),
+      //     ),
+      // ),
 
-          child: ListView(
-            children: workouts.keys.map((String key) {
-              return new CheckboxListTile(
-                checkColor: Colors.black,
-                contentPadding: EdgeInsets.fromLTRB(30, 0, 250, 0),
-                title: new Text(key),
-                value: workouts[key],
-                onChanged: (bool value) {
-                  setState(() {
-                    workouts[key] = value;
-                  });
-                },
-              );
-            }).toList(),
-          ),
+      Center(
+        child: Padding(
+        padding: EdgeInsets.only(left: 25, right: 25),
+        child: FutureBuilder(
+            future: getFirestoreUser(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return getWorkoutNotes(context, snapshot);
+              } else {
+                return CircularProgressIndicator(
+                  backgroundColor: Colors.red,
+                );
+              }
+            }),
+        ),
       ),
-
-      // Center(
-      //   child: Padding(
-      //   padding: EdgeInsets.only(left: 25, right: 25),
-      //   child: FutureBuilder(
-      //       future: getFirestoreUser(),
-      //       builder: (context, snapshot) {
-      //         if (snapshot.connectionState == ConnectionState.done) {
-      //           return getWorkoutNotes(context, snapshot);
-      //         } else {
-      //           return CircularProgressIndicator(
-      //             backgroundColor: Colors.red,
-      //           );
-      //         }
-      //       }),
-      // )),
-      // ]),
     );
   }
 
   TextField buildTextFieldMultiLine(String labelText, String placeholder,
-      String database) {
+      String database, String date) {
     return TextField(
       onChanged: (text) {
         _firestore
             .collection("SpotlightUsers")
             .doc(_auth.currentUser.uid)
+            .collection("WorkoutNotes")
+            .doc(date)
             .update({database: text});
         //print(text)
       },
