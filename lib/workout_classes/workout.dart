@@ -1,4 +1,3 @@
-
 import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +8,7 @@ import 'package:flutter/rendering.dart';
 class Workout extends StatefulWidget {
   static const String route = '/workout';
   static const String id = "workout";
+
   @override
   _WorkoutState createState() => _WorkoutState();
 }
@@ -19,8 +19,6 @@ FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 User loggedInUser;
 var uid;
-
-String imageUrl;
 
 void initState() {
   getCurrentUser();
@@ -39,14 +37,6 @@ void getCurrentUser() async {
   } catch (e) {
     print(e);
   }
-}
-
-getName() {
-  return _firestore
-      .collection("SpotlightUsers")
-      .doc(loggedInUser.uid) //"7uUbB9zLN7hyqPGiDpQjb3onWf73"
-      .get()
-      .then((value) => print(value.data()["firstName"]));
 }
 
 //get the current user UID
@@ -81,10 +71,11 @@ class _WorkoutState extends State<Workout> {
     'Legs': false,
   };
 
-  Widget getWorkoutNotes(context, snapshot) {
-    final user = snapshot.data;
+  Widget getWorkoutNotes(context, snapshot, user) {
+    // loggedInUser = _auth.currentUser;
+    var workoutNotes = "Multi-line text sample. This text is to visualize what "
+        "the free text field in the calendar workout page will look on the same screen as the workout type checkboxes.";
 
-    // var workoutNotes =
     //     stream: _firestore.collection("SpotlightUsers").snapshots(),
     //     .collection("SpotlightUsers")
     //     .doc(_auth.currentUser.uid)
@@ -95,7 +86,7 @@ class _WorkoutState extends State<Workout> {
     // }
 
     StreamBuilder<QuerySnapshot>(
-        stream: _firestore.collection("SpotlightUsers").snapshots(),
+        stream: _firestore.collection("Gyms").snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(
@@ -106,19 +97,30 @@ class _WorkoutState extends State<Workout> {
           final gyms = snapshot.data.docs;
 
 
-          for (var gym in gyms) {
-            final gymTitle = gym.data()["Title"];
-            final gymAddress = gym.data()["Address"];
-            final gymCity = gym.data()["City"];
-            final gymUsers = gym.data()["NumUsers"];
+          // for (var gym in gyms) {
+          //   final gymTitle = gym.data()["Title"];
+          //   final gymAddress = gym.data()["Address"];
+          //   final gymCity = gym.data()["City"];
+          //   final gymUsers = gym.data()["NumUsers"];
+          //
+          //   final gymWidget = GymDisplay(
+          //       title: gymTitle, address: gymAddress, city: gymCity,
+          //       numUsers: gymUsers);
+          //
+          //   gymWidgets.add(gymWidget);
+          // }
 
-            final gymWidget = GymDisplay(
-                title: gymTitle, address: gymAddress, city: gymCity,
-                numUsers: gymUsers);
-
-            gymWidgets.add(gymWidget);
-          }
-        }),
+          //return the styling that we want here (Cards)
+          return Expanded(
+            child: ListView(
+              padding:
+              EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              // children: gymWidgets,
+            ),
+          );
+        });
 
     var args = ModalRoute
         .of(context)
@@ -126,7 +128,7 @@ class _WorkoutState extends State<Workout> {
         .arguments;
 
     return Column(
-      children: [
+        children: [
           buildTextFieldMultiLine
             ("Workout Notes: ", "$workoutNotes", "workoutNotes",
               args.toString().substring(0, 10)),
@@ -146,68 +148,124 @@ class _WorkoutState extends State<Workout> {
         DateTime.parse(args.toString().substring(0, 10)), [MM, ' - ', dd]);
 
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        centerTitle: true,
-        title: Center(
-          child: Text(
-              today + ' Workout',
-              style: TextStyle(fontSize: 25.0,)
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(),
           ),
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () {
-              //_auth.signOut();
-              Navigator.pop(context);
-            },
+          centerTitle: true,
+          title: Center(
+            child: Text(
+                today + ' Workout',
+                style: TextStyle(fontSize: 25.0,)
+            ),
           ),
-        ],
-      ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.logout),
+              onPressed: () {
+                //_auth.signOut();
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
 
-      body:
+        body:
 
-      // ListTileTheme(
-      //     textColor: Colors.black,
-      //     tileColor: Colors.redAccent,
-      //
-      //     child: ListView(
-      //       children: workouts.keys.map((String key) {
-      //         return new CheckboxListTile(
-      //           checkColor: Colors.black,
-      //           contentPadding: EdgeInsets.fromLTRB(30, 0, 250, 0),
-      //           title: new Text(key),
-      //           value: workouts[key],
-      //           onChanged: (bool value) {
-      //             setState(() {
-      //               workouts[key] = value;
-      //             });
-      //           },
-      //         );
-      //       }).toList(),
-      //     ),
-      // ),
 
-      Center(
-        child: Padding(
-        padding: EdgeInsets.only(left: 25, right: 25),
-        child: FutureBuilder(
-            future: getFirestoreUser(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return getWorkoutNotes(context, snapshot);
-              } else {
-                return CircularProgressIndicator(
-                  backgroundColor: Colors.red,
+        ListView(
+          padding: const EdgeInsets.all(8),
+          children: <Widget>[
+          Container(
+            constraints: BoxConstraints.expand(
+              height: Theme.of(context).textTheme.headline4.fontSize * 1 + 300.0
+            ),
+          // height: 350,
+          color: Colors.amber[600],
+          // child: const Center(child: Text('Entry A')),
+          child: ListTileTheme(
+            textColor: Colors.black,
+            tileColor: Colors.redAccent,
+            child: ListView(
+              children: workouts.keys.map((String key) {
+                return new CheckboxListTile(
+                  checkColor: Colors.black,
+                  contentPadding: EdgeInsets.fromLTRB(30, 0, 250, 0),
+                  title: new Text(key),
+                  value: workouts[key],
+                  onChanged: (bool value) {
+                    setState(() {
+                      workouts[key] = value;
+                    });
+                  },
                 );
-              }
-            }),
+              }).toList(),
+            ),
+          ),
         ),
-      ),
+            Flexible(
+      // constraints: BoxConstraints.expand(
+      //   height: Theme.of(context).textTheme.headline4.fontSize * 1 + 300.0
+      // ),
+    child: Center(
+    child: Padding(
+    padding: EdgeInsets.only(left: 25, right: 25),
+    child: FutureBuilder(
+    future: getFirestoreUser(),
+    builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.done) {
+    return getWorkoutNotes(context, snapshot, loggedInUser);
+    } else {
+    return CircularProgressIndicator(
+    backgroundColor: Colors.red,
+    );
+    }
+    }),
+    ),
+    ),
+    ),
+    ],
+    ),
+
+    // ListTileTheme(
+    //       textColor: Colors.black,
+    //       tileColor: Colors.redAccent,
+    //
+    //     child: ListView(
+    //       children: workouts.keys.map((String key) {
+    //         return new CheckboxListTile(
+    //           checkColor: Colors.black,
+    //           contentPadding: EdgeInsets.fromLTRB(30, 0, 250, 0),
+    //           title: new Text(key),
+    //           value: workouts[key],
+    //           onChanged: (bool value) {
+    //             setState(() {
+    //               workouts[key] = value;
+    //             });
+    //           },
+    //         );
+    //       }).toList(),
+    //     ),
+    // ));
+
+
+    // Center(
+    //   child: Padding(
+    //   padding: EdgeInsets.only(left: 25, right: 25),
+    //   child: FutureBuilder(
+    //       future: getFirestoreUser(),
+    //       builder: (context, snapshot) {
+    //         if (snapshot.connectionState == ConnectionState.done) {
+    //           return getWorkoutNotes(context, snapshot, loggedInUser);
+    //         } else {
+    //           return CircularProgressIndicator(
+    //             backgroundColor: Colors.red,
+    //           );
+    //         }
+    //       }),
+    //   ),
+    // ),
     );
   }
 
@@ -225,6 +283,7 @@ class _WorkoutState extends State<Workout> {
       },
       maxLength: null,
       maxLines: null,
+      minLines: 5,
       style: TextStyle(
           fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white70),
       decoration: InputDecoration(
