@@ -71,11 +71,14 @@ class _WorkoutState extends State<Workout> {
     'Legs': false,
   };
 
-  Widget getWorkoutNotes(context, snapshot, user) {
-    // loggedInUser = _auth.currentUser;
-    var workoutNotes = "Multi-line text sample. This text is to visualize what "
-        "the free text field in the calendar workout page will look on the same screen as the workout type checkboxes.";
+  Widget getWorkoutNotes(context, snapshot, user, date) {
+    //loggedInUser = _auth.currentUser;
 
+    //var workoutNotes = "poop";//_firestore
+    //     .collection("SpotlightUsers")
+    //     .doc(_auth.currentUser.uid)
+    //     .collection("WorkoutScheduler")
+    //     .doc("workout"+date);
     //     stream: _firestore.collection("SpotlightUsers").snapshots(),
     //     .collection("SpotlightUsers")
     //     .doc(_auth.currentUser.uid)
@@ -85,42 +88,38 @@ class _WorkoutState extends State<Workout> {
     //   workoutNotes = "";
     // }
 
-    StreamBuilder<QuerySnapshot>(
-        stream: _firestore.collection("Gyms").snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: Colors.white,
-                ));
-          }
-          final gyms = snapshot.data.docs;
 
+    Future<dynamic> getWorkoutData(String date) async {
+      try {
 
-          // for (var gym in gyms) {
-          //   final gymTitle = gym.data()["Title"];
-          //   final gymAddress = gym.data()["Address"];
-          //   final gymCity = gym.data()["City"];
-          //   final gymUsers = gym.data()["NumUsers"];
-          //
-          //   final gymWidget = GymDisplay(
-          //       title: gymTitle, address: gymAddress, city: gymCity,
-          //       numUsers: gymUsers);
-          //
-          //   gymWidgets.add(gymWidget);
-          // }
+        var workoutNotes = await _firestore
+            .collection("SpotlightUsers")
+            .doc(_auth.currentUser.uid)
+            .collection("WorkoutScheduler")
+            .doc("workout"+date)
+            .get()
+            .then((value) => print(value.data()["notes"]));
 
-          //return the styling that we want here (Cards)
-          return Expanded(
-            child: ListView(
-              padding:
-              EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              // children: gymWidgets,
-            ),
-          );
-        });
+        var collectionRef = _firestore.collection("SpotlightUsers")
+            .doc(_auth.currentUser.uid)
+            .collection("WorkoutScheduler");
+        var doc = await collectionRef.doc("workout"+date).get();
+        return workoutNotes;
+      } catch (e) {
+        throw e;
+      }
+    }
+
+    // if(_firestore
+    //      .collection("SpotlightUsers")
+    //      .doc(_auth.currentUser.uid)
+    //      .collection("WorkoutScheduler")
+    //      .doc("workout"+date).get() != null) {
+    //   workoutNotes = "true";
+    // }
+    // else{
+    //   workoutNotes = "false";
+    // }
 
     var args = ModalRoute
         .of(context)
@@ -130,7 +129,7 @@ class _WorkoutState extends State<Workout> {
     return Column(
         children: [
           buildTextFieldMultiLine
-            ("Workout Notes: ", "$workoutNotes", "workoutNotes",
+            ("Workout Notes: ", getWorkoutData(date).toString(), "workoutNotes",
               args.toString().substring(0, 10)),
           SizedBox(
             height: 10,
@@ -147,6 +146,8 @@ class _WorkoutState extends State<Workout> {
     var today = formatDate(
         DateTime.parse(args.toString().substring(0, 10)), [MM, ' - ', dd]);
 
+    var fullDate = args.toString().substring(0, 10); //Month/day/year
+
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -156,7 +157,7 @@ class _WorkoutState extends State<Workout> {
           centerTitle: true,
           title: Center(
             child: Text(
-                today + ' Workout',
+                fullDate + ' Workout',
                 style: TextStyle(fontSize: 25.0,)
             ),
           ),
@@ -208,22 +209,22 @@ class _WorkoutState extends State<Workout> {
       // constraints: BoxConstraints.expand(
       //   height: Theme.of(context).textTheme.headline4.fontSize * 1 + 300.0
       // ),
-    child: Center(
-    child: Padding(
-    padding: EdgeInsets.only(left: 25, right: 25),
-    child: FutureBuilder(
-    future: getFirestoreUser(),
-    builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.done) {
-    return getWorkoutNotes(context, snapshot, loggedInUser);
-    } else {
-    return CircularProgressIndicator(
-    backgroundColor: Colors.red,
-    );
-    }
-    }),
-    ),
-    ),
+      child: Center(
+        child: Padding(
+          padding: EdgeInsets.only(left: 25, right: 25),
+          child: FutureBuilder(
+            future: getFirestoreUser(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                return getWorkoutNotes(context, snapshot, loggedInUser, fullDate);
+                }
+                else {
+                  return CircularProgressIndicator(backgroundColor: Colors.red,);
+                }
+              }
+              ),
+          ),
+      ),
     ),
     ],
     ),
@@ -271,19 +272,46 @@ class _WorkoutState extends State<Workout> {
 
   TextField buildTextFieldMultiLine(String labelText, String placeholder,
       String database, String date) {
+    var user = _firestore
+        .collection("SpotlightUsers")
+        .doc(_auth.currentUser.uid)
+        .collection("WorkoutScheduler")
+        .doc("workout"+date);
+
     return TextField(
       onChanged: (text) {
-        _firestore
-            .collection("SpotlightUsers")
-            .doc(_auth.currentUser.uid)
-            .collection("WorkoutNotes")
-            .doc(date)
-            .update({database: text});
+        // if(_firestore
+        //     .collection("SpotlightUsers")
+        //     .doc(_auth.currentUser.uid)
+        //     .collection("WorkoutScheduler")
+        //     .doc("workout"+date) != null)
+        //   {
+            _firestore
+                .collection("SpotlightUsers")
+                .doc(_auth.currentUser.uid)
+                .collection("WorkoutScheduler")
+                .doc("workout"+date)
+                .update({database: text});
+          //}
+        // else
+        //   {
+        //     _firestore
+        //         .collection("SpotlightUsers")
+        //         .doc(_auth.currentUser.uid)
+        //         .collection("WorkoutScheduler")
+        //         .doc("workout"+date)
+        //         .set(
+        //       {
+        //         'notes':
+        //       }
+        //     );
+        //   }
+
         //print(text)
       },
       maxLength: null,
-      maxLines: null,
-      minLines: 5,
+      maxLines: 10,
+      minLines: 1,
       style: TextStyle(
           fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white70),
       decoration: InputDecoration(
