@@ -55,13 +55,21 @@ Future getFirestoreUser() async {
 
 Future getWorkoutScheduler(date) async {
 
-
-  return _firestore
+  var doc = await _firestore
       .collection("SpotlightUsers")
       .doc(firebaseUser.uid)
-      .collection("WorkoutScheduler")
-      .doc("workout"+date)
-      .get();
+      .collection("WorkoutScheduler").doc("workout"+date).get();
+
+  if(doc.exists){
+    return _firestore
+        .collection("SpotlightUsers")
+        .doc(firebaseUser.uid)
+        .collection("WorkoutScheduler")
+        .doc("workout"+date)
+        .get();
+  }
+
+  return null;
 }
 
 class _WorkoutState extends State<Workout> {
@@ -292,7 +300,7 @@ class _WorkoutState extends State<Workout> {
                 .doc(_auth.currentUser.uid)
                 .collection("WorkoutScheduler")
                 .doc("workout"+date)
-                .update({database: text});
+                .update({"notes": text});
           //}
         // else
         //   {
