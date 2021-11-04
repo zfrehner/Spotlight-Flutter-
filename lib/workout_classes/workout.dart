@@ -53,6 +53,17 @@ Future getFirestoreUser() async {
   return _firestore.collection("SpotlightUsers").doc(firebaseUser.uid).get();
 }
 
+Future getWorkoutScheduler(date) async {
+
+
+  return _firestore
+      .collection("SpotlightUsers")
+      .doc(firebaseUser.uid)
+      .collection("WorkoutScheduler")
+      .doc("workout"+date)
+      .get();
+}
+
 class _WorkoutState extends State<Workout> {
   @override
   final _auth = FirebaseAuth.instance;
@@ -73,43 +84,30 @@ class _WorkoutState extends State<Workout> {
 
   Widget getWorkoutNotes(context, snapshot, user, date) {
     //loggedInUser = _auth.currentUser;
+    // var workoutNotes = _firestore
+    //     .collectionGroup("WorkoutScheduler")
+    //     .get()
+    //     .then((value) => value.data()["notes"])
+    var workoutNotes = snapshot.data;
+    workoutNotes = workoutNotes["notes"];
 
-    //var workoutNotes = "poop";//_firestore
-    //     .collection("SpotlightUsers")
-    //     .doc(_auth.currentUser.uid)
-    //     .collection("WorkoutScheduler")
-    //     .doc("workout"+date);
-    //     stream: _firestore.collection("SpotlightUsers").snapshots(),
-    //     .collection("SpotlightUsers")
-    //     .doc(_auth.currentUser.uid)
-    //     .collection("WorkoutNotes")
-    //     .doc("lBJwCxosn5TONAODxmDb");
-    // if (workoutNotes == null) {
-    //   workoutNotes = "";
+    // Future<dynamic> doesDayPlanExist(String date) async {
+    //   try {
+    //
+    //     var workoutNotes = await _firestore
+    //         .collection("SpotlightUsers")
+    //         .doc(_auth.currentUser.uid)
+    //         .collection("WorkoutScheduler")
+    //         .doc("workout"+date)
+    //         .get()
+    //         .then((value) => value.data()["notes"]);
+    //
+    //     return workoutNotes;
+    //   } catch (e) {
+    //     throw e;
+    //   }
     // }
-
-
-    Future<dynamic> getWorkoutData(String date) async {
-      try {
-
-        var workoutNotes = await _firestore
-            .collection("SpotlightUsers")
-            .doc(_auth.currentUser.uid)
-            .collection("WorkoutScheduler")
-            .doc("workout"+date)
-            .get()
-            .then((value) => print(value.data()["notes"]));
-
-        var collectionRef = _firestore.collection("SpotlightUsers")
-            .doc(_auth.currentUser.uid)
-            .collection("WorkoutScheduler");
-        var doc = await collectionRef.doc("workout"+date).get();
-        return workoutNotes;
-      } catch (e) {
-        throw e;
-      }
-    }
-
+    // workoutNotes = doesDayPlanExist(date);
     // if(_firestore
     //      .collection("SpotlightUsers")
     //      .doc(_auth.currentUser.uid)
@@ -126,10 +124,13 @@ class _WorkoutState extends State<Workout> {
         .settings
         .arguments;
 
+    if(workoutNotes == null){
+      workoutNotes = "";
+    }
     return Column(
         children: [
           buildTextFieldMultiLine
-            ("Workout Notes: ", getWorkoutData(date).toString(), "workoutNotes",
+            ("Workout Notes: ", workoutNotes, "workoutNotes",
               args.toString().substring(0, 10)),
           SizedBox(
             height: 10,
@@ -213,7 +214,7 @@ class _WorkoutState extends State<Workout> {
         child: Padding(
           padding: EdgeInsets.only(left: 25, right: 25),
           child: FutureBuilder(
-            future: getFirestoreUser(),
+            future: getWorkoutScheduler(fullDate),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                 return getWorkoutNotes(context, snapshot, loggedInUser, fullDate);
