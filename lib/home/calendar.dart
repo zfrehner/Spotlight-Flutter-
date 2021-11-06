@@ -2,6 +2,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import '../workout_classes/workout.dart';
+import 'package:date_format/date_format.dart';
+import 'package:intl/intl.dart';
+
 
 
 class Calendar extends StatefulWidget {
@@ -12,9 +15,13 @@ class Calendar extends StatefulWidget {
 class _CalendarState extends State<Calendar> {
 
   DateTime _currentDate;
+  DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+  String string = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
 
   @override
   Widget build(BuildContext context) {
+
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16.0),
       child: CalendarCarousel(
@@ -23,6 +30,14 @@ class _CalendarState extends State<Calendar> {
           // Navigator.pushNamed(context, '/workout',
           //     arguments: 7);
           Navigator.pushNamed(context, Workout.id,arguments: _currentDate);
+
+        },
+        //this is what set the headerText down below when you click the left
+        //and right arrows on the calendar. Ex. September - 2021, December - 2021
+        onCalendarChanged: (DateTime date){
+          this.setState(() {
+            string = dateFormat.format(date);
+          });
         },
         weekendTextStyle: TextStyle(
           color: Colors.red,
@@ -36,6 +51,8 @@ class _CalendarState extends State<Calendar> {
             fontSize: 20,
             fontWeight: FontWeight.bold
         ),
+        headerText: '${formatDate(
+            DateTime.parse(string), [MM, ' - ', yyyy])}',
         iconColor: Colors.white,
 //      weekDays: null, /// for pass null when you do not want to render weekDays
 //      headerText: Container( /// Example for rendering custom header
