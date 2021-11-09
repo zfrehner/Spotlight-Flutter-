@@ -68,8 +68,6 @@ Future getWorkoutScheduler(date) async {
         .doc("workout"+date)
         .get();
   }
-
-  return null;
 }
 
 class _WorkoutState extends State<Workout> {
@@ -166,7 +164,7 @@ class _WorkoutState extends State<Workout> {
           centerTitle: true,
           title: Center(
             child: Text(
-                fullDate + ' Workout',
+                today + ' Workout',
                 style: TextStyle(fontSize: 25.0,)
             ),
           ),
