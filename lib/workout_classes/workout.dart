@@ -88,42 +88,24 @@ class _WorkoutState extends State<Workout> {
     'Legs': false,
   };
 
-  Widget getWorkoutNotes(context, snapshot, user, date) {
-    //loggedInUser = _auth.currentUser;
-    // var workoutNotes = _firestore
-    //     .collectionGroup("WorkoutScheduler")
-    //     .get()
-    //     .then((value) => value.data()["notes"])
-    var workoutNotes = snapshot.data;
-    workoutNotes = workoutNotes["notes"];
+  Widget getWorkoutNotes(context, snapshot, date) {
 
-    // Future<dynamic> doesDayPlanExist(String date) async {
-    //   try {
-    //
-    //     var workoutNotes = await _firestore
-    //         .collection("SpotlightUsers")
-    //         .doc(_auth.currentUser.uid)
-    //         .collection("WorkoutScheduler")
-    //         .doc("workout"+date)
-    //         .get()
-    //         .then((value) => value.data()["notes"]);
-    //
-    //     return workoutNotes;
-    //   } catch (e) {
-    //     throw e;
-    //   }
-    // }
-    // workoutNotes = doesDayPlanExist(date);
-    // if(_firestore
-    //      .collection("SpotlightUsers")
-    //      .doc(_auth.currentUser.uid)
-    //      .collection("WorkoutScheduler")
-    //      .doc("workout"+date).get() != null) {
-    //   workoutNotes = "true";
-    // }
-    // else{
-    //   workoutNotes = "false";
-    // }
+    var workoutNotes;
+    try {
+      workoutNotes = snapshot.data['notes'];
+    }
+    // this is to get around having to use future instances
+    // so as a workaround I am trying to get the notes from firebase
+    // and if the notes for that day don't exist in firebase yet
+    // a null error is thrown. we catch the error in this block then instead
+    // of terminating the program we create the missing doc in firebase
+    catch (e) {
+      // this is to set the collection/docID if it was not found in the
+      // try block. Once set, then workoutNotes is set to the data from
+      // the new field, which is place holder/user hint text
+       createDoc(date);
+      workoutNotes = "Enter workout notes here.";
+    }
 
     var args = ModalRoute
         .of(context)
@@ -223,7 +205,7 @@ class _WorkoutState extends State<Workout> {
             future: getWorkoutScheduler(fullDate),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                return getWorkoutNotes(context, snapshot, loggedInUser, fullDate);
+                return getWorkoutNotes(context, snapshot, fullDate);
                 }
                 else {
                   return CircularProgressIndicator(backgroundColor: Colors.red,);
@@ -279,11 +261,6 @@ class _WorkoutState extends State<Workout> {
 
   TextField buildTextFieldMultiLine(String labelText, String placeholder,
       String database, String date) {
-    var user = _firestore
-        .collection("SpotlightUsers")
-        .doc(_auth.currentUser.uid)
-        .collection("WorkoutScheduler")
-        .doc("workout"+date);
 
     return TextField(
       onChanged: (text) {
@@ -299,7 +276,7 @@ class _WorkoutState extends State<Workout> {
                 .collection("WorkoutScheduler")
                 .doc("workout"+date)
                 .update({"notes": text});
-          //}
+          // }
         // else
         //   {
         //     _firestore
@@ -307,11 +284,7 @@ class _WorkoutState extends State<Workout> {
         //         .doc(_auth.currentUser.uid)
         //         .collection("WorkoutScheduler")
         //         .doc("workout"+date)
-        //         .set(
-        //       {
-        //         'notes':
-        //       }
-        //     );
+        //         .set({"notes": text});
         //   }
 
         //print(text)
@@ -335,5 +308,14 @@ class _WorkoutState extends State<Workout> {
         ),
       ),
     );
+  }
+
+  void createDoc(date) async {
+    await _firestore
+        .collection("SpotlightUsers")
+        .doc(_auth.currentUser.uid)
+        .collection("WorkoutScheduler")
+        .doc("workout"+date)
+        .set({"notes": "Enter workout notes here."});
   }
 }
