@@ -17,6 +17,7 @@ Widget displayWorkoutNotes(context, snapshot, date) {
   workoutNotes = workoutNotes["notes"];
   String currentDate = formatDate(date,[MM,' - ', dd]);
 
+  //poo poo (remove)
   if(workoutNotes == null){
     workoutNotes = "";
   }
@@ -54,11 +55,7 @@ Widget displayWorkoutNotes(context, snapshot, date) {
 
 TextField buildTextFieldMultiLine(String labelText, String placeholder,
     String database, String date) {
-  var user = _firestore
-      .collection("SpotlightUsers")
-      .doc(_auth.currentUser.uid)
-      .collection("WorkoutScheduler")
-      .doc("workout"+date);
+
 
   return TextField(
     onChanged: (text) {

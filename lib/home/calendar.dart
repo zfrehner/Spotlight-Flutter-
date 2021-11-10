@@ -17,12 +17,12 @@ class _CalendarState extends State<Calendar> {
 
   DateTime _currentDate;
   DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
-  String string = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+  String workoutDate = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
   String testDate = "2021-11-01";
 
   @override
   Widget build(BuildContext context) {
-
+    workoutDate = DateFormat("yyyy-MM-dd").format(_currentDate);
 
     return ListView(
       padding: const EdgeInsets.all(8),
@@ -41,7 +41,7 @@ class _CalendarState extends State<Calendar> {
         //and right arrows on the calendar. Ex. September - 2021, December - 2021
         onCalendarChanged: (DateTime date){
         this.setState(() {
-        string = dateFormat.format(date);
+        workoutDate = dateFormat.format(date);
         });
         },
         weekendTextStyle: TextStyle(
@@ -57,7 +57,7 @@ class _CalendarState extends State<Calendar> {
         fontWeight: FontWeight.bold
         ),
         headerText: '${formatDate(
-        DateTime.parse(string), [MM, ' - ', yyyy])}',
+        DateTime.parse(workoutDate), [MM, ' - ', yyyy])}',
         iconColor: Colors.white,
     //      weekDays: null, /// for pass null when you do not want to render weekDays
     //      headerText: Container( /// Example for rendering custom header
@@ -99,7 +99,7 @@ class _CalendarState extends State<Calendar> {
               child: Padding(
                 padding: EdgeInsets.only(left: 25, right: 25),
                 child: FutureBuilder(
-                    future: getWorkoutScheduler(testDate),
+                    future: getWorkoutScheduler(workoutDate),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
                         return displayWorkoutNotes(context, snapshot,_currentDate);
