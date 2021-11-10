@@ -15,7 +15,7 @@ class Calendar extends StatefulWidget {
 
 class _CalendarState extends State<Calendar> {
 
-  DateTime _currentDate;
+  DateTime _currentDate = DateTime.now();
   DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
   String workoutDate = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
   String testDate = "2021-11-01";
