@@ -88,24 +88,10 @@ class _WorkoutState extends State<Workout> {
     'Legs': false,
   };
 
-  Widget getWorkoutNotes(context, snapshot, date) {
+  Widget getWorkoutNotes(context, snapshot, user, date) {
 
-    var workoutNotes;
-    try {
-      workoutNotes = snapshot.data['notes'];
-    }
-    // this is to get around having to use future instances
-    // so as a workaround I am trying to get the notes from firebase
-    // and if the notes for that day don't exist in firebase yet
-    // a null error is thrown. we catch the error in this block then instead
-    // of terminating the program we create the missing doc in firebase
-    catch (e) {
-      // this is to set the collection/docID if it was not found in the
-      // try block. Once set, then workoutNotes is set to the data from
-      // the new field, which is place holder/user hint text
-       createDoc(date);
-      workoutNotes = "Enter workout notes here.";
-    }
+    var workoutNotes = snapshot.data;
+    workoutNotes = workoutNotes["notes"];
 
     var args = ModalRoute
         .of(context)
@@ -205,7 +191,7 @@ class _WorkoutState extends State<Workout> {
             future: getWorkoutScheduler(fullDate),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                return getWorkoutNotes(context, snapshot, fullDate);
+                return getWorkoutNotes(context, snapshot, loggedInUser, fullDate);
                 }
                 else {
                   return CircularProgressIndicator(backgroundColor: Colors.red,);
@@ -217,50 +203,16 @@ class _WorkoutState extends State<Workout> {
     ),
     ],
     ),
-
-    // ListTileTheme(
-    //       textColor: Colors.black,
-    //       tileColor: Colors.redAccent,
-    //
-    //     child: ListView(
-    //       children: workouts.keys.map((String key) {
-    //         return new CheckboxListTile(
-    //           checkColor: Colors.black,
-    //           contentPadding: EdgeInsets.fromLTRB(30, 0, 250, 0),
-    //           title: new Text(key),
-    //           value: workouts[key],
-    //           onChanged: (bool value) {
-    //             setState(() {
-    //               workouts[key] = value;
-    //             });
-    //           },
-    //         );
-    //       }).toList(),
-    //     ),
-    // ));
-
-
-    // Center(
-    //   child: Padding(
-    //   padding: EdgeInsets.only(left: 25, right: 25),
-    //   child: FutureBuilder(
-    //       future: getFirestoreUser(),
-    //       builder: (context, snapshot) {
-    //         if (snapshot.connectionState == ConnectionState.done) {
-    //           return getWorkoutNotes(context, snapshot, loggedInUser);
-    //         } else {
-    //           return CircularProgressIndicator(
-    //             backgroundColor: Colors.red,
-    //           );
-    //         }
-    //       }),
-    //   ),
-    // ),
     );
   }
 
   TextField buildTextFieldMultiLine(String labelText, String placeholder,
       String database, String date) {
+    var user = _firestore
+        .collection("SpotlightUsers")
+        .doc(_auth.currentUser.uid)
+        .collection("WorkoutScheduler")
+        .doc("workout"+date);
 
     return TextField(
       onChanged: (text) {
@@ -276,7 +228,7 @@ class _WorkoutState extends State<Workout> {
                 .collection("WorkoutScheduler")
                 .doc("workout"+date)
                 .update({"notes": text});
-          // }
+          //}
         // else
         //   {
         //     _firestore
@@ -284,7 +236,11 @@ class _WorkoutState extends State<Workout> {
         //         .doc(_auth.currentUser.uid)
         //         .collection("WorkoutScheduler")
         //         .doc("workout"+date)
-        //         .set({"notes": text});
+        //         .set(
+        //       {
+        //         'notes':
+        //       }
+        //     );
         //   }
 
         //print(text)
@@ -308,14 +264,5 @@ class _WorkoutState extends State<Workout> {
         ),
       ),
     );
-  }
-
-  void createDoc(date) async {
-    await _firestore
-        .collection("SpotlightUsers")
-        .doc(_auth.currentUser.uid)
-        .collection("WorkoutScheduler")
-        .doc("workout"+date)
-        .set({"notes": "Enter workout notes here."});
   }
 }
