@@ -14,7 +14,14 @@ FirebaseFirestore _firestore = FirebaseFirestore.instance;
 Widget displayWorkoutNotes(context, snapshot, date) {
 
   var workoutNotes = snapshot.data;
-  workoutNotes = workoutNotes["notes"];
+  try{
+    workoutNotes = snapshot.data["notes"];
+    // Replace with future builder using _firestore to get a new instance thingimabob
+  }catch(e){
+    workoutNotes = "New schedule made for this day";
+  }
+
+
   String currentDate = formatDate(date,[MM,' - ', dd]);
 
   //poo poo (remove)
