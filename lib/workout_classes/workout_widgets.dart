@@ -13,21 +13,20 @@ FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 Widget displayWorkoutNotes(context, snapshot, date) {
 
+
   var workoutNotes = snapshot.data;
   try{
-    workoutNotes = snapshot.data["notes"];
+    workoutNotes = workoutNotes["notes"];
     // Replace with future builder using _firestore to get a new instance thingimabob
   }catch(e){
-    workoutNotes = "New schedule made for this day";
+    readFromNotes(date);
+    workoutNotes = "Unable to load notes";
   }
 
 
   String currentDate = formatDate(date,[MM,' - ', dd]);
 
-  //poo poo (remove)
-  if(workoutNotes == null){
-    workoutNotes = "";
-  }
+
   return Column(
       children: [
         FractionallySizedBox(
@@ -114,4 +113,12 @@ TextField buildTextFieldMultiLine(String labelText, String placeholder,
       ),
     ),
   );
+}
+
+Future<String> readFromNotes(date) async{
+  return await _firestore
+      .collection("SpotlightUsers")
+      .doc(_auth.currentUser.uid)
+      .collection("WorkoutScheduler")
+      .doc("workout"+date).get().then((value) => value.data()["notes"]);
 }

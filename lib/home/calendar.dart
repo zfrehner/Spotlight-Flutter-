@@ -17,8 +17,9 @@ class _CalendarState extends State<Calendar> {
 
   DateTime _currentDate = DateTime.now();
   DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+  String monthYear = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
   String workoutDate = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
-  String testDate = "2021-11-01";
+
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +40,11 @@ class _CalendarState extends State<Calendar> {
         },
         //this is what set the headerText down below when you click the left
         //and right arrows on the calendar. Ex. September - 2021, December - 2021
-        onCalendarChanged: (DateTime date){
-        this.setState(() {
-        workoutDate = dateFormat.format(date);
-        });
-        },
+          onCalendarChanged: (DateTime date){
+            this.setState(() {
+              monthYear = dateFormat.format(date);
+            });
+          },
         weekendTextStyle: TextStyle(
         color: Colors.red,
         ),
@@ -56,8 +57,8 @@ class _CalendarState extends State<Calendar> {
         fontSize: 20,
         fontWeight: FontWeight.bold
         ),
-        headerText: '${formatDate(
-        DateTime.parse(workoutDate), [MM, ' - ', yyyy])}',
+          headerText: '${formatDate(
+              DateTime.parse(monthYear), [MM, ' - ', yyyy])}',
         iconColor: Colors.white,
     //      weekDays: null, /// for pass null when you do not want to render weekDays
     //      headerText: Container( /// Example for rendering custom header
