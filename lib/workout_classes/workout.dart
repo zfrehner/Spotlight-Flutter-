@@ -89,16 +89,13 @@ class _WorkoutState extends State<Workout> {
     'Legs': false,
   };
 
-  void assignWorkoutBool(context, date) async{
+  Future<dynamic> assignWorkoutBool(context, date) async{
     workouts['Biceps'] = await getWorkoutBoxes(context, date, "Biceps");
     workouts['Shoulders'] = await getWorkoutBoxes(context, date, "Shoulders");
     workouts['Triceps'] = await getWorkoutBoxes(context, date, "Triceps");
     workouts['Chest'] = await getWorkoutBoxes(context, date, "Chest");
     workouts['Back'] = await getWorkoutBoxes(context, date, "Back");
     workouts['Legs'] = await getWorkoutBoxes(context, date, "Legs");
-    // workouts.forEach((key, value) {
-    //   value = getWorkoutBoxes(context, collection, date, key);
-    // });
   }
 
   Future<bool> getWorkoutBoxes(context, date, workout) async{
@@ -116,8 +113,6 @@ class _WorkoutState extends State<Workout> {
       return false;
     }
   }
-
-
 
   Widget getWorkoutNotes(context, snapshot, date) {
     var workoutNotes;
@@ -166,7 +161,9 @@ class _WorkoutState extends State<Workout> {
         DateTime.parse(args.toString().substring(0, 10)), [MM, ' - ', dd]);
 
     var fullDate = args.toString().substring(0, 10); //Month/day/year
-    assignWorkoutBool(context, fullDate);
+
+
+
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -209,9 +206,10 @@ class _WorkoutState extends State<Workout> {
                 future: getWorkoutScheduler(fullDate),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
-                    return getWorkouts(context, snapshot, fullDate);                }
+                    return getWorkouts(context, snapshot, fullDate);
+                  }
                   else {
-                    return CircularProgressIndicator(backgroundColor: Colors.red,);
+                    return CircularProgressIndicator(backgroundColor: Colors.red);
                   }
                 }
             ),
@@ -248,34 +246,12 @@ class _WorkoutState extends State<Workout> {
 
     return TextField(
       onChanged: (text) {
-        // if(_firestore
-        //     .collection("SpotlightUsers")
-        //     .doc(_auth.currentUser.uid)
-        //     .collection("WorkoutScheduler")
-        //     .doc("workout"+date) != null)
-        //   {
             _firestore
                 .collection("SpotlightUsers")
                 .doc(_auth.currentUser.uid)
                 .collection("WorkoutScheduler")
                 .doc("workout"+date)
                 .update({"notes": text});
-          //}
-        // else
-        //   {
-        //     _firestore
-        //         .collection("SpotlightUsers")
-        //         .doc(_auth.currentUser.uid)
-        //         .collection("WorkoutScheduler")
-        //         .doc("workout"+date)
-        //         .set(
-        //       {
-        //         'notes':
-        //       }
-        //     );
-        //   }
-
-        //print(text)
       },
       maxLength: null,
       maxLines: 10,
@@ -316,7 +292,23 @@ class _WorkoutState extends State<Workout> {
         .set({workout: false});
   }
 
-  Widget getWorkouts(BuildContext context, AsyncSnapshot snapshot, String fullDate) {
+  bool getBoxes(BuildContext context, snapshot, String date, String workout) {
+    try {
+      return snapshot.data[workout];
+    } catch(e) {
+      createBoxesDoc(date, workout);
+      return false;
+    }
+  }
+
+  Widget getWorkouts(BuildContext context, snapshot, String fullDate) {
+    workouts['Biceps'] = getBoxes(context, snapshot, fullDate, 'Biceps');
+    workouts['Shoulders'] = getBoxes(context, snapshot, fullDate, 'Shoulders');
+    workouts['Triceps'] = getBoxes(context, snapshot, fullDate, 'Triceps');
+    workouts['Chest'] = getBoxes(context, snapshot, fullDate, 'Chest');
+    workouts['Back'] = getBoxes(context, snapshot, fullDate, 'Back');
+    workouts['Legs'] = getBoxes(context, snapshot, fullDate, 'Legs');
+
     return ListView(
       children: workouts.keys.map((String key) {
         return new CheckboxListTile(
