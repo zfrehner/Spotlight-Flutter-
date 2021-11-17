@@ -22,6 +22,7 @@ var uid;
 
 void initState() {
   getCurrentUser();
+
 }
 
 void getCurrentUser() async {
@@ -88,8 +89,37 @@ class _WorkoutState extends State<Workout> {
     'Legs': false,
   };
 
-  Widget getWorkoutNotes(context, snapshot, date) {
+  void assignWorkoutBool(context, date) async{
+    workouts['Biceps'] = await getWorkoutBoxes(context, date, "Biceps");
+    workouts['Shoulders'] = await getWorkoutBoxes(context, date, "Shoulders");
+    workouts['Triceps'] = await getWorkoutBoxes(context, date, "Triceps");
+    workouts['Chest'] = await getWorkoutBoxes(context, date, "Chest");
+    workouts['Back'] = await getWorkoutBoxes(context, date, "Back");
+    workouts['Legs'] = await getWorkoutBoxes(context, date, "Legs");
+    // workouts.forEach((key, value) {
+    //   value = getWorkoutBoxes(context, collection, date, key);
+    // });
+  }
 
+  Future<bool> getWorkoutBoxes(context, date, workout) async{
+    var collection = await _firestore
+        .collection("SpotlightUsers")
+        .doc(_auth.currentUser.uid)
+        .collection("WorkoutScheduler")
+        .doc("workout"+date).get();
+    try {
+      bool temp = await collection.data()[workout];
+      print(temp);
+      return temp;
+    } catch(e) {
+      createBoxesDoc(date, workout);
+      return false;
+    }
+  }
+
+
+
+  Widget getWorkoutNotes(context, snapshot, date) {
     var workoutNotes;
     try {
       workoutNotes = snapshot.data['notes'];
@@ -103,7 +133,7 @@ class _WorkoutState extends State<Workout> {
       // this is to set the collection/docID if it was not found in the
       // try block. Once set, then workoutNotes is set to the data from
       // the new field, which is place holder/user hint text
-      createDoc(date);
+      createNotesDoc(date);
       workoutNotes = "Enter workout notes here.";
     }
 
@@ -136,7 +166,7 @@ class _WorkoutState extends State<Workout> {
         DateTime.parse(args.toString().substring(0, 10)), [MM, ' - ', dd]);
 
     var fullDate = args.toString().substring(0, 10); //Month/day/year
-
+    assignWorkoutBool(context, fullDate);
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -162,8 +192,6 @@ class _WorkoutState extends State<Workout> {
         ),
 
         body:
-
-
         ListView(
           padding: const EdgeInsets.all(8),
           children: <Widget>[
@@ -177,20 +205,15 @@ class _WorkoutState extends State<Workout> {
           child: ListTileTheme(
             textColor: Colors.black,
             tileColor: Colors.redAccent,
-            child: ListView(
-              children: workouts.keys.map((String key) {
-                return new CheckboxListTile(
-                  checkColor: Colors.black,
-                  contentPadding: EdgeInsets.fromLTRB(30, 0, 250, 0),
-                  title: new Text(key),
-                  value: workouts[key],
-                  onChanged: (bool value) {
-                    setState(() {
-                      workouts[key] = value;
-                    });
-                  },
-                );
-              }).toList(),
+            child: FutureBuilder(
+                future: getWorkoutScheduler(fullDate),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return getWorkouts(context, snapshot, fullDate);                }
+                  else {
+                    return CircularProgressIndicator(backgroundColor: Colors.red,);
+                  }
+                }
             ),
           ),
         ),
@@ -275,12 +298,45 @@ class _WorkoutState extends State<Workout> {
     );
   }
 
-  void createDoc(date) async {
+  void createNotesDoc(date) async {
     await _firestore
         .collection("SpotlightUsers")
         .doc(_auth.currentUser.uid)
         .collection("WorkoutScheduler")
         .doc("workout"+date)
         .set({"notes": "Enter workout notes here."});
+  }
+
+  void createBoxesDoc(date, workout) async {
+    await _firestore
+        .collection("SpotlightUsers")
+        .doc(_auth.currentUser.uid)
+        .collection("WorkoutScheduler")
+        .doc("workout"+date)
+        .set({workout: false});
+  }
+
+  Widget getWorkouts(BuildContext context, AsyncSnapshot snapshot, String fullDate) {
+    return ListView(
+      children: workouts.keys.map((String key) {
+        return new CheckboxListTile(
+          checkColor: Colors.black,
+          contentPadding: EdgeInsets.fromLTRB(30, 0, 250, 0),
+          title: new Text(key),
+          value: workouts[key],
+          onChanged: (bool value) {
+            setState(() {
+              _firestore
+                  .collection("SpotlightUsers")
+                  .doc(_auth.currentUser.uid)
+                  .collection("WorkoutScheduler")
+                  .doc("workout"+fullDate)
+                  .update({key: value});
+              workouts[key] = value;
+            });
+          },
+        );
+      }).toList(),
+    );
   }
 }
