@@ -89,9 +89,22 @@ class _WorkoutState extends State<Workout> {
     'Legs': false,
   };
 
+  // workouts group 2
+  Map<String, bool> workoutsTwo = {
+    'Circuits': false,
+    'Run': false,
+    'Ropes': false,
+    'Swim': false,
+    'Sports': false,
+    'Placeholder': false,
+  };
+
   Future<dynamic> assignWorkoutBool(context, snapshot, date) async{
     for (String workoutName in workouts.keys) {
       workouts[workoutName] = getBoxes(context, snapshot, date, workoutName);
+    }
+    for (String workoutName in workoutsTwo.keys) {
+      workoutsTwo[workoutName] = getBoxes(context, snapshot, date, workoutName);
     }
   }
 
@@ -198,9 +211,9 @@ class _WorkoutState extends State<Workout> {
                       height: Theme.of(context).textTheme.headline4.fontSize * 1 + 300.0,
                   ),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(0),
                     boxShadow: [
-                      BoxShadow(color: Colors.green, spreadRadius: 3),
+                      BoxShadow(color: Colors.white, spreadRadius: 3),
                     ],
                   ),
 
@@ -212,7 +225,7 @@ class _WorkoutState extends State<Workout> {
                         future: getWorkoutScheduler(fullDate),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.done) {
-                            return getWorkouts(context, snapshot, fullDate);
+                            return getWorkouts(context, snapshot, fullDate, 1);
                           }
                           else {
                             return CircularProgressIndicator(backgroundColor: Colors.red);
@@ -226,9 +239,9 @@ class _WorkoutState extends State<Workout> {
               Flexible(
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(0),
                     boxShadow: [
-                      BoxShadow(color: Colors.green, spreadRadius: 3),
+                      BoxShadow(color: Colors.white, spreadRadius: 3),
                     ],
                   ),
                   constraints: BoxConstraints.expand(
@@ -243,7 +256,7 @@ class _WorkoutState extends State<Workout> {
                         future: getWorkoutScheduler(fullDate),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.done) {
-                            return getWorkouts(context, snapshot, fullDate);
+                            return getWorkouts(context, snapshot, fullDate, 2);
                           }
                           else {
                             return CircularProgressIndicator(backgroundColor: Colors.red);
@@ -339,13 +352,18 @@ class _WorkoutState extends State<Workout> {
     }
   }
 
-  Widget getWorkouts(BuildContext context, snapshot, String fullDate) {
-    for (String workoutName in workouts.keys) {
-      workouts[workoutName] = getBoxes(context, snapshot, fullDate, workoutName);
+  Widget getWorkouts(BuildContext context, snapshot, String fullDate, group) {
+    // get and assign bool to workouts group 1
+    assignWorkoutBool(context, snapshot, fullDate);
+    Map<String, bool> temp;
+    if(group == 1) {
+      temp = workouts;
+    } else if(group == 2) {
+      temp = workoutsTwo;
     }
 
     return ListView(
-      children: workouts.keys.map((String key) {
+      children: temp.keys.map((String key) {
         return new CheckboxListTile(
           checkColor: Colors.white,
           activeColor: Colors.black45,
@@ -360,7 +378,7 @@ class _WorkoutState extends State<Workout> {
             ),
           ),
 
-          value: workouts[key],
+          value: temp[key],
           onChanged: (bool value) {
             setState(() {
               _firestore
@@ -369,7 +387,7 @@ class _WorkoutState extends State<Workout> {
                   .collection("WorkoutScheduler")
                   .doc("workout"+fullDate)
                   .update({key: value});
-              workouts[key] = value;
+              temp[key] = value;
             });
           },
         );
