@@ -82,9 +82,9 @@ class _WorkoutState extends State<Workout> {
 
   Map<String, bool> workouts = {
     'Biceps': false,
-    'Shoulders': false,
     'Triceps': false,
     'Chest': false,
+    'Shoulders': false,
     'Back': false,
     'Legs': false,
   };
@@ -192,33 +192,37 @@ class _WorkoutState extends State<Workout> {
       ListView(
         padding: const EdgeInsets.all(8),
         children: <Widget>[
-          Container(
-            constraints: BoxConstraints.expand(
-                height: Theme.of(context).textTheme.headline4.fontSize * 1 + 300.0
-            ),
-            // height: 350,
-            color: Colors.amber[600],
-            // child: const Center(child: Text('Entry A')),
-            child: ListTileTheme(
-              textColor: Colors.black,
-              tileColor: Colors.redAccent,
-              child: FutureBuilder(
-                  future: getWorkoutScheduler(fullDate),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return getWorkouts(context, snapshot, fullDate);
-                    }
-                    else {
-                      return CircularProgressIndicator(backgroundColor: Colors.red);
-                    }
-                  }
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Flexible(
+                child: Container(
+                  constraints: BoxConstraints.expand(
+                      height: Theme.of(context).textTheme.headline4.fontSize * 1 + 300.0
+                  ),
+
+                  color: Colors.amberAccent[600],
+                  child: ListTileTheme(
+                    textColor: Colors.black,
+                    tileColor: Colors.redAccent,
+                    child: FutureBuilder(
+                        future: getWorkoutScheduler(fullDate),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            return getWorkouts(context, snapshot, fullDate);
+                          }
+                          else {
+                            return CircularProgressIndicator(backgroundColor: Colors.red);
+                          }
+                        }
+                    ),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
+
           Flexible(
-            // constraints: BoxConstraints.expand(
-            //   height: Theme.of(context).textTheme.headline4.fontSize * 1 + 300.0
-            // ),
             child: Center(
               child: Padding(
                 padding: EdgeInsets.only(left: 25, right: 25),
@@ -309,7 +313,8 @@ class _WorkoutState extends State<Workout> {
     return ListView(
       children: workouts.keys.map((String key) {
         return new CheckboxListTile(
-          checkColor: Colors.black,
+          checkColor: Colors.white,
+          activeColor: Colors.black45,
           contentPadding: EdgeInsets.fromLTRB(10, 0, 215, 0),
           title: new Text(
               key,
