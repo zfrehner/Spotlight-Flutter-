@@ -305,22 +305,22 @@ class _WorkoutState extends State<Workout> {
     for (String workoutName in workouts.keys) {
       workouts[workoutName] = getBoxes(context, snapshot, fullDate, workoutName);
     }
-    /*
-    workouts['Biceps'] = getBoxes(context, snapshot, fullDate, 'Biceps');
-    workouts['Shoulders'] = getBoxes(context, snapshot, fullDate, 'Shoulders');
-    workouts['Triceps'] = getBoxes(context, snapshot, fullDate, 'Triceps');
-    workouts['Chest'] = getBoxes(context, snapshot, fullDate, 'Chest');
-    workouts['Back'] = getBoxes(context, snapshot, fullDate, 'Back');
-    workouts['Legs'] = getBoxes(context, snapshot, fullDate, 'Legs');
-
-     */
 
     return ListView(
       children: workouts.keys.map((String key) {
         return new CheckboxListTile(
           checkColor: Colors.black,
-          contentPadding: EdgeInsets.fromLTRB(30, 0, 250, 0),
-          title: new Text(key),
+          contentPadding: EdgeInsets.fromLTRB(10, 0, 215, 0),
+          title: new Text(
+              key,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              height: 1.4,
+            ),
+          ),
+
           value: workouts[key],
           onChanged: (bool value) {
             setState(() {
