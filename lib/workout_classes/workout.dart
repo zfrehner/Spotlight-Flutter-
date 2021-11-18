@@ -165,78 +165,78 @@ class _WorkoutState extends State<Workout> {
 
 
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          centerTitle: true,
-          title: Center(
-            child: Text(
-                today + ' Workout',
-                style: TextStyle(fontSize: 25.0,)
-            ),
-          ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.logout),
-              onPressed: () {
-                //_auth.signOut();
-                Navigator.pop(context);
-              },
-            ),
-          ],
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
         ),
+        centerTitle: true,
+        title: Center(
+          child: Text(
+              today + ' Workout',
+              style: TextStyle(fontSize: 25.0,)
+          ),
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () {
+              //_auth.signOut();
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
 
-        body:
-        ListView(
-          padding: const EdgeInsets.all(8),
-          children: <Widget>[
+      body:
+      ListView(
+        padding: const EdgeInsets.all(8),
+        children: <Widget>[
           Container(
             constraints: BoxConstraints.expand(
-              height: Theme.of(context).textTheme.headline4.fontSize * 1 + 300.0
+                height: Theme.of(context).textTheme.headline4.fontSize * 1 + 300.0
             ),
-          // height: 350,
-          color: Colors.amber[600],
-          // child: const Center(child: Text('Entry A')),
-          child: ListTileTheme(
-            textColor: Colors.black,
-            tileColor: Colors.redAccent,
-            child: FutureBuilder(
-                future: getWorkoutScheduler(fullDate),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return getWorkouts(context, snapshot, fullDate);
+            // height: 350,
+            color: Colors.amber[600],
+            // child: const Center(child: Text('Entry A')),
+            child: ListTileTheme(
+              textColor: Colors.black,
+              tileColor: Colors.redAccent,
+              child: FutureBuilder(
+                  future: getWorkoutScheduler(fullDate),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return getWorkouts(context, snapshot, fullDate);
+                    }
+                    else {
+                      return CircularProgressIndicator(backgroundColor: Colors.red);
+                    }
                   }
-                  else {
-                    return CircularProgressIndicator(backgroundColor: Colors.red);
-                  }
-                }
-            ),
-          ),
-        ),
-            Flexible(
-      // constraints: BoxConstraints.expand(
-      //   height: Theme.of(context).textTheme.headline4.fontSize * 1 + 300.0
-      // ),
-      child: Center(
-        child: Padding(
-          padding: EdgeInsets.only(left: 25, right: 25),
-          child: FutureBuilder(
-            future: getWorkoutScheduler(fullDate),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return getWorkoutNotes(context, snapshot, fullDate);                }
-                else {
-                  return CircularProgressIndicator(backgroundColor: Colors.red,);
-                }
-              }
               ),
+            ),
           ),
+          Flexible(
+            // constraints: BoxConstraints.expand(
+            //   height: Theme.of(context).textTheme.headline4.fontSize * 1 + 300.0
+            // ),
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.only(left: 25, right: 25),
+                child: FutureBuilder(
+                    future: getWorkoutScheduler(fullDate),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return getWorkoutNotes(context, snapshot, fullDate);                }
+                      else {
+                        return CircularProgressIndicator(backgroundColor: Colors.red,);
+                      }
+                    }
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
-    ),
-    ],
-    ),
     );
   }
 
@@ -246,12 +246,12 @@ class _WorkoutState extends State<Workout> {
 
     return TextField(
       onChanged: (text) {
-            _firestore
-                .collection("SpotlightUsers")
-                .doc(_auth.currentUser.uid)
-                .collection("WorkoutScheduler")
-                .doc("workout"+date)
-                .update({"notes": text});
+        _firestore
+            .collection("SpotlightUsers")
+            .doc(_auth.currentUser.uid)
+            .collection("WorkoutScheduler")
+            .doc("workout"+date)
+            .update({"notes": text});
       },
       maxLength: null,
       maxLines: 10,
@@ -280,7 +280,7 @@ class _WorkoutState extends State<Workout> {
         .doc(_auth.currentUser.uid)
         .collection("WorkoutScheduler")
         .doc("workout"+date)
-        .set({"notes": "Enter workout notes here."});
+        .set({"notes": "Enter workout notes here."}, SetOptions(merge: true));
   }
 
   void createBoxesDoc(date, workout) async {
@@ -289,7 +289,7 @@ class _WorkoutState extends State<Workout> {
         .doc(_auth.currentUser.uid)
         .collection("WorkoutScheduler")
         .doc("workout"+date)
-        .set({workout: false});
+        .set({workout: false}, SetOptions(merge: true));
   }
 
   bool getBoxes(BuildContext context, snapshot, String date, String workout) {
@@ -302,12 +302,18 @@ class _WorkoutState extends State<Workout> {
   }
 
   Widget getWorkouts(BuildContext context, snapshot, String fullDate) {
+    for (String workoutName in workouts.keys) {
+      workouts[workoutName] = getBoxes(context, snapshot, fullDate, workoutName);
+    }
+    /*
     workouts['Biceps'] = getBoxes(context, snapshot, fullDate, 'Biceps');
     workouts['Shoulders'] = getBoxes(context, snapshot, fullDate, 'Shoulders');
     workouts['Triceps'] = getBoxes(context, snapshot, fullDate, 'Triceps');
     workouts['Chest'] = getBoxes(context, snapshot, fullDate, 'Chest');
     workouts['Back'] = getBoxes(context, snapshot, fullDate, 'Back');
     workouts['Legs'] = getBoxes(context, snapshot, fullDate, 'Legs');
+
+     */
 
     return ListView(
       children: workouts.keys.map((String key) {
