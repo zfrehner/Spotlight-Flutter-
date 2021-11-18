@@ -89,13 +89,10 @@ class _WorkoutState extends State<Workout> {
     'Legs': false,
   };
 
-  Future<dynamic> assignWorkoutBool(context, date) async{
-    workouts['Biceps'] = await getWorkoutBoxes(context, date, "Biceps");
-    workouts['Shoulders'] = await getWorkoutBoxes(context, date, "Shoulders");
-    workouts['Triceps'] = await getWorkoutBoxes(context, date, "Triceps");
-    workouts['Chest'] = await getWorkoutBoxes(context, date, "Chest");
-    workouts['Back'] = await getWorkoutBoxes(context, date, "Back");
-    workouts['Legs'] = await getWorkoutBoxes(context, date, "Legs");
+  Future<dynamic> assignWorkoutBool(context, snapshot, date) async{
+    for (String workoutName in workouts.keys) {
+      workouts[workoutName] = getBoxes(context, snapshot, date, workoutName);
+    }
   }
 
   Future<bool> getWorkoutBoxes(context, date, workout) async{
@@ -198,7 +195,44 @@ class _WorkoutState extends State<Workout> {
               Flexible(
                 child: Container(
                   constraints: BoxConstraints.expand(
-                      height: Theme.of(context).textTheme.headline4.fontSize * 1 + 300.0
+                      height: Theme.of(context).textTheme.headline4.fontSize * 1 + 300.0,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(color: Colors.green, spreadRadius: 3),
+                    ],
+                  ),
+
+                  color: Colors.amberAccent[600],
+                  child: ListTileTheme(
+                    textColor: Colors.black,
+                    tileColor: Colors.redAccent,
+                    child: FutureBuilder(
+                        future: getWorkoutScheduler(fullDate),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            return getWorkouts(context, snapshot, fullDate);
+                          }
+                          else {
+                            return CircularProgressIndicator(backgroundColor: Colors.red);
+                          }
+                        }
+                    ),
+                  ),
+                ),
+              ),
+
+              Flexible(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(color: Colors.green, spreadRadius: 3),
+                    ],
+                  ),
+                  constraints: BoxConstraints.expand(
+                    height: Theme.of(context).textTheme.headline4.fontSize * 1 + 300.0,
                   ),
 
                   color: Colors.amberAccent[600],
@@ -315,7 +349,7 @@ class _WorkoutState extends State<Workout> {
         return new CheckboxListTile(
           checkColor: Colors.white,
           activeColor: Colors.black45,
-          contentPadding: EdgeInsets.fromLTRB(10, 0, 215, 0),
+          contentPadding: EdgeInsets.fromLTRB(20, 0, 0, 0),
           title: new Text(
               key,
             style: TextStyle(
