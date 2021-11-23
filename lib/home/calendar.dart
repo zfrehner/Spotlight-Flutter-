@@ -5,12 +5,57 @@ import '../workout_classes/workout.dart';
 import 'package:date_format/date_format.dart';
 import 'package:intl/intl.dart';
 import '../workout_classes/workout_widgets.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/rendering.dart';
 
 
 
 class Calendar extends StatefulWidget {
   @override
   _CalendarState createState() => _CalendarState();
+}
+
+final _auth = FirebaseAuth.instance;
+var firebaseUser = FirebaseAuth.instance.currentUser;
+FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+User loggedInUser;
+var uid;
+
+void initState() {
+  getCurrentUser();
+
+}
+
+void getCurrentUser() async {
+  try {
+    final user = _auth.currentUser;
+    final fireUser = FirebaseAuth.instance.currentUser.uid;
+
+    if (user != null) {
+      loggedInUser = user;
+      uid = fireUser;
+      //print(loggedInUser.email);
+    }
+  } catch (e) {
+    print(e);
+  }
+}
+
+//get the current user UID
+Future<String> getCurrentUID() async {
+  return firebaseUser.uid;
+}
+
+//get the current user info
+Future getAuthUserInfo() async {
+  return firebaseUser;
+}
+
+Future getFirestoreUser() async {
+  return _firestore.collection("SpotlightUsers").doc(firebaseUser.uid).get();
 }
 
 class _CalendarState extends State<Calendar> {
@@ -20,11 +65,68 @@ class _CalendarState extends State<Calendar> {
   String monthYear = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
   String workoutDate = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
 
+  Map<String, bool> daysWorkedOut = {
+
+  };
+
+  void buildMap() {
+    for (var i = 0; i < 32; i++) {
+      String temp = i.toString();
+      daysWorkedOut[temp] = false;
+    }
+  }
+
+  Future getWorkoutScheduler(date) async {
+
+    var doc = await _firestore
+        .collection("SpotlightUsers")
+        .doc(firebaseUser.uid)
+        .collection("WorkoutScheduler").doc("workout"+date).get();
+
+    if(doc.exists){
+      return _firestore
+          .collection("SpotlightUsers")
+          .doc(firebaseUser.uid)
+          .collection("WorkoutScheduler")
+          .doc("workout"+date)
+          .get();
+    }
+  }
+
+  Future<dynamic> assignDaysWorkedOut(context, snapshot, date) async{
+    for (String day in daysWorkedOut.keys) {
+      daysWorkedOut[day] = getBoxes(context, snapshot, date);
+    }
+  }
+
+  bool getBoxes(BuildContext context, snapshot, String date) {
+    try {
+      return snapshot.data["workedOut"];
+    } catch(e) {
+      return false;
+    }
+  }
+
+  Widget temp(context, snapshot, date) {
+    assignDaysWorkedOut(context, snapshot, date);
+
+    return Text('');
+  }
 
   @override
   Widget build(BuildContext context) {
+    buildMap();
     workoutDate = DateFormat("yyyy-MM-dd").format(_currentDate);
-
+    FutureBuilder(
+        future: getWorkoutScheduler(workoutDate),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return temp(context, snapshot, workoutDate.substring(8,10));                }
+          else {
+            return CircularProgressIndicator(backgroundColor: Colors.red,);
+          }
+        }
+    );
     return ListView(
       padding: const EdgeInsets.all(8),
       children: <Widget>[
@@ -47,15 +149,18 @@ class _CalendarState extends State<Calendar> {
           },
         weekendTextStyle: TextStyle(
         color: Colors.red,
+            fontWeight: FontWeight.bold,
         ),
         thisMonthDayBorderColor: Colors.white,
         daysTextStyle: TextStyle(
-        color: Colors.white
+
+        color: Colors.white,
+            fontWeight: FontWeight.bold,
         ),
         headerTextStyle: TextStyle(
         color: Colors.white,
         fontSize: 20,
-        fontWeight: FontWeight.bold
+        fontWeight: FontWeight.bold,
         ),
           headerText: '${formatDate(
               DateTime.parse(monthYear), [MM, ' - ', yyyy])}',
@@ -75,12 +180,19 @@ class _CalendarState extends State<Calendar> {
         bool isThisMonthDay,
         DateTime day,
         ) {
+          String dayString = day.toString().substring(8,10);
         /// If you return null, [CalendarCarousel] will build container for current [day] with default function.
         /// This way you can build custom containers for specific days only, leaving rest as default.
         // Example: every 15th of month, we have a flight, we can place an icon in the container like that:
-        if (day.day == 15) {
+        if (daysWorkedOut[day.day.toString()] == true ) {
         return Center(
-        child: Icon(Icons.fitness_center),
+        child: Text(
+            dayString,
+            style: TextStyle(
+              color: Colors.green,
+              fontWeight: FontWeight.bold,
+            )
+        ),
         );
         } else {
         return null;
