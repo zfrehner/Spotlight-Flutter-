@@ -194,6 +194,18 @@ class _GymCardThreeViewState extends State<GymCardThreeView> {
               ],
             ),
             body: Column(children: <Widget>[
+              // title and address text
+              Text(
+                "Good Life Fitness #3\n" +
+                    "90 Interchange Way Concord, ON L4K 5Z8\n",
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
+              ),
+
+              // People checked-in text
               Text(
                 "People checked-in to Gym 3!",
                 style: TextStyle(

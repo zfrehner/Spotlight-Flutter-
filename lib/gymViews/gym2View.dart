@@ -194,6 +194,18 @@ class _GymCardTwoViewState extends State<GymCardTwoView> {
               ],
             ),
             body: Column(children: <Widget>[
+              // title and address text
+              Text(
+                "Good Life Fitness #2\n" +
+                    "57 Northview Blvd Woodbridge, ON L4L 8X9\n",
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
+              ),
+
+              // People checked-in text
               Text(
                 "People checked-in to Gym 2!",
                 style: TextStyle(

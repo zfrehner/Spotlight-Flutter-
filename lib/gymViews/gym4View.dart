@@ -194,6 +194,18 @@ class _GymCardFourViewState extends State<GymCardFourView> {
               ],
             ),
             body: Column(children: <Widget>[
+              // title and address text
+              Text(
+                "Good Life Fitness #4\n" +
+                    "7700 Keele St Concord, ON L4K 2A1\n",
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
+              ),
+
+              // People checked-in text
               Text(
                 "People checked-in to Gym 4!",
                 style: TextStyle(

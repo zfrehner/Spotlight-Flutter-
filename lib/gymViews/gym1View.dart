@@ -196,12 +196,24 @@ class _GymCardOneViewState extends State<GymCardOneView> {
             ],
           ),
           body: Column(children: <Widget>[
+            // title and address text
             Text(
-            "People checked-in to Gym 1!",
+              "Good Life Fitness #1\n" +
+                  "3420 Major MacKenzie Dr W #201 Vaughan, ON L4H 4J6\n",
+              style: TextStyle(
+                fontSize: 15,
+                color: Colors.white,
+              ),
+              textAlign: TextAlign.center,
+            ),
+
+            // People checked-in text
+            Text(
+              "People checked-in to Gym 1!",
             style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.white
+                color: Colors.white,
             ),
           ), Expanded(
             child: Column(
