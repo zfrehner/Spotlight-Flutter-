@@ -163,7 +163,7 @@ class _CalendarState extends State<Calendar> {
         fontWeight: FontWeight.bold,
         ),
           headerText: '${formatDate(
-              DateTime.parse(monthYear), [MM, ' - ', yyyy])}',
+              DateTime.parse(monthYear), [MM, ' ', yyyy])}',
         iconColor: Colors.white,
     //      weekDays: null, /// for pass null when you do not want to render weekDays
     //      headerText: Container( /// Example for rendering custom header
