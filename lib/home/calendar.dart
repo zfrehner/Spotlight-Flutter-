@@ -184,6 +184,13 @@ class _CalendarState extends State<Calendar> {
         /// If you return null, [CalendarCarousel] will build container for current [day] with default function.
         /// This way you can build custom containers for specific days only, leaving rest as default.
         // Example: every 15th of month, we have a flight, we can place an icon in the container like that:
+
+          /// Note: Our client really wants this calendar to have an indicator for if a user has worked out that day
+          /// and the last group to work on this project couldn't quite get it to work, so it's recommended
+          /// that future groups work on this part as soon as they can.
+          ///
+          /// A possible solution is to return this entire CalendarCarousel widget as a FutureBuilder Widget
+
         if (daysWorkedOut[day.day.toString()] == true ) {
         return Center(
         child: Text(
