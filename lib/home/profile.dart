@@ -16,33 +16,33 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  final _auth = FirebaseAuth.instance;
-  var firebaseUser = FirebaseAuth.instance.currentUser;
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final _auth = FirebaseAuth.instance;  // Firebase Authentication Instance
+  var firebaseUser = FirebaseAuth.instance.currentUser; // The current App User
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;  // Firebase Firestore Instance
 
-  User loggedInUser;
-  var uid;
+  User loggedInUser;  // User variable
+  var uid;  // User ID variable
 
-  String imageUrl;
+  String imageUrl;  // Image url String
 
-
-
+  // Initializes State of the page
   void initState() {
     getCurrentUser();
-
   }
 
+  // Initializes User and uid variables
   void getCurrentUser() async {
-    try {
+    try { // Gets the user and user ID from the database
       final user = _auth.currentUser;
       final fireUser = FirebaseAuth.instance.currentUser.uid;
 
-      if (user != null) {
+      if (user != null) { // If the user has been found, sets the loggedInUser and uid variables
+                          // with what's on the database
         loggedInUser = user;
         uid = fireUser;
         //print(loggedInUser.email);
       }
-    } catch (e) {
+    } catch (e) { // If the user doesn't exist, an error is thrown
       print(e);
     }
   }
@@ -55,6 +55,7 @@ class _ProfileState extends State<Profile> {
       ),);
   }
 
+  // Gets user's first name
   getName() {
     return _firestore
         .collection("SpotlightUsers")
@@ -63,58 +64,63 @@ class _ProfileState extends State<Profile> {
         .then((value) => print(value.data()["firstName"]));
   }
 
-  //get the current user UID
+  // Gets the current user UID
   Future<String> getCurrentUID() async {
     return firebaseUser.uid;
   }
 
-  //get the current user info
+  // Gets the current user info
   Future getAuthUserInfo() async {
     return firebaseUser;
   }
 
+  // Gets Firestore User's UID
   Future getFirestoreUser() async {
     return _firestore.collection("SpotlightUsers").doc(firebaseUser.uid).get();
   }
 
+  // Displays User Info
   Widget displayUserInfo(context, snapshot) {
     final user = snapshot.data;
 
     // Variable to show empty strings instead of null
     // if user leaves any of these blank
 
-    // check if phone is left blank
+    // Check if phone is left blank
     var phone = user["phoneNumber"];
     if (phone == null) {
       phone = "";
     }
-    // check if address is left blank
+
+    // Check if address is left blank
     var address = user["address"];
     if (address == null) {
       address = "";
     }
-    // check if city is left blank
+
+    // Check if city is left blank
     var city = user["city"];
     if (city == null) {
       city = "";
     }
-    // check if state is left blank
+    // Check if state is left blank
     var state = user["state"];
     if (state == null) {
       state = "";
     }
-    // check if zipcode is left blank
+    // Check if zipcode is left blank
     var zip = user["zipCode"];
     if (zip == null) {
       zip = "";
     }
 
+    // Checks if birthday is left blank
     var date = DateFormat('MM/dd/yyyy').format(user["birthday"].toDate());
     if (date == null) {
       date = "";
     }
 
-    // check if About Me is left blank (NEW)
+    // check if About Me is left blank
     var aboutMe = user["aboutMe"];
     if (aboutMe == null) {
       aboutMe = "Test Description for Testing!";
@@ -132,6 +138,7 @@ class _ProfileState extends State<Profile> {
       workout = "";
     }
 
+    // Returns a Column which builds text fields with the user info
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -182,6 +189,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
+  // Build Method
   @override
   Widget build(BuildContext context) {
 // no need of the file extension, the name will do fine.
@@ -344,6 +352,7 @@ class _ProfileState extends State<Profile> {
 
   }
 
+  // Uploads an Image to Firebase
   uploadImage() async {
     final _picker = ImagePicker();
     final _storage = FirebaseStorage.instance;
@@ -382,6 +391,7 @@ class _ProfileState extends State<Profile> {
     }
   }
 
+  // Builds a Textfield
   TextField buildTextField(
       String labelText, String placeholder, String database) {
     return TextField(
@@ -416,6 +426,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
+  // Creates a multi-lined text field for workout notes
   TextField buildTextFieldMultiLine(
       String labelText, String placeholder, String database) {
     return TextField(
