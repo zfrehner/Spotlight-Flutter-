@@ -5,29 +5,28 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/rendering.dart';
 
-final _auth = FirebaseAuth.instance;
-var firebaseUser = FirebaseAuth.instance.currentUser;
-FirebaseFirestore _firestore = FirebaseFirestore.instance;
+final _auth = FirebaseAuth.instance;  // Firebase Authentication Instance
+var firebaseUser = FirebaseAuth.instance.currentUser; // The current App User
+FirebaseFirestore _firestore = FirebaseFirestore.instance;  // Firebase Firestore Instance
 
-
-
+// Creates a textbox on the calendar page with the given day's workout notes
 Widget displayWorkoutNotes(context, snapshot, date) {
 
+  // Gets workout notes if they exist, otherwise sets to a default in the catch
   var workoutNotes = snapshot.data;
   try{
     workoutNotes = snapshot.data["notes"];
     // Replace with future builder using _firestore to get a new instance thingimabob
+
+    // (Not sure if the above note is still relevant, feel free to ignore it)
   }catch(e){
     workoutNotes = "New schedule made for this day";
   }
 
-
+  // Formats current date
   String currentDate = formatDate(date,[MM,' - ', dd]);
 
-  //poo poo (remove)
-  if(workoutNotes == null){
-    workoutNotes = "";
-  }
+  // Returns the textbox Widget
   return Column(
       children: [
         FractionallySizedBox(
@@ -60,6 +59,7 @@ Widget displayWorkoutNotes(context, snapshot, date) {
   );
 }
 
+// Creates an Updatable text field that can span up to 10 lines (Unused in Calendar Page)
 TextField buildTextFieldMultiLine(String labelText, String placeholder,
     String database, String date) {
 

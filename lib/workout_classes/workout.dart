@@ -28,16 +28,17 @@ void initState() {
 
 // Initializes User and uid variables
 void getCurrentUser() async {
-  try {
+  try { // Gets the user and user ID from the database
     final user = _auth.currentUser;
     final fireUser = FirebaseAuth.instance.currentUser.uid;
 
-    if (user != null) {
+    if (user != null) { // If the user has been found, sets the loggedInUser and uid variables
+                        // with what's on the database
       loggedInUser = user;
       uid = fireUser;
       //print(loggedInUser.email);
     }
-  } catch (e) {
+  } catch (e) { // If the user doesn't exist, an error is thrown
     print(e);
   }
 }
