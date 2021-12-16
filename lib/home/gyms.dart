@@ -31,6 +31,7 @@ class _GymsState extends State<Gyms> {
   //_markerIcon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(), "assets/images/.jpg");
   //}
 
+  // This method builds the array of markers on the map
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
 
@@ -38,31 +39,44 @@ class _GymsState extends State<Gyms> {
       _markers.add(Marker(
         markerId: MarkerId("1"),
         position: LatLng(43.847000, -79.551850),
-        infoWindow: InfoWindow(title: "Good Life Fitness #1",
+        onTap: () {
+          Navigator.pushNamed(context, GymCardOneView.id);
+        }));
+        // removed this info window, decision made because of feedback
+        /*infoWindow: InfoWindow(title: "Good Life Fitness #1",
             onTap: () {Navigator.pushNamed(context, GymCardOneView.id);},
-            snippet: "3420 Major MacKenzie Dr W #201 Vaughan, ON L4H 4J6"),
-      )); //icon: _markerIcon-- add this to add an image for marker icons
+            snippet: "3420 Major MacKenzie Dr W #201 Vaughan, ON L4H 4J6"),*/
+       //icon: _markerIcon-- add this to add an image for marker icons
 
       _markers.add(Marker(
           markerId: MarkerId("2"),
           position: LatLng(43.790910, -79.544790),
-          infoWindow: InfoWindow(title: "Good Life Fitness #2",
+          onTap: () {
+            Navigator.pushNamed(context, GymCardTwoView.id);
+          }));
+          /*infoWindow: InfoWindow(title: "Good Life Fitness #2",
               onTap: () {Navigator.pushNamed(context, GymCardTwoView.id);},
-              snippet: "57 Northview Blvd Woodbridge, ON L4L 8X9")));
+              snippet: "57 Northview Blvd Woodbridge, ON L4L 8X9")*/
 
       _markers.add(Marker(
           markerId: MarkerId("3"),
           position: LatLng(43.790050, -79.529910),
-          infoWindow: InfoWindow(title: "Good Life Fitness #3",
+          onTap: () {
+            Navigator.pushNamed(context, GymCardThreeView.id);
+          }));
+          /*infoWindow: InfoWindow(title: "Good Life Fitness #3",
               onTap: () {Navigator.pushNamed(context, GymCardThreeView.id);},
-              snippet: "90 Interchange Way Concord, ON L4K 5Z8")));
+              snippet: "90 Interchange Way Concord, ON L4K 5Z8")*/
 
       _markers.add(Marker(
           markerId: MarkerId("4"),
           position: LatLng(43.798580, -79.501129),
-          infoWindow: InfoWindow(title: "Good Life Fitness #4",
+          onTap: () {
+            Navigator.pushNamed(context, GymCardFourView.id);
+          }));
+          /*infoWindow: InfoWindow(title: "Good Life Fitness #4",
               onTap: () {Navigator.pushNamed(context, GymCardFourView.id);},
-              snippet: "7700 Keele St Concord, ON L4K 2A1")));
+              snippet: "7700 Keele St Concord, ON L4K 2A1")*/
     });
   }
 
@@ -96,6 +110,8 @@ class _GymsState extends State<Gyms> {
     );
   }
 }
+
+// OLD CODE
 
 
 /*class _GymsState extends State<Gyms> {

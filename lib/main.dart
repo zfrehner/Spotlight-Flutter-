@@ -12,8 +12,10 @@ import 'package:spotlight_login/gymViews/gym2View.dart';
 import 'package:spotlight_login/gymViews/gym3View.dart';
 import 'package:spotlight_login/gymViews/gym4View.dart';
 import 'package:spotlight_login/forgotPassword.dart';
+import 'workout_classes/workout.dart';
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
@@ -52,7 +54,8 @@ class MyApp extends StatelessWidget {
           GymCardTwoView.id : (context) => GymCardTwoView(),
           GymCardThreeView.id : (context) => GymCardThreeView(),
           GymCardFourView.id : (context) => GymCardFourView(),
-          ForgotPassword.id : (context) => ForgotPassword()
+          ForgotPassword.id : (context) => ForgotPassword(),
+          Workout.id : (context) => Workout()
         }
     );
   }

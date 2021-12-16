@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:spotlight_login/constants.dart';
 // import 'package:spotlight_login/functions/functions.dart';
 
+/// Recommended: Find a way to combine the GymView files into a single GymView file
 
 class GymCardOneView extends StatefulWidget {
   static const String id = 'gym_card_one_view';
@@ -196,12 +197,24 @@ class _GymCardOneViewState extends State<GymCardOneView> {
             ],
           ),
           body: Column(children: <Widget>[
+            // title and address text
             Text(
-            "People checked-in to Gym 1!",
+              "Good Life Fitness #1\n" +
+                  "3420 Major MacKenzie Dr W #201 Vaughan, ON L4H 4J6\n",
+              style: TextStyle(
+                fontSize: 15,
+                color: Colors.white,
+              ),
+              textAlign: TextAlign.center,
+            ),
+
+            // People checked-in text
+            Text(
+              "People checked-in to Gym 1!",
             style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.white
+                color: Colors.white,
             ),
           ), Expanded(
             child: Column(
@@ -301,6 +314,16 @@ class _GymCardOneViewState extends State<GymCardOneView> {
                                 "Hobbies" : hobbies,
                                 "Workout" : workout
                               });
+
+                              DateTime rightNow = DateTime.now();
+                              var nowString = rightNow.toString().substring(0, 10);
+                              _firestore
+                                  .collection("SpotlightUsers")
+                                  .doc(_auth.currentUser.uid)
+                                  .collection("WorkoutScheduler")
+                                  .doc("workout"+nowString)
+                                  .set({"workedOut": true}, SetOptions(merge: true));
+
                               _firestore.collection("Gyms")
                                   .doc("Gym 1")
                                   .update({
@@ -338,6 +361,16 @@ class _GymCardOneViewState extends State<GymCardOneView> {
                           _firestore.collection("Gym1CheckedIn")
                               .doc(_auth.currentUser.uid)
                               .delete();
+
+                          DateTime rightNow = DateTime.now();
+                          var nowString = rightNow.toString().substring(0, 10);
+                          _firestore
+                              .collection("SpotlightUsers")
+                              .doc(_auth.currentUser.uid)
+                              .collection("WorkoutScheduler")
+                              .doc("workout"+nowString)
+                              .set({"workedOut": false}, SetOptions(merge: true));
+
                           //subtract 1 from the NumUsers in the gym
                           var count = await getNumUsers();
                           if(user.exists && !user2.exists && !user3.exists && !user4.exists) {

@@ -20,27 +20,30 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   //creating an instance of a user -
-  final _auth = FirebaseAuth.instance;
-  final _firestore = FirebaseFirestore.instance;
+  final _auth = FirebaseAuth.instance;  // Firebase Authentication Instance
+  final _firestore = FirebaseFirestore.instance;  // Firebase Firestore Instance
 
-  User loggedInUser;
-  var userID;
+  User loggedInUser;  // User variable
+  var userID;  // User ID variable
 
+  // Initializes State of the page
   void initState() {
     getCurrentUser();
   }
 
+  // Initializes User and uid variables
   void getCurrentUser() async {
-    try {
+    try { // Gets the user and user ID from the database
       final user = _auth.currentUser;
       final fireUser = FirebaseAuth.instance.currentUser.uid;
 
-      if (user != null) {
+      if (user != null) { // If the user has been found, sets the loggedInUser and uid variables
+                          // with what's on the database
         loggedInUser = user;
         userID = fireUser;
 
       }
-    } catch (e) {
+    } catch (e) { // If the user doesn't exist, an error is thrown
       print(e);
     }
   }
@@ -137,7 +140,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  //***************************show gender dialog ****************************
+  //*************************** Show gender dialog ****************************
   Future<void> _showGenderDialog() async {
     return showDialog<void>(
       context: context,
@@ -183,16 +186,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: Builder(
             builder: (context) => TextFormField(
               onChanged: (value) {
-                firstName = value;
+                firstName = value;  // Sets first name to user input
               },
-              validator: (name) {
+              validator: (name) { // Validation
                 // trim off whitespace
                 name = name.trim();
                 Pattern pattern = r'^[A-Za-z]+(?:[ _-][A-Za-z]+)*$';
                 RegExp regex = new RegExp(pattern);
-                if (name.isEmpty)
+                if (name.isEmpty) // Checks if field is empty
                   return '    Please enter a first name';
-                else if (!regex.hasMatch(name))
+                else if (!regex.hasMatch(name)) // Does it match regex?
                   return '    Invalid first name';
                 else
                   return null;
@@ -211,7 +214,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 errorStyle: kErrorTextStyle,
               ),
               inputFormatters: [
-                MaxLengthFormatter(20, (){
+                MaxLengthFormatter(20, (){  // Length formatter
                   showSnackBar(context, 'Only 20 characters allowed for First Name.');
                 },
                 ),
@@ -239,17 +242,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
           height: 60,
           child: Builder(
             builder: (context) => TextFormField(
-              onChanged: (value) {
+              onChanged: (value) {  // Sets Last Name to user input
                 lastName = value;
               },
-              validator: (name) {
+              validator: (name) { // Validation
                 // trim off whitespace
                 name = name.trim();
                 Pattern pattern = r'^[A-Za-z]+(?:[ _-][A-Za-z]+)*$';
                 RegExp regex = new RegExp(pattern);
-                if (name.isEmpty)
+                if (name.isEmpty) // Checks if field is empty
                   return '    Please enter a last name';
-                else if (!regex.hasMatch(name))
+                else if (!regex.hasMatch(name)) // Does it match regex?
                   return '    Invalid last name';
                 else
                   return null;
@@ -265,7 +268,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   errorStyle: kErrorTextStyle
               ),
               inputFormatters: [
-                MaxLengthFormatter(20, (){
+                MaxLengthFormatter(20, (){  // Length formatter
                   showSnackBar(context, 'Only 20 characters are allowed for Last Name.');
                 },
                 ),
@@ -293,7 +296,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           height: 60,
           child: Builder(
             builder: (context) => TextFormField(
-              onChanged: (value) {
+              onChanged: (value) {  // Sets Username to user input
                 username = value;
               },
               decoration: InputDecoration(
@@ -310,7 +313,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 errorStyle: kErrorTextStyle,
               ),
               inputFormatters: [
-                MaxLengthFormatter(30, (){
+                MaxLengthFormatter(30, (){  // Length formatter
                   showSnackBar(context, 'Only 30 characters allowed for Username.');
                 },
                 ),
@@ -338,17 +341,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
           height: 60,
           child: Builder(
             builder: (context) => TextFormField(
-              onChanged: (value) {
+              onChanged: (value) {  // Sets email to user input
                 email = value.trim();
               },
               keyboardType: TextInputType.emailAddress,
-              validator: (email) {
+              validator: (email) {  // Validation
                 Pattern pattern =
                     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
                 RegExp regex = new RegExp(pattern);
-                if (email.trim().isEmpty)
+                if (email.trim().isEmpty) // Checks if field is empty
                   return '    Please enter an email';
-                else if (!regex.hasMatch(email.trim()))
+                else if (!regex.hasMatch(email.trim())) // Does it match regex?
                   return '    Invalid email';
                 else
                   return null;
@@ -364,7 +367,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 errorStyle: kErrorTextStyle,
               ),
               inputFormatters: [
-                MaxLengthFormatter(50,(){
+                MaxLengthFormatter(50,(){ // Length formatter
                   showSnackBar(context, 'Only 25 characters are allowed for Email.');
                 },
                 ),
@@ -387,7 +390,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         SizedBox(height: 10),
         FormBuilderCountryPicker(
-          onChanged: (value) {
+          onChanged: (value) {  // Sets Country to selection
             country = value.name;
           },
           attribute: 'country_picker',
@@ -413,7 +416,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             height: 60,
             child: Builder(
               builder: (context) => TextFormField(
-                onChanged: (value) {
+                onChanged: (value) {  // Sets address to user input
                   address = value;
                 },
                 decoration: InputDecoration(
@@ -427,7 +430,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
                 inputFormatters: [
-                  MaxLengthFormatter(20, (){
+                  MaxLengthFormatter(20, (){  // Length formatter
                     showSnackBar(context, 'Only 20 characters are allowed for Address.');
                   },
                   ),
@@ -454,7 +457,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           height: 60,
           child: Builder(
             builder: (context) => TextFormField(
-              onChanged: (value) {
+              onChanged: (value) {  // Sets City to user input
                 city = value;
               },
               decoration: InputDecoration(
@@ -468,7 +471,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               inputFormatters: [
-                MaxLengthFormatter(20, (){
+                MaxLengthFormatter(20, (){  // Length formatter
                   showSnackBar(context, 'Only 20 characters are allowed for a City.');
                 },
                 ),
@@ -496,7 +499,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           height: 60,
           child: Builder(
             builder: (context) => TextFormField(
-              onChanged: (value) {
+              onChanged: (value) {  // Sets State to user input
                 state = value;
               },
               decoration: InputDecoration(
@@ -510,7 +513,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               inputFormatters: [
-                MaxLengthFormatter(20, (){
+                MaxLengthFormatter(20, (){  // Length formatter
                   showSnackBar(context, 'Only 20 characters are allowed.');
                 },
                 ),
@@ -537,7 +540,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             decoration: kSignUpBoxDecoration,
             height: 60,
             child: TextFormField(
-              onChanged: (value) {
+              onChanged: (value) {  // Sets Zip Code to user input
                 zipCode = value;
               },
               decoration: InputDecoration(
@@ -552,7 +555,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               inputFormatters: [
-                MaxLengthFormatter(10, (){
+                MaxLengthFormatter(10, (){  // Length formatter
                   showSnackBar(context, 'Only 10 characters are allowed for the Zip Code.');
                 },
                 ),
@@ -562,7 +565,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ]);
   }
 
-//**************************** First Name Input Field **************************
+//**************************** Age Input Field **************************
   Widget buildAgeField() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -704,15 +707,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
               border: OutlineInputBorder(),
               labelText: 'Phone Number',
             ),
-            onChanged: (value) {
+            onChanged: (value) {  // Sets Phone # to user input
               phoneNumber = value;
             },
             priorityListByIsoCode: ['US'],
-            validators: [
+            validators: [ // Validation
               FormBuilderValidators.required(errorText: 'This field required')
             ],
             inputFormatters: [
-              MaxLengthFormatter(16, (){
+              MaxLengthFormatter(16, (){  // Length formatter
                 showSnackBar(context, 'Only 16 characters are allowed for Phone Number.');
               },
               ),
@@ -722,7 +725,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ],
     );
   }
-//******************************* About Me Field (NEW) *************************
+//******************************* About Me Field *******************************
   Widget buildAboutMe() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -738,7 +741,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           height: 100,
           child: Builder(
             builder: (context) => TextFormField(
-              onChanged: (value) {
+              onChanged: (value) {  // Sets About Me to user input
                 aboutMe = value;
               },
               decoration: InputDecoration(
@@ -758,7 +761,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               maxLength: 300,
               maxLines: null,
               inputFormatters: [
-                MaxLengthFormatter(300, (){
+                MaxLengthFormatter(300, (){ // Length formatter
                   showSnackBar(context, 'Only 300 characters allowed for About Me');
                 })
               ],
@@ -784,15 +787,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
           height: 60,
           child: Builder (
             builder: (context) => TextFormField(
-              onChanged: (value) {
+              onChanged: (value) {  // Sets Password to user input
                 password = value;
               },
               controller: _password,
               obscureText: true,
-              validator: (password) {
-                if (password.isEmpty)
+              validator: (password) { // Validation
+                if (password.isEmpty) // Checks if field is empty
                   return '    Please enter a password';
-                else if (password.length < 8)
+                else if (password.length < 8) // Is it longer than 8 characters?
                   return '    Password too short';
                 else
                   return null;
@@ -808,7 +811,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 errorStyle: kErrorTextStyle,
               ),
               inputFormatters: [
-                MaxLengthFormatter(25, (){
+                MaxLengthFormatter(25, (){  // Length formatter
                   showSnackBar(context, 'Only 25 characters are allowed for a Password.');
                 },
                 ),
@@ -841,9 +844,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               obscureText: true,
               // ************ Artems code: validator *************************
               validator: (password) {
-                if (password.isEmpty)
+                if (password.isEmpty) // Checks if field is empty
                   return '    Please re-enter password';
-                else if (_password.text != _confirmPassword.text)
+                else if (_password.text != _confirmPassword.text) // Does it match what was put in the Password field?
                   return '    Passwords must match';
                 else
                   return null;
@@ -863,6 +866,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               inputFormatters: [
                 MaxLengthFormatter(25, (){
+                  // Length formatter
                   showSnackBar(context, 'Only 25 characters are allowed for a Password.');
                 },
                 ),
@@ -887,6 +891,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             //async and await mean the user is authenticated before we go on
             try {
 
+              // Checks validation of all the fields
               if(dateTime == null || gender == "Choose.." || genderSelected == "Choose..") {
                 if(gender == "Choose.." || genderSelected == "Choose..") {
                   _showGenderDialog();
@@ -894,7 +899,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 if(dateTime == null) {
                   _showMyDialog();
                 }
-              } else {
+              } else {  // If everything's good, add data to database
                 await _auth
                     .createUserWithEmailAndPassword(
                     email: email, password: password)
@@ -908,7 +913,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'uid': _auth.currentUser.uid,
                           'firstName': firstName,
                           'lastName': lastName,
-                          // (NEW) username field
                           'username': username,
                           'email': email,
                           'country': country,
@@ -919,7 +923,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'birthday': dateTime,
                           'gender': gender,
                           'phoneNumber': phoneNumber,
-                          // (NEW) Uncomment when you can add the About ME section to Firebase
                           'aboutMe': aboutMe,
                           'hobbies': "",
                           'workout': "",
@@ -928,6 +931,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                 );
 
+                // If everything is set, move to the main page
                 if (_auth.currentUser.uid != null) {
                   Navigator.pushNamed(context, Success.id);
                 }
